@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+/api/obj/
+/api/bin/
+
 # production
 /build
 
