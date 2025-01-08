@@ -1,4 +1,5 @@
 "use client"
+import "./globals.css";
 import { NextUIProvider } from "@nextui-org/react";
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";

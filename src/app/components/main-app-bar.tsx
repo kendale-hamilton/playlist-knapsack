@@ -12,7 +12,15 @@ export default function MainAppBar() {
             className="text-white bg-black"
             maxWidth="full"    
         >
-            <NavbarBrand>Playlist Knapsack</NavbarBrand>
+            <NavbarBrand>
+                <Button 
+                    onPress={() => router.push("/")}
+                    className="text-white"
+                    variant="bordered"
+                >
+                    Playlist Knapsack
+                </Button>
+            </NavbarBrand>
             {!session?.data?.user && (
                 <NavbarItem>
                     <Button onPress={() => signIn()}>

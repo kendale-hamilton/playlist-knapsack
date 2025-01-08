@@ -1,10 +1,16 @@
+using API.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Configuration.
+    AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).
+    AddEnvironmentVariables();
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddSingleton<IServiceBase, ServiceBase>();
+builder.Services.AddScoped<IPlaylistService, PlaylistService>();
 
 var app = builder.Build();
 

@@ -19,10 +19,14 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body>
+      <body className="bg-neutral-900">
         <Providers session={session}>
-          <MainAppBar />
-          {children}
+          <div className="flex flex-col h-screen">
+            <MainAppBar />
+            <div className="flex-grow" >
+              {children}
+            </div>
+          </div>
         </Providers>
       </body>
     </html>
