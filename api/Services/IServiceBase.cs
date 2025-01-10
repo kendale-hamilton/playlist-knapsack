@@ -1,10 +1,11 @@
-using SpotifyAPI.Web;
+using Models;
 
 namespace API.Services
 {
     public interface IServiceBase
     {
-        Task<Paging<FullPlaylist>> FetchPlaylists(string userId);
-        Task<Paging<PlaylistTrack<IPlayableItem>>> FetchPlaylistTracks(string playlistId);
+
+        Task<string> FetchPlaylists(string userId, string token);
+        Task<PlaylistItemsResponse> FetchPlaylistTracks(string playlistId, string token);
     }
 }

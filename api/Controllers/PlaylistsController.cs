@@ -7,15 +7,19 @@ namespace API.Controllers
     [Route("api")]
     public class PlaylistsController : ControllerBase
     {
-        private readonly IPlaylistService _playlistService;
-        public PlaylistsController(IPlaylistService playlistService)
+        private readonly IServiceBase _service;
+        public PlaylistsController(IServiceBase serviceBase)
         {
-            _playlistService = playlistService;
+            _service = serviceBase;
         }
         [HttpGet("users/{userId}/playlists/{playlistId}/tracks")]
         public async Task<ActionResult> GetPlaylistTracks(string userId, string playlistId)
         {
-            var playlistTracks = await _playlistService.GetPlaylistTracks(playlistId);
+            Console.WriteLine("Getting Playlist Tracks...");
+            var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            Console.WriteLine($"token: {accessToken}");
+            var playlistTracks = await _service.FetchPlaylistTracks(playlistId, accessToken);
+            Console.WriteLine($"PlaylistTracks: {playlistTracks.Items[0].Track.DurationMs}");
             return Ok(playlistTracks);
         }
     }

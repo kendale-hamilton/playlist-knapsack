@@ -10,7 +10,6 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services.AddSingleton<IServiceBase, ServiceBase>();
-builder.Services.AddScoped<IPlaylistService, PlaylistService>();
 
 var app = builder.Build();
 

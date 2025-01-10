@@ -7,15 +7,16 @@ namespace API.Controllers
     [Route("api")]
     public class UsersController : ControllerBase
     {
-        private readonly IPlaylistService _playlistService;
-        public UsersController(IPlaylistService playlistService)
+        private readonly IServiceBase _service;
+        public UsersController(IServiceBase serviceBase)
         {
-            _playlistService = playlistService;
+            _service = serviceBase;
         }
         [HttpGet("users/{userId}")]
         public async Task<ActionResult> GetPlaylists(string userId)
         {
-            var playlists = await _playlistService.GetPlaylists(userId);
+            var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var playlists = await _service.FetchPlaylists(userId, accessToken);
             return Ok(playlists);
         }
     }

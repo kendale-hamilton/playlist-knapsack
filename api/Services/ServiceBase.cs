@@ -1,31 +1,28 @@
-using SpotifyAPI.Web;
+using System.Text.Json;
+using Models;
 
 namespace API.Services
 {
     public class ServiceBase : IServiceBase
     {
-        private static SpotifyClient _spotify;
 
-        public ServiceBase(IConfiguration configuration)
+        public async Task<string> FetchPlaylists(string userId, string token)
         {
-            var clientId = configuration["Spotify:ClientId"];
-            var clientSecret = configuration["Spotify:ClientSecret"];
-            var config = SpotifyClientConfig
-                .CreateDefault()
-                .WithAuthenticator(new ClientCredentialsAuthenticator(clientId, clientSecret));
-
-            _spotify = new SpotifyClient(config);
-        }
-
-        public async Task<Paging<FullPlaylist>> FetchPlaylists(string userId)
-        {
-            return await _spotify.Playlists.GetUsers(userId);
+           throw new NotImplementedException();
 
         }
         
-        public async Task<Paging<PlaylistTrack<IPlayableItem>>> FetchPlaylistTracks(string playlistId)
+        public async Task<PlaylistItemsResponse> FetchPlaylistTracks(string playlistId, string token)
         {
-            return await _spotify.Playlists.GetItems(playlistId);
+            HttpClient client = new HttpClient();
+            var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.spotify.com/v1/playlists/{playlistId}/tracks");
+            request.Headers.Add("Authorization", $"Bearer {token}");
+
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<PlaylistItemsResponse>(content);
         }
     }
 }
