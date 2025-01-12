@@ -6,7 +6,7 @@ export default function Home() {
   const router = useRouter();
   return (
     <div className="flex h-full justify-center items-center">
-      <Card isPressable onPress={() => router.push('/builder')} className="bg-gray-500">
+      <Card isPressable onPress={() => router.push('/playlists')} className="bg-gray-500">
         <CardHeader className="flex gap-3">
           <Image
             alt="spotify logo"

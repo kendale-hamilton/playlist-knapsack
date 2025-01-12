@@ -12,12 +12,14 @@ namespace API.Controllers
         {
             _service = serviceBase;
         }
-        [HttpGet("users/{userId}")]
+
+        [HttpGet("users/{userId}/playlists")]
         public async Task<ActionResult> GetPlaylists(string userId)
         {
+            Console.WriteLine("Getting User Playlists...");
             var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            var playlists = await _service.FetchPlaylists(userId, accessToken);
-            return Ok(playlists);
+            var userPlaylists = await _service.GetUserPlaylists(userId, accessToken);
+            return Ok(userPlaylists);
         }
     }
 }

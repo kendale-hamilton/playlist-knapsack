@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace Models
 {
-    public class PlaylistItemsResponse
+    public class PlaylistItems
     {
         [JsonPropertyName("href")]
         public string? Href { get; set; }
