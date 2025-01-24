@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import MainAppBar from "./components/main-app-bar";
-import { NextUIProvider } from "@nextui-org/react";
 import Providers from "./provider";
-import { getServerSession } from "next-auth";
 
 export const metadata: Metadata = {
   title: "Playlist Knapsack",
@@ -15,12 +13,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession();
 
   return (
     <html lang="en">
       <body className="bg-neutral-900">
-        <Providers session={session}>
+        <Providers>
           <div className="flex flex-col h-screen">
             <MainAppBar />
             <div className="flex-grow" >

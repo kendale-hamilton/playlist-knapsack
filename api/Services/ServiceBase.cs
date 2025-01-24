@@ -39,17 +39,40 @@ namespace API.Services
             }
             return playlists;
         }
-        
-        public async Task<PlaylistItems> FetchPlaylistTracks(string playlistId, string token)
+
+        public async Task<SimpPlaylist> FetchPlaylist(string playlistId, string token)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.spotify.com/v1/playlists/{playlistId}/tracks");
-            request.Headers.Add("Authorization", $"Bearer {token}");
+            var response = await MakeGetRequest($"https://api.spotify.com/v1/playlists/{playlistId}", token);
+            string content = await response.Content.ReadAsStringAsync();
+            PlaylistsItem? playlist = JsonSerializer.Deserialize<PlaylistsItem>(content);
+            if (playlist == null)
+            {
+                throw new Exception("Failed to fetch playlist");
+            }
 
-            var response = await _client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
+            SimpPlaylist simpPlaylist = new SimpPlaylist
+            {
+                Details = playlist.Simplify()
+            };
 
-            var content = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<PlaylistItems>(content);
+            return simpPlaylist;
+        }
+        
+        public async Task<List<SimpTrack>> FetchPlaylistTracks(string playlistId, string token)
+        {
+            var response = await MakeGetRequest($"https://api.spotify.com/v1/playlists/{playlistId}/tracks", token);
+            string content = await response.Content.ReadAsStringAsync();
+            PlaylistItems? playlistItems = JsonSerializer.Deserialize<PlaylistItems>(content);
+            
+            List<SimpTrack> tracks = [];
+            foreach (PlaylistTrack fullTrack in playlistItems.Items)
+            {
+                Track track = fullTrack.Track;
+                var simpTrack = track.Simplify();
+                tracks.Add(simpTrack);
+            }
+
+            return tracks;
         }
     }
 }

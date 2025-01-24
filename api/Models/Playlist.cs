@@ -34,4 +34,10 @@ namespace Models
         [JsonPropertyName("video_thumbnail")]
         public VideoThumbnail? VideoThumbnail { get; set; }
     }
+
+    public class SimpPlaylist
+    {
+        public SimpUserPlaylistItem Details { get; set; }
+        public List<SimpTrack> Tracks { get; set; }
+    }
 }

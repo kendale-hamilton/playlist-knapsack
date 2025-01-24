@@ -1,3 +1,5 @@
+import { Track } from "./Track"
+
 export type Playlist = {
     id: string
     name: string
@@ -10,4 +12,9 @@ export type Playlist = {
             height: number
         }
     ]
+}
+
+export type FullPlaylist = {
+    details: Playlist,
+    tracks: Track[]
 }

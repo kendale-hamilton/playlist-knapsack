@@ -42,5 +42,25 @@ namespace Models
         public string? Uri { get; set; }
         [JsonPropertyName("is_local")]
         public bool IsLocal { get; set; }
+        public SimpTrack Simplify()
+        {
+            return new SimpTrack
+            {
+                Album = Album,
+                Artists = Artists,
+                DurationMs = DurationMs,
+                Name = Name,
+                Popularity = Popularity
+            };
+        }
+    }
+
+    public class SimpTrack 
+    {
+        public Album? Album { get; set; }
+        public List<Artist>? Artists { get; set; }
+        public int? DurationMs { get; set; }
+        public string? Name { get; set; }
+        public int? Popularity { get; set; }
     }
 }

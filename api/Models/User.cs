@@ -31,10 +31,10 @@ namespace Models
         [JsonPropertyName("total")]
         public int? Total { get; set; }
         [JsonPropertyName("items")]
-        public List<UserPlaylistsItem>? Items { get; set; }
+        public List<PlaylistsItem>? Items { get; set; }
     }
 
-    public class UserPlaylistsItem
+    public class PlaylistsItem
     {
         [JsonPropertyName("collaborative")]
         public bool? Collaborative { get; set; }

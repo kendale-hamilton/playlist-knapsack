@@ -1,5 +1,6 @@
 using API.Services;
 using Microsoft.AspNetCore.Mvc;
+using Models;
 
 namespace API.Controllers
 {
@@ -18,8 +19,15 @@ namespace API.Controllers
         {
             Console.WriteLine("Getting Playlist Tracks...");
             var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            var playlistTracks = await _service.FetchPlaylistTracks(playlistId, accessToken);
-            return Ok(playlistTracks);
+            SimpPlaylist playlist = await _service.FetchPlaylist(playlistId, accessToken);
+            List<SimpTrack> playlistTracks = await _service.FetchPlaylistTracks(playlistId, accessToken);
+            SimpPlaylist playlistInfo= new SimpPlaylist
+            {
+                Details = playlist.Details,
+                Tracks = playlistTracks
+            };
+            Console.WriteLine($"Playlist info: {playlistInfo}");
+            return Ok(playlistInfo);
         }
     }
 }
