@@ -62,7 +62,9 @@ export default function MainAppBar() {
                             <Avatar src={cookies?.userAvatar} />
                         </DropdownTrigger>
                         <DropdownMenu>
-                            <DropdownItem key="Sign Out" onPress={() => signOut()}>Sign out</DropdownItem>
+                            <DropdownItem key="Sign Out" onPress={() => signOut()}>
+                                <p className="text-white">Sign out</p>
+                            </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
                 </NavbarItem>

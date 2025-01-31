@@ -37,7 +37,9 @@ namespace Models
 
     public class SimpPlaylist
     {
+        [JsonPropertyName("details")]
         public SimpUserPlaylistItem Details { get; set; }
+        [JsonPropertyName("tracks")]
         public List<SimpTrack> Tracks { get; set; }
     }
 }

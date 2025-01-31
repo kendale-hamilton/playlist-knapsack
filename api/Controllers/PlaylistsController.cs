@@ -21,6 +21,12 @@ namespace API.Controllers
             var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             SimpPlaylist playlist = await _service.FetchPlaylist(playlistId, accessToken);
             List<SimpTrack> playlistTracks = await _service.FetchPlaylistTracks(playlistId, accessToken);
+            int duration = 0;
+            foreach (SimpTrack t in playlistTracks)
+            {
+                duration += t.DurationMs ?? 0;
+            }
+            playlist.Details.DurationMs = duration;
             SimpPlaylist playlistInfo= new SimpPlaylist
             {
                 Details = playlist.Details,

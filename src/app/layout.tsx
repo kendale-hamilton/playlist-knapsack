@@ -15,7 +15,7 @@ export default async function RootLayout({
 }>) {
 
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body className="bg-neutral-900">
         <Providers>
           <div className="flex flex-col h-screen">

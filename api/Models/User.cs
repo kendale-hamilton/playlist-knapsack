@@ -85,5 +85,7 @@ namespace Models
         public List<Image>? Images { get; set; }
         [JsonPropertyName("name")]
         public string? Name { get; set; } 
+        [JsonPropertyName("duration_ms")]
+        public int DurationMs { get; set; }
     }
 }
