@@ -1,15 +1,12 @@
 "use client";
 import getCookies from "@/app/helpers/get-cookies";
-import toTimeString from "@/app/helpers/ms-convert";
 import { FullPlaylist } from "@/types/Playlist";
-import { Track } from "@/types/Track";
-import { ArrowsRightLeftIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/16/solid";
-import { Button, Card, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Tracks from "./Tracks";
 import PlaylistDetails from "./PlaylistDetails";
-import Instructions from "./Instructions";
+import BuilderConfiguration from "./BuilderConfiguration";
 
 
 export default function Playlist({params}: any) {
@@ -41,12 +38,16 @@ export default function Playlist({params}: any) {
 
     const onClose = () => { setWarningOn(false) }
 
+    const onSubmit = (desiredLength: string, weightingFunction: Function) => {
+        console.log("Submitting Playlist:", playlist.tracks, desiredLength)
+    }
+
     return (
         <>
             <div className="flex h-full flex-row text-white">
                 <PlaylistDetails playlist={playlist} setWarningOn={setWarningOn} />
                 <Tracks playlist={playlist} setPlaylist={setPlaylist} />
-                <Instructions />
+                <BuilderConfiguration onSubmit={onSubmit}/>
             </div>
             <Modal isOpen={warningOn} onClose={onClose}>
                 <ModalContent>
