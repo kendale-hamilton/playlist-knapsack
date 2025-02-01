@@ -5,7 +5,7 @@ using Models;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("api")]
+    [Route("api/spotify")]
     public class PlaylistsController : ControllerBase
     {
         private readonly IServiceBase _service;

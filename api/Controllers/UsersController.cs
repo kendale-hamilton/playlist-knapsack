@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("api")]
+    [Route("api/spotify")]
     public class UsersController : ControllerBase
     {
         private readonly IServiceBase _service;
