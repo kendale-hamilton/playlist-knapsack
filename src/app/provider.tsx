@@ -1,16 +1,12 @@
 "use client"
 import "./globals.css";
 import { NextUIProvider } from "@nextui-org/react";
-import { Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
 import React from "react";
 
-export default function Providers({session, children}: { session: Session | null, children: React.ReactNode}) {
+export default function Providers({children}: {children: React.ReactNode}) {
     return (
         <NextUIProvider>
-            <SessionProvider session={session}>
-                {children}
-            </SessionProvider>
+            {children}
         </NextUIProvider>
     )
 }

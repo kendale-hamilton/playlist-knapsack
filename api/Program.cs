@@ -2,14 +2,25 @@ using API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.
-    AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).
-    AddEnvironmentVariables();
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddEnvironmentVariables();
 
+// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
-
 builder.Services.AddSingleton<IServiceBase, ServiceBase>();
+
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder => builder
+            .WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
+});
 
 var app = builder.Build();
 
@@ -20,6 +31,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Use CORS
+app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthorization();
 

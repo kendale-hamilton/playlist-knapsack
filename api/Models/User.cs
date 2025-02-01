@@ -31,10 +31,10 @@ namespace Models
         [JsonPropertyName("total")]
         public int? Total { get; set; }
         [JsonPropertyName("items")]
-        public List<UserPlaylistsItem>? Items { get; set; }
+        public List<PlaylistsItem>? Items { get; set; }
     }
 
-    public class UserPlaylistsItem
+    public class PlaylistsItem
     {
         [JsonPropertyName("collaborative")]
         public bool? Collaborative { get; set; }
@@ -85,5 +85,7 @@ namespace Models
         public List<Image>? Images { get; set; }
         [JsonPropertyName("name")]
         public string? Name { get; set; } 
+        [JsonPropertyName("duration_ms")]
+        public int DurationMs { get; set; }
     }
 }
