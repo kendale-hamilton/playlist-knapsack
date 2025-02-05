@@ -1,26 +1,20 @@
 using System.Text.Json;
-using Models.Spotify;
 using Models.Knapsack;
+using Models.Spotify;
 
-namespace Services
+
+namespace Services.SpotifyService
 {
-    public class ServiceBase : IServiceBase
+    public class SpotifyService : ISpotifyService
     {
-        private readonly HttpClient _client = new HttpClient();
-        private async Task<HttpResponseMessage> MakeGetRequest(string url, string token)
+        private readonly IHttpService _httpService;
+        public SpotifyService(IHttpService httpService)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-            request.Headers.Add("Authorization", $"Bearer {token}");
-
-            var response = await _client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-
-            return response;
+            _httpService = httpService;
         }
-
         public async Task<List<PlaylistDetails>> GetUserPlaylists(string userId, string token)
         {
-            var response = await MakeGetRequest($"https://api.spotify.com/v1/users/{userId}/playlists", token);
+            var response = await _httpService.MakeGetRequest($"https://api.spotify.com/v1/users/{userId}/playlists", token);
             string content = await response.Content.ReadAsStringAsync();
             SpotifyUserPlaylists? jsonResponse = JsonSerializer.Deserialize<SpotifyUserPlaylists>(content);
 
@@ -43,7 +37,7 @@ namespace Services
 
         public async Task<PlaylistDetails> GetPlaylistDetails(string playlistId, string token)
         {
-            var response = await MakeGetRequest($"https://api.spotify.com/v1/playlists/{playlistId}", token);
+            var response = await _httpService.MakeGetRequest($"https://api.spotify.com/v1/playlists/{playlistId}", token);
             string content = await response.Content.ReadAsStringAsync();
             SpotifyPlaylistsItem? playlist = JsonSerializer.Deserialize<SpotifyPlaylistsItem>(content);
             if (playlist == null)
@@ -58,7 +52,7 @@ namespace Services
         
         public async Task<List<Track>> GetPlaylistTracks(string playlistId, string token)
         {
-            var response = await MakeGetRequest($"https://api.spotify.com/v1/playlists/{playlistId}/tracks", token);
+            var response = await _httpService.MakeGetRequest($"https://api.spotify.com/v1/playlists/{playlistId}/tracks", token);
             string content = await response.Content.ReadAsStringAsync();
             SpotifyPlaylistItems? playlistItems = JsonSerializer.Deserialize<SpotifyPlaylistItems>(content);
             

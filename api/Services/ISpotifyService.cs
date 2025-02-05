@@ -1,8 +1,8 @@
 using Models.Knapsack;
 
-namespace Services
+namespace Services.SpotifyService
 {
-    public interface IServiceBase
+    public interface ISpotifyService
     {
         Task<List<PlaylistDetails>> GetUserPlaylists(string userId, string token);
         Task<PlaylistDetails> GetPlaylistDetails(string playlistId, string token);

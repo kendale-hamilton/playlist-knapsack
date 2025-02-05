@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Models.Knapsack;
 using Services;
+using Services.SpotifyService;
 
 namespace Controllers
 {
@@ -9,17 +10,17 @@ namespace Controllers
     [Route("api/spotify")]
     public class SpotifyController : ControllerBase
     {
-        private readonly IServiceBase _service;
-        public SpotifyController(IServiceBase serviceBase)
+        private readonly ISpotifyService _spotifyService;
+        public SpotifyController(ISpotifyService spotifyService)
         {
-            _service = serviceBase;
+            _spotifyService = spotifyService;
         }
         [HttpGet("users/{userId}/playlists")]
         public async Task<ActionResult> GetUserPlaylists(string userId)
         {
             Console.WriteLine("Getting User Playlists...");
             var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            List<PlaylistDetails> userPlaylists = await _service.GetUserPlaylists(userId, accessToken);
+            List<PlaylistDetails> userPlaylists = await _spotifyService.GetUserPlaylists(userId, accessToken);
             return Ok(userPlaylists);
         }
         [HttpGet("playlists/{playlistId}")]
@@ -27,8 +28,8 @@ namespace Controllers
         {
             Console.WriteLine("Getting Playlist Tracks...");
             var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            PlaylistDetails details = await _service.GetPlaylistDetails(playlistId, accessToken);
-            List<Track> playlistTracks = await _service.GetPlaylistTracks(playlistId, accessToken);
+            PlaylistDetails details = await _spotifyService.GetPlaylistDetails(playlistId, accessToken);
+            List<Track> playlistTracks = await _spotifyService.GetPlaylistTracks(playlistId, accessToken);
             int duration = 0;
             foreach (Track t in playlistTracks)
             {
