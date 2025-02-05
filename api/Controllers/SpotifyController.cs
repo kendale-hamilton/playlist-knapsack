@@ -23,7 +23,7 @@ namespace Controllers.SpotifyController
             return Ok(userPlaylists);
         }
         [HttpGet("playlists/{playlistId}")]
-        public async Task<ActionResult> GetPlaylist(string userId, string playlistId)
+        public async Task<ActionResult> GetPlaylist(string playlistId)
         {
             Console.WriteLine("Getting Playlist Tracks...");
             var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
