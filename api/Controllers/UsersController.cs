@@ -1,5 +1,6 @@
-using API.Services;
+using Services;
 using Microsoft.AspNetCore.Mvc;
+using Models.Knapsack;
 
 namespace API.Controllers
 {
@@ -18,7 +19,7 @@ namespace API.Controllers
         {
             Console.WriteLine("Getting User Playlists...");
             var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            var userPlaylists = await _service.GetUserPlaylists(userId, accessToken);
+            List<PlaylistDetails> userPlaylists = await _service.GetUserPlaylists(userId, accessToken);
             return Ok(userPlaylists);
         }
     }

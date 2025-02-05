@@ -1,7 +1,8 @@
 using System.Text.Json;
-using Models;
+using Models.Spotify;
+using Models.Knapsack;
 
-namespace API.Services
+namespace Services
 {
     public class ServiceBase : IServiceBase
     {
@@ -17,59 +18,56 @@ namespace API.Services
             return response;
         }
 
-        public async Task<List<SimpUserPlaylistItem>> GetUserPlaylists(string userId, string token)
+        public async Task<List<PlaylistDetails>> GetUserPlaylists(string userId, string token)
         {
             var response = await MakeGetRequest($"https://api.spotify.com/v1/users/{userId}/playlists", token);
             string content = await response.Content.ReadAsStringAsync();
-            UserPlaylists? jsonResponse = JsonSerializer.Deserialize<UserPlaylists>(content);
+            SpotifyUserPlaylists? jsonResponse = JsonSerializer.Deserialize<SpotifyUserPlaylists>(content);
 
             if (jsonResponse == null || jsonResponse.Items == null)
             {
                 throw new Exception("Failed to fetch user playlists");
             }
 
-            List<SimpUserPlaylistItem> playlists = [];
-            foreach (var item in jsonResponse.Items)
+            List<PlaylistDetails> playlists = [];
+            foreach (SpotifyPlaylistsItem item in jsonResponse.Items)
             {   
                 if (item != null)
                 {
-                    var simpPlaylist = item.Simplify();
-                    playlists.Add(simpPlaylist);
+                    PlaylistDetails details = item.Simplify();
+                    playlists.Add(details);
                 }
             }
             return playlists;
         }
 
-        public async Task<SimpPlaylist> FetchPlaylist(string playlistId, string token)
+        public async Task<PlaylistDetails> GetPlaylistDetails(string playlistId, string token)
         {
             var response = await MakeGetRequest($"https://api.spotify.com/v1/playlists/{playlistId}", token);
             string content = await response.Content.ReadAsStringAsync();
-            PlaylistsItem? playlist = JsonSerializer.Deserialize<PlaylistsItem>(content);
+            SpotifyPlaylistsItem? playlist = JsonSerializer.Deserialize<SpotifyPlaylistsItem>(content);
             if (playlist == null)
             {
                 throw new Exception("Failed to fetch playlist");
             }
 
-            SimpPlaylist simpPlaylist = new SimpPlaylist
-            {
-                Details = playlist.Simplify()
-            };
+            PlaylistDetails simpPlaylist = playlist.Simplify();
 
             return simpPlaylist;
         }
         
-        public async Task<List<SimpTrack>> FetchPlaylistTracks(string playlistId, string token)
+        public async Task<List<Track>> GetPlaylistTracks(string playlistId, string token)
         {
             var response = await MakeGetRequest($"https://api.spotify.com/v1/playlists/{playlistId}/tracks", token);
             string content = await response.Content.ReadAsStringAsync();
-            PlaylistItems? playlistItems = JsonSerializer.Deserialize<PlaylistItems>(content);
+            SpotifyPlaylistItems? playlistItems = JsonSerializer.Deserialize<SpotifyPlaylistItems>(content);
             
-            List<SimpTrack> tracks = [];
-            foreach (PlaylistTrack fullTrack in playlistItems.Items)
+            List<Track> tracks = [];
+            foreach (SpotifyPlaylistTrack fullTrack in playlistItems.Items)
             {
-                Track track = fullTrack.Track;
-                var simpTrack = track.Simplify();
-                tracks.Add(simpTrack);
+                SpotifyTrack track = fullTrack.Track;
+                Track simpleTrack = track.Simplify();
+                tracks.Add(simpleTrack);
             }
 
             return tracks;

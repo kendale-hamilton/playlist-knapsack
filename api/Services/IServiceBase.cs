@@ -1,11 +1,11 @@
-using Models;
+using Models.Knapsack;
 
-namespace API.Services
+namespace Services
 {
     public interface IServiceBase
     {
-        Task<List<SimpUserPlaylistItem>> GetUserPlaylists(string userId, string token);
-        Task<SimpPlaylist> FetchPlaylist(string playlistId, string token);
-        Task<List<SimpTrack>> FetchPlaylistTracks(string playlistId, string token);
+        Task<List<PlaylistDetails>> GetUserPlaylists(string userId, string token);
+        Task<PlaylistDetails> GetPlaylistDetails(string playlistId, string token);
+        Task<List<Track>> GetPlaylistTracks(string playlistId, string token);
     }
 }

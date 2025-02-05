@@ -1,6 +1,6 @@
-using API.Services;
+using Services;
 using Microsoft.AspNetCore.Mvc;
-using Models;
+using Models.Knapsack;
 
 namespace API.Controllers
 {
@@ -19,20 +19,19 @@ namespace API.Controllers
         {
             Console.WriteLine("Getting Playlist Tracks...");
             var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            SimpPlaylist playlist = await _service.FetchPlaylist(playlistId, accessToken);
-            List<SimpTrack> playlistTracks = await _service.FetchPlaylistTracks(playlistId, accessToken);
+            PlaylistDetails details = await _service.GetPlaylistDetails(playlistId, accessToken);
+            List<Track> playlistTracks = await _service.GetPlaylistTracks(playlistId, accessToken);
             int duration = 0;
-            foreach (SimpTrack t in playlistTracks)
+            foreach (Track t in playlistTracks)
             {
                 duration += t.DurationMs ?? 0;
             }
-            playlist.Details.DurationMs = duration;
-            SimpPlaylist playlistInfo= new SimpPlaylist
+            details.DurationMs = duration;
+            Playlist playlistInfo= new Playlist
             {
-                Details = playlist.Details,
+                Details = details,
                 Tracks = playlistTracks
             };
-            Console.WriteLine($"Playlist info: {playlistInfo}");
             return Ok(playlistInfo);
         }
     }
