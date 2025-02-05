@@ -19,17 +19,15 @@ export default function Playlist({params}: any) {
         const fetchPlaylist = async () => {
             const { id } = await params;
             const cookies = getCookies();
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${cookies.userId}/playlists/${id}/tracks`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/spotify/playlists/${id}`, {
                 headers: {
                     Authorization: `Bearer ${cookies.accessToken}`
                 }
             })
             const fullPlaylist = await response.json()
-            console.log("fullPlaylist: ", fullPlaylist)
             setPlaylist(fullPlaylist)
         }
         fetchPlaylist()
-        console.log('Playlist: ', playlist)
     }, [])
 
     if (!playlist) {

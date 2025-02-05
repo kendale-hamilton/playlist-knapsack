@@ -12,13 +12,12 @@ export default function Builder() {
     useEffect(() => {
         const fetchPlaylists = async () => {
             const cookies = getCookies();
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${cookies.userId}/playlists`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/spotify/users/${cookies.userId}/playlists`, {
                 headers: {
                     Authorization: `Bearer ${cookies.accessToken}`
                 }
             })
             const playlists = await response.json()
-            console.log('Setting playlists: ', playlists)
             setPlaylists(playlists)
         }
         fetchPlaylists()

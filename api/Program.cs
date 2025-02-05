@@ -1,4 +1,5 @@
-using API.Services;
+using Services.HttpService;
+using Services.SpotifyService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,8 @@ builder.Configuration
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
-builder.Services.AddSingleton<IServiceBase, ServiceBase>();
+builder.Services.AddSingleton<IHttpService, HttpService>();
+builder.Services.AddSingleton<ISpotifyService, SpotifyService>();
 
 // Configure CORS
 builder.Services.AddCors(options =>
