@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Models.Knapsack;
 using Models.Spotify;
-
+using Services.HttpService;
 
 namespace Services.SpotifyService
 {

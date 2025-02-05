@@ -1,10 +1,9 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Models.Knapsack;
-using Services;
 using Services.SpotifyService;
 
-namespace Controllers
+namespace Controllers.SpotifyController
 {
     [ApiController]
     [Route("api/spotify")]

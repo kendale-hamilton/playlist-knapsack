@@ -1,5 +1,5 @@
 
-namespace Services
+namespace Services.HttpService
 {
     public class HttpService : IHttpService
     {

@@ -1,6 +1,5 @@
-using Models.Knapsack;
 
-namespace Services
+namespace Services.HttpService
 {
     public interface IHttpService
     {
