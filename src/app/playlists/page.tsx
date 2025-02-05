@@ -18,7 +18,6 @@ export default function Builder() {
                 }
             })
             const playlists = await response.json()
-            console.log('Setting playlists: ', playlists)
             setPlaylists(playlists)
         }
         fetchPlaylists()

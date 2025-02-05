@@ -18,10 +18,6 @@ export default function MainAppBar() {
         setCookieState()
     }, [])
 
-    useEffect(() => {
-        console.log('Cookies: ', cookies)
-    }, [cookies])
-
     const signIn = async () => {
         const state = window.location.href;
         redirect('https://accounts.spotify.com/authorize?' +
