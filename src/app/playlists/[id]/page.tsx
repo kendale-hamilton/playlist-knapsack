@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import Tracks from "./Tracks";
 import PlaylistDetails from "./PlaylistDetails";
 import BuilderConfiguration from "./BuilderConfiguration";
-import { SimpleTrack } from "@/types/Track";
+import { Track } from "@/types/Track";
 
 
 export default function Playlist({params}: any) {
@@ -38,23 +38,22 @@ export default function Playlist({params}: any) {
     const onClose = () => { setWarningOn(false) }
 
     const onSubmit = (desiredLength: string, weightingFunction: Function) => {
-        const postPlaylist = async (simplePlaylist: SimpleTrack[]) => {
+        const postPlaylist = async (tracks: Track[]) => {
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/knapsack/playlists?length=${desiredLength}`, 
             {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(simplePlaylist)
+                body: JSON.stringify(tracks)
             })
 
             return res.json()
         }
         
-        const simpleTracks: SimpleTrack[] = playlist.tracks.map((track, index) => {
+        const simpleTracks: Track[] = playlist.tracks.map((track, index) => {
             return {
-                name: track.name,
-                duration_ms: track.duration_ms,
+                ...track,
                 weight: weightingFunction(index, playlist.tracks.length)
             }
         })
