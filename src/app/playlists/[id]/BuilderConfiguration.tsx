@@ -7,14 +7,22 @@ type BuilderConfigurationProps = {
     onSubmit: (desiredLength: string, weightingFunction: Function) => void
 }
 
+type WeightingFunction = (index: number, playlistSize: number) => number
+
+type WeightingSystem = {
+    name: string,
+    image: string,
+    function: WeightingFunction
+}
+
 export default function BuilderConfiguration(props: BuilderConfigurationProps) {
     const { onSubmit } = props
     const [desiredLength, setDesireLength] = useState<string>("")
 
-    const weightingSystems = [
-        {name: "Unweighted", image: "/UnweightedGraph.png", function: () => console.log("Unweighted") },
-        {name: "Inverse", image: "/InverseGraph.png", function: () => console.log("Inverse") },
-        {name: "Linear", image: "/LinearGraph.png", function: () => console.log("Linear") },
+    const weightingSystems: WeightingSystem[] = [
+        {name: "Unweighted", image: "/UnweightedGraph.png", function: (index, size) => 1  },
+        {name: "Inverse", image: "/InverseGraph.png", function: (index, size) => 1 / (index + 1) },
+        {name: "Linear", image: "/LinearGraph.png", function: (index, size) => size - index },
     ]
     const [weightingIndex, setWeightingIndex] = useState(0)
 
