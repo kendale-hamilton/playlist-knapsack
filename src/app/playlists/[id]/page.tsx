@@ -39,7 +39,7 @@ export default function Playlist({params}: any) {
 
     const onSubmit = (desiredLength: string, weightingFunction: Function) => {
         const postPlaylist = async (tracks: Track[]) => {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/knapsack/playlists?length=${desiredLength}`, 
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/knapsack/playlist?length=${desiredLength}`, 
             {
                 method: 'POST',
                 headers: {

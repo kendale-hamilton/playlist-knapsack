@@ -1,4 +1,5 @@
 using Services.HttpService;
+using Services.KnapsackService;
 using Services.SpotifyService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddSingleton<IHttpService, HttpService>();
 builder.Services.AddSingleton<ISpotifyService, SpotifyService>();
+builder.Services.AddSingleton<IKnapsackService, KnapsackService>();
 
 // Configure CORS
 builder.Services.AddCors(options =>
