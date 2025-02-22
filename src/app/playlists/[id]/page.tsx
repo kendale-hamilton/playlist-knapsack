@@ -8,6 +8,7 @@ import Tracks from "./Tracks";
 import PlaylistDetails from "./PlaylistDetails";
 import BuilderConfiguration from "./BuilderConfiguration";
 import { Track } from "@/types/Track";
+import { toMs } from "@/app/helpers/ms-convert";
 
 
 export default function Playlist({params}: any) {
@@ -39,7 +40,7 @@ export default function Playlist({params}: any) {
 
     const onSubmit = (desiredLength: string, weightingFunction: Function) => {
         const postPlaylist = async (tracks: Track[]) => {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/knapsack/playlist?length=${desiredLength}`, 
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/knapsack/playlist?length=${toMs(desiredLength)}`, 
             {
                 method: 'POST',
                 headers: {
@@ -58,9 +59,9 @@ export default function Playlist({params}: any) {
             }
         })
 
-        postPlaylist(simpleTracks)
-
+        const response = postPlaylist(simpleTracks)
         console.log("Weighted Playlist: ", simpleTracks)
+        console.log("Response: ", response)
     }
 
     return (

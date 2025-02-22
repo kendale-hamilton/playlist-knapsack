@@ -1,6 +1,6 @@
 "use client";
 import getCookies from "@/app/helpers/get-cookies";
-import toTimeString from "@/app/helpers/ms-convert";
+import { toTimeString } from "@/app/helpers/ms-convert";
 import { FullPlaylist } from "@/types/Playlist"
 import { Track } from "@/types/Track";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/16/solid";

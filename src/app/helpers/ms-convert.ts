@@ -1,5 +1,5 @@
 
-export default function toTimeString(ms: number): string {
+export function toTimeString(ms: number): string {
     const seconds = Math.floor(ms / 1000)
     const minutes = Math.floor(seconds / 60)
     const hours = Math.floor(minutes / 60)
@@ -10,4 +10,9 @@ export default function toTimeString(ms: number): string {
         return `${hours}:${minutes < 10 ? '0' : ''}${output}`
     }
     return output
+}
+
+export function toMs(timeString: string): number {
+    const [hours, minutes, seconds] = timeString.split(':').map(Number)
+    return (hours * 60 * 60 + minutes * 60 + seconds) * 1000
 }

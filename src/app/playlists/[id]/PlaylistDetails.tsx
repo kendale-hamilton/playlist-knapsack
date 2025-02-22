@@ -1,4 +1,4 @@
-import toTimeString from "@/app/helpers/ms-convert"
+import { toTimeString } from "@/app/helpers/ms-convert"
 import { FullPlaylist } from "@/types/Playlist"
 import { ArrowsRightLeftIcon } from "@heroicons/react/16/solid"
 import { Button } from "@nextui-org/react"
