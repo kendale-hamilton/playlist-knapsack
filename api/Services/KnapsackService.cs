@@ -9,48 +9,60 @@ namespace Services.KnapsackService
         public KnapsackService(){}
         public Task<List<Track>> SolveKnapsack(int length, List<Track> tracks)
         {
-            double[] vec1 = new double[] {1, 2, 3, 4, 5};
-            double[] vec2 = new double[] {6, 4, 8, 7, 9};
-            double[] result = FFTConvolve(vec1, vec2);
-            Console.WriteLine("FFT Result: " + string.Join(", ", result));
-            double[] naiveResult = StandardConvolve(vec1, vec2);
-            Console.WriteLine("Naive Result: " + string.Join(", ", naiveResult));
-            // double[] values = new double[tracks.Count];
-            // for (int i = 0; i < tracks.Count; i++)
-            // {
-            //     values[i] = (double)tracks[i].DurationMs;
-            // }
-
-            // double[][] arrays = new double[tracks.Count][];
-
-            // for (int i = 0; i < tracks.Count; i++)
-            // {
-            //     int size = (int)tracks[i].DurationMs;
-            //     double[] array = new double[size + 1];
-            //     array[0] = 1;
-            //     array[size] = 1;
-            //     arrays[i] = array;
-            // }
+            // TEST CONVOLUTION
+            // double[] vec1 = new double[] {1, 2, 3, 4, 5};
+            // double[] vec2 = new double[] {6, 4, 8, 7, 9};
             
-            // Console.WriteLine("Starting FFT Convolution");
-            // while (arrays.Length > 1)
-            // {
-            //     for (int i = 0, j = 0; j < arrays.Length - 1; i += 1, j += 2)
-            //     {
-            //         if (j + 1 < arrays.Length)
-            //         {
-            //             arrays[i] = FFTConvolve(arrays[j], arrays[j + 1]);
-            //         }
-            //         else
-            //         {
-            //             arrays[i] = arrays[j];
-            //         }
-            //     }
-            //     arrays = new ArraySegment<double[]>(arrays, 0, (arrays.Length + 1) / 2).ToArray();
-            // }
+            // double[] result = FFTConvolve(vec1, vec2);
+            // Console.WriteLine("FFT Result: " + string.Join(", ", result));
+            // double[] naiveResult = StandardConvolve(vec1, vec2);
+            // Console.WriteLine("Naive Result: " + string.Join(", ", naiveResult));
 
-            // Console.WriteLine("Finished FFT Convolution");
-            // // Console.WriteLine("Final FFT Convolution Result: " + string.Join(", ", arrays[0]));
+            double[] values = new double[tracks.Count];
+            for (int i = 0; i < tracks.Count; i++)
+            {
+                values[i] = (double)tracks[i].DurationMs;
+            }
+
+            double[][] arrays = new double[tracks.Count][];
+
+            for (int i = 0; i < tracks.Count; i++)
+            {
+                int size = (int)tracks[i].DurationMs;
+                double[] array = new double[size + 1];
+                array[0] = 1;
+                array[size] = 1;
+                arrays[i] = array;
+            }
+            
+            Console.WriteLine("Starting FFT Convolution");
+            while (arrays.Length > 1)
+            {
+                for (int i = 0, j = 0; j < arrays.Length - 1; i += 1, j += 2)
+                {
+                    if (j + 1 < arrays.Length)
+                    {
+                        arrays[i] = FFTConvolve(arrays[j], arrays[j + 1]);
+                    }
+                    else
+                    {
+                        arrays[i] = arrays[j];
+                    }
+                }
+                arrays = new ArraySegment<double[]>(arrays, 0, (arrays.Length + 1) / 2).ToArray();
+            }
+
+            int[] possibleTotals = new int[arrays[0].Length];
+            for (int i = 0; i < arrays[0].Length; i++)
+            {
+                if (arrays[0][i] > .5)
+                {
+                    possibleTotals[i] = i;
+                }
+            }
+
+            Console.WriteLine("Finished FFT Convolution");
+            Console.WriteLine("Final FFT Convolution Result: " + string.Join(", ", possibleTotals));
 
 
 
@@ -71,27 +83,29 @@ namespace Services.KnapsackService
         private static void FFT(Complex[] vector)
         {
             int n = vector.Length;
-            if (n <= 1)
+            if (n == 1)
             {
                 return;
             }
-
+            if (n % 2 != 0)
+            {
+                throw new ArgumentException("Vector length must be a power of 2");
+            }
             Complex[] packedEvens = new Complex[n/2];
-            Complex[] packedOdd = new Complex[n/2];
-            for (int i = 0; i < n/2; i++)
+            Complex[] packedOdds = new Complex[n/2];
+            for (int i = 0; i < n / 2; i++)
             {
                 packedEvens[i] = vector[2 * i];
-                packedOdd[i] = vector[2 * i + 1];
+                packedOdds[i] = vector[2 * i + 1];
             }
 
             FFT(packedEvens);
-            FFT(packedOdd);
-            
+            FFT(packedOdds);
             for (int i = 0; i < n / 2; i++)
             {
                 Complex x = Complex.Exp(-2 * Math.PI * i * Complex.ImaginaryOne / n);
-                vector[i] = packedEvens[i] + x * packedOdd[i];
-                vector[i + n / 2] = packedEvens[i] - x * packedOdd[i];
+                vector[i] = packedEvens[i] + x * packedOdds[i];
+                vector[i + n / 2] = packedEvens[i] - x * packedOdds[i];
             }
         }
 
@@ -110,47 +124,30 @@ namespace Services.KnapsackService
 
         private double[] FFTConvolve(double[] lhs, double[] rhs)
         {
-            Console.WriteLine($"Convolving lhs: {string.Join(", ", lhs)} and rhs: {string.Join(", ", rhs)}");
+            // Console.WriteLine($"Convolving lhs: {string.Join(", ", lhs)} and rhs: {string.Join(", ", rhs)}");
 
-            int n;
-            if (lhs.Length > rhs.Length)
-            {
-                n = lhs.Length;
-                rhs = Pad(rhs, n);
-            }
-            else
-            {
-                n = rhs.Length;
-                lhs = Pad(lhs, n);
-            }
-            double[] lhsPad = new double[2 * n];
-            double[] rhsPad = new double[2 * n];
-            for (int i = 0; i < n; i++)
-            {
-                lhsPad[i] = lhs[i];
-                rhsPad[i] = rhs[i];
-            }
+            int size = Math.Max(lhs.Length, rhs.Length);
+            int n = 1;
+            while (n < size) n *= 2;
 
-            Complex[] lhsComplex = FFT(lhsPad);
-            Complex[] rhsComplex = FFT(rhsPad);
+            lhs = Pad(lhs, n * 2);
+            rhs = Pad(rhs, n * 2);
+            
+            Complex[] fftLhs = FFT(lhs);
+            Complex[] fftRhs = FFT(rhs);
 
             Complex[] complexResult = new Complex[2 * n];
-            double[] result = new double[2 * n];
             for (int i = 0; i < 2 * n; i++)
             {
-                Complex product = lhsComplex[i] * rhsComplex[i];
-                Console.WriteLine($"Product {i}: {product}");
-                complexResult[i] = Complex.Conjugate(product);
+                Complex product = fftLhs[i] * fftRhs[i];
+                complexResult[i] = product;
             }
-            FFT(complexResult);
-            Console.WriteLine($"Complex Result: {string.Join(", ", complexResult)}");
             for (int i = 0; i < 2 * n; i++)
             {
                 complexResult[i] = Complex.Conjugate(complexResult[i] / (2 * n));
-                result[i] = complexResult[i].Real;
             }
-            double[] resultSegment = new ArraySegment<double>(result, 0, (n * 2) - 1).ToArray();
-            Console.WriteLine($"Result: {string.Join(", ", resultSegment)}");
+            FFT(complexResult);
+            double[] resultSegment = new ArraySegment<double>(ComplexToReal(complexResult), 0, (n * 2) - 1).ToArray();
             return resultSegment;
         }
 
@@ -174,6 +171,16 @@ namespace Services.KnapsackService
                 paddedArray[i] = array[i];
             }
             return paddedArray;
+        }
+        
+        private static double[] ComplexToReal(Complex[] complexArray)
+        {
+            double[] realArray = new double[complexArray.Length];
+            for (int i = 0; i < complexArray.Length; i++)
+            {
+                realArray[i] = complexArray[i].Real;
+            }
+            return realArray;
         }
         //TODO: Remove
         private static double[] StandardConvolve(double[] lhs, double[] rhs)
