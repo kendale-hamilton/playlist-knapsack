@@ -1,10 +1,11 @@
 "use client"
+import { toSecs } from "@/app/helpers/ms-convert"
 import { ChevronLeftIcon } from "@heroicons/react/16/solid"
 import { Button, Input } from "@nextui-org/react"
 import { useState } from "react"
 
 type BuilderConfigurationProps = {
-    onSubmit: (desiredLength: string, weightingFunction: Function) => void
+    onSubmit: (desiredLength: number, weightingFunction: Function) => void
 }
 
 type WeightingFunction = (index: number, playlistSize: number) => number
@@ -62,7 +63,7 @@ export default function BuilderConfiguration(props: BuilderConfigurationProps) {
                     </div>
                 }
             />
-            <Button color="primary" isDisabled={!desiredLength.length} onPress={() => onSubmit(desiredLength ?? "", weightingSystems[weightingIndex].function)}>Submit Playlist</Button>
+            <Button color="primary" isDisabled={!desiredLength.length} onPress={() => onSubmit(toSecs(desiredLength), weightingSystems[weightingIndex].function)}>Submit Playlist</Button>
         </div>
     )
 }

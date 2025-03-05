@@ -12,7 +12,7 @@ export type Playlist = {
             height: number
         }
     ]
-    duration_ms: number
+    seconds: number
 }
 
 export type FullPlaylist = {

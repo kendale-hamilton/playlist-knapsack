@@ -15,10 +15,10 @@ namespace Controllers.KnapsackController
             _knapsackService = knapsackService;
         }
         [HttpPost("playlist")]
-        public async Task<IActionResult> SolvePlaylist([FromQuery] int length, [FromBody] List<Track> tracks)
+        public IActionResult SolvePlaylist([FromQuery] int length, [FromBody] List<Track> tracks)
         {
             Console.WriteLine("Solving Playlist...");
-            List<Track> playlist = await _knapsackService.SolveKnapsack(length, tracks);
+            List<Track> playlist = _knapsackService.SolveKnapsack(length, tracks);
             return Ok(playlist);
         }
     }

@@ -1,18 +1,19 @@
 using System.Numerics;
 using Models.Knapsack;
+using Swan;
 
 namespace Services.KnapsackService
 {
     public class KnapsackService : IKnapsackService
     {
         public KnapsackService(){}
-        public Task<List<Track>> SolveKnapsack(int length, List<Track> tracks)
+        public List<Track> SolveKnapsack(int length, List<Track> tracks)
         {
+            Console.WriteLine($"Length: {length}");
             SubsetNode[] nodes = new SubsetNode[tracks.Count];
             for (int i = 0; i < tracks.Count; i++)
             {
                 nodes[i] = new SubsetNode(tracks[i]);
-                nodes[i].Vector.Print("Added Vector: ");
             }
             
             Console.WriteLine("Starting FFT Convolution");
@@ -24,26 +25,20 @@ namespace Services.KnapsackService
                 {
                     if (j + 1 < level.Length)
                     {
-                        Console.WriteLine($"j: {j}, i: {i}");
                         SubsetNode left = level[j];
                         SubsetNode right = level[j + 1];
-                        left.Vector.Print("Left: ");
-                        right.Vector.Print("Right: ");
                         Vec sum = FFTConvolve(left.Vector, right.Vector);
                         SubsetNode node = new SubsetNode(sum, left, right);
                         nextLevel[i] = node;
                     }
                     else
                     {
-                        Console.WriteLine("Odd Node");
                         SubsetNode child = level[j];
-                        child.Vector.Print("Odd Child: ");
                         nextLevel[i] = child;
                     }
                 }
                 level = nextLevel;
             }   
-
             Console.WriteLine("Finished FFT Convolution");
 
             Console.WriteLine("Starting Backwards Pass");
@@ -52,14 +47,14 @@ namespace Services.KnapsackService
             if (!top.Vector.ContainsValue(length))
             {
                 Console.WriteLine("No solution found");
-                return Task.FromResult(new List<Track>());
+                return [];
             }
             Vec total = new Vec(length, 1);
 
             List<Track> selections = BackwardsPass(total, top);
             Console.WriteLine("Finished Backwards Pass");
 
-            return Task.FromResult(selections);
+            return selections;
         }
 
         private static void FFT(Vec vector)
@@ -93,7 +88,6 @@ namespace Services.KnapsackService
 
         private Vec VectorSubtraction(Vec lhs, Vec rhs)
         {
-            // Console.WriteLine("Subtracting vectors");
             Vec reversed = rhs.DeepCopy();
             reversed.Reverse();
             Vec convolve = FFTConvolve(lhs, reversed);
@@ -103,8 +97,6 @@ namespace Services.KnapsackService
 
         private Vec FFTConvolve(Vec lhs, Vec rhs)
         {
-            // Console.WriteLine($"Convolving lhs: {string.Join(", ", lhs)} and rhs: {string.Join(", ", rhs)}");
-
             int size = Math.Max(lhs.Length, rhs.Length);
             int n = 1;
             while (n < size) n *= 2;
@@ -164,11 +156,8 @@ namespace Services.KnapsackService
         {
             int p = 16;
             double powered_lhs = Math.Pow(lhs, p);
-            // Console.WriteLine("Powered LHS: " + powered_lhs);
             double powered_rhs = Math.Pow(rhs, p);
-            // Console.WriteLine("Powered RHS: " + powered_rhs);
             double result = Math.Pow(powered_lhs + powered_rhs, 1.0 / p);
-            // Console.WriteLine("Result: " + result);
             return result;
         }
         

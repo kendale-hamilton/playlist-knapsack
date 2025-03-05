@@ -1,7 +1,7 @@
 export type Track = {
     album: any
     artists: any[]
-    duration_ms: number
+    seconds: number
     name: string
     popularity: number
     weight: number

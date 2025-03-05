@@ -32,9 +32,9 @@ namespace Controllers.SpotifyController
             int duration = 0;
             foreach (Track t in playlistTracks)
             {
-                duration += t.DurationMs;
+                duration += t.Seconds;
             }
-            details.DurationMs = duration;
+            details.Seconds = duration;
             Playlist playlistInfo= new Playlist
             {
                 Details = details,

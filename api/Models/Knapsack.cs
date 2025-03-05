@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Numerics;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore.Query;
 using Models.Spotify;
 
 namespace Models.Knapsack
@@ -9,9 +10,9 @@ namespace Models.Knapsack
     public class Playlist
     {
         [JsonPropertyName("details")]
-        public PlaylistDetails Details { get; set; }
+        public required PlaylistDetails Details { get; set; }
         [JsonPropertyName("tracks")]
-        public List<Track> Tracks { get; set; }
+        public required List<Track> Tracks { get; set; }
     }
 
     public class PlaylistDetails
@@ -24,8 +25,8 @@ namespace Models.Knapsack
         public List<SpotifyImage>? Images { get; set; }
         [JsonPropertyName("name")]
         public string? Name { get; set; } 
-        [JsonPropertyName("duration_ms")]
-        public int DurationMs { get; set; }
+        [JsonPropertyName("seconds")]
+        public int Seconds { get; set; }
     }
     #endregion
     #region Track
@@ -35,8 +36,8 @@ namespace Models.Knapsack
         public SpotifyAlbum? Album { get; set; }
         [JsonPropertyName("artists")]
         public List<SpotifyArtist>? Artists { get; set; }
-        [JsonPropertyName("duration_ms")]
-        public required int DurationMs { get; set; }
+        [JsonPropertyName("seconds")]
+        public required int Seconds { get; set; }
         [JsonPropertyName("name")]
         public string? Name { get; set; }
         [JsonPropertyName("popularity")]
@@ -49,6 +50,7 @@ namespace Models.Knapsack
     {
         private readonly Complex[] _values;
         public int Length => _values.Length;
+        private static double Thresh => .1;
         public Vec(int size)
         {
             _values = new Complex[size];
@@ -97,7 +99,7 @@ namespace Models.Knapsack
             for (int i = 0; i < _values.Length; i++)
             {
                 double value = _values[i].Real;
-                if (value > .1 || value < -.1)
+                if (value > Thresh || value < -Thresh)
                 {
                     reals.Add(value);
                 }
@@ -137,7 +139,7 @@ namespace Models.Knapsack
         public Vec Trim()
         {
             int i = _values.Length - 1;
-            while (i >= 0 && _values[i].Magnitude < .1)
+            while (i >= 0 && _values[i].Magnitude < Thresh)
             {
                 i--;
             }
@@ -167,7 +169,7 @@ namespace Models.Knapsack
         {
             for (int i = 0; i < _values.Length; i++)
             {
-                if (_values[i].Real > .1)
+                if (_values[i].Real > Thresh)
                 {
                     return i;
                 }
@@ -180,7 +182,7 @@ namespace Models.Knapsack
             List<int> nonzeroIndexes = new List<int>();
             for (int i = 0; i < _values.Length; i++)
             {
-                if (_values[i].Real > .1)
+                if (_values[i].Real > Thresh)
                 {
                     nonzeroIndexes.Add(i);
                 }
@@ -190,7 +192,11 @@ namespace Models.Knapsack
 
         public bool ContainsValue(int value)
         {
-            if (_values[value].Real > .1)
+            if (value > _values.Length)
+            {
+                return false;
+            }
+            if (_values[value].Real > Thresh)
             {
                 return true;
             }
@@ -226,7 +232,7 @@ namespace Models.Knapsack
 
         public bool IsZero()
         {
-            if (Length == 1 && _values[0].Real > .1)
+            if (Length == 1 && _values[0].Real > Thresh)
             {
                 return true;
             }
@@ -247,7 +253,7 @@ namespace Models.Knapsack
         public SubsetNode(Track track)
         {
             Track = track;
-            Vector = new Vec(track.DurationMs, 1); 
+            Vector = new Vec(track.Seconds, 1); 
             Vector[0] = 1;
             
         }
@@ -256,6 +262,19 @@ namespace Models.Knapsack
             Vector = vec;
             LeftChild = left;
             RightChild = right;
+        }
+
+        public void Print(string prepend = "")
+        {
+            Vector.Print(prepend);
+            if (LeftChild != null)
+            {
+                Console.WriteLine("Has Left");
+            }
+            if (RightChild != null)
+            {
+                Console.WriteLine("Has Right");
+            }
         }
     }
 

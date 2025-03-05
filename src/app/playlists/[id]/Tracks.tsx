@@ -1,6 +1,6 @@
 "use client";
 import getCookies from "@/app/helpers/get-cookies";
-import { toTimeString } from "@/app/helpers/ms-convert";
+import { toTimeString, toTimeStringSeconds } from "@/app/helpers/ms-convert";
 import { FullPlaylist } from "@/types/Playlist"
 import { Track } from "@/types/Track";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/16/solid";
@@ -28,7 +28,7 @@ export default function Tracks(props: TracksProps) {
                     <Card className="bg-white flex flex-row px-4 py-2 justify-between w-4/5">
                         <p>{index + 1}</p>
                         <p>{track.name}</p>
-                        <p>{toTimeString(track.duration_ms)}</p>
+                        <p>{toTimeStringSeconds(track.seconds)}</p>
                     </Card>
                     <div className="items-center justify-center flex flex-row w-1/5">
                         { index > 0 && (

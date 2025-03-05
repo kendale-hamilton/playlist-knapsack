@@ -225,7 +225,7 @@ namespace Models.Spotify
             {
                 Album = Album,
                 Artists = Artists,
-                DurationMs = DurationMs ?? -1,
+                Seconds = DurationMs / 1000 ?? -1,
                 Name = Name,
                 Popularity = Popularity
             };
