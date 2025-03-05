@@ -36,7 +36,7 @@ namespace Models.Knapsack
         [JsonPropertyName("artists")]
         public List<SpotifyArtist>? Artists { get; set; }
         [JsonPropertyName("duration_ms")]
-        public int? DurationMs { get; set; }
+        public required int DurationMs { get; set; }
         [JsonPropertyName("name")]
         public string? Name { get; set; }
         [JsonPropertyName("popularity")]
@@ -223,17 +223,33 @@ namespace Models.Knapsack
             }
             return copy;
         }
+
+        public bool IsZero()
+        {
+            if (Length == 1 && _values[0].Real > .1)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 
     public class SubsetNode
     {
         public Vec Vector;
-        public SubsetNode Parent;
-        public SubsetNode LeftChild;
-        public SubsetNode RightChild;
+        public Track? Track;
+        public SubsetNode? LeftChild;
+        public SubsetNode? RightChild;
         public SubsetNode(Vec vec)
         {
             Vector = vec;
+        }
+        public SubsetNode(Track track)
+        {
+            Track = track;
+            Vector = new Vec(track.DurationMs, 1); 
+            Vector[0] = 1;
+            
         }
         public SubsetNode(Vec vec, SubsetNode left, SubsetNode right)
         {
