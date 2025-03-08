@@ -1,13 +1,27 @@
 using System.Numerics;
+using System.Text;
+using System.Text.Json;
 using Models.Knapsack;
-using Swan;
+using Services.BlobService;
 
 namespace Services.KnapsackService
 {
     public class KnapsackService : IKnapsackService
     {
-        public KnapsackService(){}
-        public List<Track> SolveKnapsack(int length, List<Track> tracks)
+        private readonly IBlobService _blobService;
+        public KnapsackService(IBlobService blobService)
+        {
+            _blobService = blobService;
+        }
+        public async Task<List<Track>> GetSolvedPlaylist(string userId, string customId)
+        {
+            string blob = $"{userId}/{customId}.json";
+            List<Track> tracks = await _blobService.DownloadFile<List<Track>>(blob);
+            await _blobService.DeleteFile(blob);
+            return tracks;
+        }
+
+        public async Task<string> SolveKnapsack(int length, List<Track> tracks, string userId)
         {
             Console.WriteLine($"Length: {length}");
             SubsetNode[] nodes = new SubsetNode[tracks.Count];
@@ -47,14 +61,22 @@ namespace Services.KnapsackService
             if (!top.Vector.ContainsValue(length))
             {
                 Console.WriteLine("No solution found");
-                return [];
+                return "";
             }
             Vec total = new Vec(length, 1);
 
             List<Track> selections = BackwardsPass(total, top);
             Console.WriteLine("Finished Backwards Pass");
 
-            return selections;
+            string json = JsonSerializer.Serialize(selections);
+            var stream = new MemoryStream(Encoding.UTF8.GetBytes(json));
+
+            Guid guid = Guid.NewGuid();
+
+            string filename = $"{userId}/{guid}.json";
+            await _blobService.UploadFile(filename, stream);
+
+            return guid.ToString();
         }
 
         private static void FFT(Vec vector)

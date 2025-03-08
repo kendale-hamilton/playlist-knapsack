@@ -4,17 +4,30 @@ import { FullPlaylist } from "@/types/Playlist";
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Tracks from "./Tracks";
 import PlaylistDetails from "./PlaylistDetails";
 import BuilderConfiguration from "./BuilderConfiguration";
 import { Track } from "@/types/Track";
-import { toSecs } from "@/app/helpers/ms-convert";
+import { Cookies } from "@/types/cookies";
+import TrackList from "../components/TrackList";
 
 
 export default function Playlist({params}: any) {
     const router = useRouter()
 
     const [warningOn, setWarningOn] = useState(false)
+    const [cookies, setCookies] = useState<Cookies | null>();
+    const [submission, setSubmission] = useState<{
+        desiredLength: number,
+        weightingFunction: Function
+    } | null>();
+
+    useEffect(() => {
+        const setCookieState = async () => {
+            const cookieStore = getCookies();
+            setCookies(cookieStore);
+        }
+        setCookieState()
+    }, [])
 
     const [playlist, setPlaylist] = useState<FullPlaylist>()
     useEffect(() => {
@@ -25,12 +38,46 @@ export default function Playlist({params}: any) {
                 headers: {
                     Authorization: `Bearer ${cookies.accessToken}`
                 }
-            })
+            });
             const fullPlaylist = await response.json()
             setPlaylist(fullPlaylist)
         }
         fetchPlaylist()
     }, [])
+
+    useEffect(() => {
+        if (!submission) {
+            return
+        }
+        const postPlaylist = async (tracks?: Track[]) => {
+            const body = {
+                tracks: tracks,
+                length: submission.desiredLength,
+                userId: cookies?.userId
+            }
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/knapsack/playlists`, 
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            })
+            const json = await res.json()
+            const customId = json.id
+            router.push(`/playlists/custom/${customId}`)
+        }
+
+        const weightedTracks: Track[] = playlist ? playlist.tracks.map((track, index) => {
+            return {
+                ...track,
+                weight: submission.weightingFunction(index, playlist.tracks.length)
+            }
+        }) : []
+
+        postPlaylist(weightedTracks)
+
+    }, [submission])
 
     if (!playlist) {
         return <div>Loading...</div>
@@ -39,36 +86,17 @@ export default function Playlist({params}: any) {
     const onClose = () => { setWarningOn(false) }
 
     const onSubmit = (desiredLength: number, weightingFunction: Function) => {
-        const postPlaylist = async (tracks: Track[]) => {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/knapsack/playlist?length=${desiredLength}`, 
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(tracks)
-            })
-
-            return res.json()
-        }
-        
-        const simpleTracks: Track[] = playlist.tracks.map((track, index) => {
-            return {
-                ...track,
-                weight: weightingFunction(index, playlist.tracks.length)
-            }
+        setSubmission({
+            desiredLength: desiredLength,
+            weightingFunction: weightingFunction
         })
-
-        const response = postPlaylist(simpleTracks)
-        // console.log("Weighted Playlist: ", simpleTracks)
-        // console.log("Response: ", response)
     }
 
     return (
         <>
             <div className="flex h-full flex-row text-white">
                 <PlaylistDetails playlist={playlist} setWarningOn={setWarningOn} />
-                <Tracks playlist={playlist} setPlaylist={setPlaylist} />
+                <TrackList tracks={playlist.tracks} setPlaylist={(tracks: Track[]) => setPlaylist({...playlist, tracks: tracks})} />
                 <BuilderConfiguration onSubmit={onSubmit}/>
             </div>
             <Modal isOpen={warningOn} onClose={onClose}>

@@ -1,3 +1,4 @@
+using Services.BlobService;
 using Services.HttpService;
 using Services.KnapsackService;
 using Services.SpotifyService;
@@ -12,6 +13,7 @@ builder.Configuration
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddSingleton<IHttpService, HttpService>();
+builder.Services.AddSingleton<IBlobService, BlobService>();
 builder.Services.AddSingleton<ISpotifyService, SpotifyService>();
 builder.Services.AddSingleton<IKnapsackService, KnapsackService>();
 

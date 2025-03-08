@@ -192,7 +192,7 @@ namespace Models.Knapsack
 
         public bool ContainsValue(int value)
         {
-            if (value > _values.Length)
+            if (value >= _values.Length)
             {
                 return false;
             }
@@ -267,14 +267,14 @@ namespace Models.Knapsack
         public void Print(string prepend = "")
         {
             Vector.Print(prepend);
-            if (LeftChild != null)
-            {
-                Console.WriteLine("Has Left");
-            }
-            if (RightChild != null)
-            {
-                Console.WriteLine("Has Right");
-            }
+            // if (LeftChild != null)
+            // {
+            //     Console.WriteLine("Has Left");
+            // }
+            // if (RightChild != null)
+            // {
+            //     Console.WriteLine("Has Right");
+            // }
         }
     }
 

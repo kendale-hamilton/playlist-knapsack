@@ -5,6 +5,7 @@ namespace Services.KnapsackService
 {
     public interface IKnapsackService
     {
-        List<Track> SolveKnapsack(int length, List<Track> tracks);
+        Task<string> SolveKnapsack(int length, List<Track> tracks, string userId);
+        Task<List<Track>> GetSolvedPlaylist(string userId, string filename);
     }
 }
