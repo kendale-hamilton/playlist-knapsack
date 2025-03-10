@@ -1,17 +1,16 @@
 using System.Text.Json;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace Services.BlobService
 {
     public class BlobService : IBlobService
     {
         private readonly BlobContainerClient _containerClient;
-        private readonly IConfiguration _configuration;
-        public BlobService(IConfiguration configuration) 
+        public BlobService() 
         {
-            _configuration = configuration;
-            string connectionString = _configuration.GetSection("AzureStorage:ConnectionString").Value;
+            string connectionString = Environment.GetEnvironmentVariable("ConnectionString");
             var blobServiceClient = new BlobServiceClient(connectionString);
             _containerClient = blobServiceClient.GetBlobContainerClient("custom-playlists");
         }

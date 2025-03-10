@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Numerics;
 using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore.Query;
 using Models.Spotify;
 
 namespace Models.Knapsack
@@ -45,7 +44,7 @@ namespace Models.Knapsack
     }
     #endregion
 
-    #region Solver
+    #region Vec
     public class Vec : IEnumerable<Complex>
     {
         private readonly Complex[] _values;
@@ -239,6 +238,8 @@ namespace Models.Knapsack
             return false;
         }
     }
+    #endregion
+    #region SubsetNode
 
     public class SubsetNode
     {

@@ -1,12 +1,13 @@
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Models.Knapsack;
+using Models.Routes;
 using Services.SpotifyService;
 
 namespace Controllers.SpotifyController
 {
-    [ApiController]
-    [Route("api/spotify")]
     public class SpotifyController : ControllerBase
     {
         private readonly ISpotifyService _spotifyService;
@@ -14,19 +15,19 @@ namespace Controllers.SpotifyController
         {
             _spotifyService = spotifyService;
         }
-        [HttpGet("users/{userId}/playlists")]
-        public async Task<ActionResult> GetUserPlaylists(string userId)
+        [Function("SpotifyGetUserPlaylists")]
+        public async Task<IActionResult> GetUserPlaylists([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.SpotifyUserPlaylists)] HttpRequestData req, string userId)
         {
             Console.WriteLine("Getting User Playlists...");
-            var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var accessToken = req.Headers.GetValues("Authorization").FirstOrDefault().Replace("Bearer ", "");
             List<PlaylistDetails> userPlaylists = await _spotifyService.GetUserPlaylists(userId, accessToken);
             return Ok(userPlaylists);
         }
-        [HttpGet("playlists/{playlistId}")]
-        public async Task<ActionResult> GetPlaylist(string playlistId)
+        [Function("SpotifyGetPlaylist")]
+        public async Task<ActionResult> GetPlaylist([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.SpotifyPlaylist)] HttpRequestData req, string playlistId)
         {
             Console.WriteLine("Getting Playlist Tracks...");
-            var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var accessToken = req.Headers.GetValues("Authorization").FirstOrDefault().Replace("Bearer ", "");
             PlaylistDetails details = await _spotifyService.GetPlaylistDetails(playlistId, accessToken);
             List<Track> playlistTracks = await _spotifyService.GetPlaylistTracks(playlistId, accessToken);
             int duration = 0;
