@@ -52,10 +52,9 @@ export default function Playlist({params}: any) {
         const postPlaylist = async (tracks?: Track[]) => {
             const body = {
                 tracks: tracks,
-                length: submission.desiredLength,
-                userId: cookies?.userId
+                length: submission.desiredLength
             }
-            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/knapsack/playlists`, 
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${cookies?.userId}/playlists`, 
             {
                 method: 'POST',
                 headers: {

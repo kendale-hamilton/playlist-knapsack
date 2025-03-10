@@ -13,7 +13,7 @@ export default function CustomPlaylist({params}: any){
             const { id } = await params;
             console.log("Fetching playlist: ", id)
             const cookies = getCookies();
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/knapsack/playlists/${cookies.userId}/${id}`)
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/knapsack/users/${cookies.userId}/playlists/${id}`)
             const customPlaylist = await response.json()
             console.log("Response: ", customPlaylist)
             setTracks(customPlaylist)
@@ -25,7 +25,6 @@ export default function CustomPlaylist({params}: any){
     if (!tracks) {
         return <div>Loading...</div>
     }
-    console.log(tracks)
 
     return (
         <TrackList tracks={tracks} />
