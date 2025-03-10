@@ -1,0 +1,1328 @@
+(globalThis.TURBOPACK = globalThis.TURBOPACK || []).push(["static/chunks/_fea673._.js", {
+
+"[project]/src/app/helpers/ms-convert.ts [app-client] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, k: __turbopack_refresh__, m: module, z: __turbopack_require_stub__ } = __turbopack_context__;
+{
+__turbopack_esm__({
+    "default": (()=>toTimeString)
+});
+function toTimeString(ms) {
+    const seconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+}
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_refresh__.registerExports(module, globalThis.$RefreshHelpers$);
+}
+}}),
+"[project]/src/app/playlists/[id]/page.tsx [app-client] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, k: __turbopack_refresh__, m: module, z: __turbopack_require_stub__ } = __turbopack_context__;
+{
+__turbopack_esm__({
+    "default": (()=>Playlist)
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$helpers$2f$get$2d$cookies$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/src/app/helpers/get-cookies.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$helpers$2f$ms$2d$convert$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/src/app/helpers/ms-convert.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$button$2f$dist$2f$chunk$2d$G5TSEPD3$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__button_default__as__Button$3e$__ = __turbopack_import__("[project]/node_modules/@nextui-org/button/dist/chunk-G5TSEPD3.mjs [app-client] (ecmascript) <export button_default as Button>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$16$2f$solid$2f$esm$2f$ArrowsRightLeftIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowsRightLeftIcon$3e$__ = __turbopack_import__("[project]/node_modules/@heroicons/react/16/solid/esm/ArrowsRightLeftIcon.js [app-client] (ecmascript) <export default as ArrowsRightLeftIcon>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$card$2f$dist$2f$chunk$2d$46NETW2U$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__card_default__as__Card$3e$__ = __turbopack_import__("[project]/node_modules/@nextui-org/card/dist/chunk-46NETW2U.mjs [app-client] (ecmascript) <export card_default as Card>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$16$2f$solid$2f$esm$2f$ChevronUpIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronUpIcon$3e$__ = __turbopack_import__("[project]/node_modules/@heroicons/react/16/solid/esm/ChevronUpIcon.js [app-client] (ecmascript) <export default as ChevronUpIcon>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$16$2f$solid$2f$esm$2f$ChevronDownIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDownIcon$3e$__ = __turbopack_import__("[project]/node_modules/@heroicons/react/16/solid/esm/ChevronDownIcon.js [app-client] (ecmascript) <export default as ChevronDownIcon>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$modal$2f$dist$2f$chunk$2d$KMN6V4NS$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__modal_default__as__Modal$3e$__ = __turbopack_import__("[project]/node_modules/@nextui-org/modal/dist/chunk-KMN6V4NS.mjs [app-client] (ecmascript) <export modal_default as Modal>");
+;
+var _s = __turbopack_refresh__.signature();
+"use client";
+;
+;
+;
+;
+;
+function Playlist({ params }) {
+    _s();
+    const [warningOn, setWarningOn] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [playlist, setPlaylist] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])();
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "Playlist.useEffect": ()=>{
+            const fetchPlaylist = {
+                "Playlist.useEffect.fetchPlaylist": async ()=>{
+                    const { id } = await params;
+                    const cookies = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$helpers$2f$get$2d$cookies$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"])();
+                    const response = await fetch(`${("TURBOPACK compile-time value", "http://localhost:5110/api")}/users/${cookies.userId}/playlists/${id}/tracks`, {
+                        headers: {
+                            Authorization: `Bearer ${cookies.accessToken}`
+                        }
+                    });
+                    const fullPlaylist = await response.json();
+                    console.log("fullPlaylist: ", fullPlaylist);
+                    setPlaylist(fullPlaylist);
+                }
+            }["Playlist.useEffect.fetchPlaylist"];
+            fetchPlaylist();
+            console.log('Playlist: ', playlist);
+        }
+    }["Playlist.useEffect"], []);
+    if (!playlist) {
+        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            children: "Loading..."
+        }, void 0, false, {
+            fileName: "[project]/src/app/playlists/[id]/page.tsx",
+            lineNumber: 32,
+            columnNumber: 16
+        }, this);
+    }
+    const playlistDisplay = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "w-1/4 flex flex-col m-2 p-4 space-y-4 items-center",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "font-bold underline",
+                children: "Selected Playlist"
+            }, void 0, false, {
+                fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                lineNumber: 37,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                className: "w-32 h-32",
+                src: playlist.details.images[0].url
+            }, void 0, false, {
+                fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                lineNumber: 38,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                children: playlist.details.name
+            }, void 0, false, {
+                fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                lineNumber: 39,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                children: [
+                    "Length: ",
+                    (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$helpers$2f$ms$2d$convert$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"])(playlist.details.duration_ms)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                lineNumber: 40,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$button$2f$dist$2f$chunk$2d$G5TSEPD3$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__button_default__as__Button$3e$__["Button"], {
+                color: "primary",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                        children: "Switch Playlist"
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                        lineNumber: 42,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$16$2f$solid$2f$esm$2f$ArrowsRightLeftIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowsRightLeftIcon$3e$__["ArrowsRightLeftIcon"], {
+                        className: "w-6 h-6"
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                        lineNumber: 43,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                lineNumber: 41,
+                columnNumber: 13
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/src/app/playlists/[id]/page.tsx",
+        lineNumber: 36,
+        columnNumber: 9
+    }, this);
+    const trackSelector = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "w-1/2 flex flex-col flex-grow m-2 p-4 space-y-2 rounded-xl bg-neutral-800",
+        children: playlist.tracks.map((track, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "flex flex-row",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$card$2f$dist$2f$chunk$2d$46NETW2U$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__card_default__as__Card$3e$__["Card"], {
+                        className: "bg-white flex flex-row px-4 py-2 justify-between w-4/5",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                children: index + 1
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                                lineNumber: 53,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                children: track.name
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                                lineNumber: 54,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$helpers$2f$ms$2d$convert$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"])(track.duration_ms)
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                                lineNumber: 55,
+                                columnNumber: 25
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                        lineNumber: 52,
+                        columnNumber: 21
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "items-center justify-center flex flex-row w-1/5",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$button$2f$dist$2f$chunk$2d$G5TSEPD3$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__button_default__as__Button$3e$__["Button"], {
+                                isIconOnly: true,
+                                onPress: ()=>console.log('Move Up'),
+                                variant: "light",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$16$2f$solid$2f$esm$2f$ChevronUpIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronUpIcon$3e$__["ChevronUpIcon"], {
+                                    className: "w-8 h-8"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                                    lineNumber: 59,
+                                    columnNumber: 29
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                                lineNumber: 58,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$button$2f$dist$2f$chunk$2d$G5TSEPD3$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__button_default__as__Button$3e$__["Button"], {
+                                isIconOnly: true,
+                                onPress: ()=>console.log('Move Down'),
+                                variant: "light",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$16$2f$solid$2f$esm$2f$ChevronDownIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDownIcon$3e$__["ChevronDownIcon"], {
+                                    className: "w-8 h-8"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                                    lineNumber: 62,
+                                    columnNumber: 29
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                                lineNumber: 61,
+                                columnNumber: 25
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                        lineNumber: 57,
+                        columnNumber: 21
+                    }, this)
+                ]
+            }, index, true, {
+                fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                lineNumber: 51,
+                columnNumber: 17
+            }, this))
+    }, void 0, false, {
+        fileName: "[project]/src/app/playlists/[id]/page.tsx",
+        lineNumber: 49,
+        columnNumber: 9
+    }, this);
+    const instructions = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "w-1/4 flex flex-col m-8 space-y-4 items-center",
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+            children: "Insert Instructions Here"
+        }, void 0, false, {
+            fileName: "[project]/src/app/playlists/[id]/page.tsx",
+            lineNumber: 72,
+            columnNumber: 13
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/src/app/playlists/[id]/page.tsx",
+        lineNumber: 71,
+        columnNumber: 9
+    }, this);
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "flex h-full flex-row text-white",
+        children: [
+            playlistDisplay,
+            trackSelector,
+            instructions,
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$modal$2f$dist$2f$chunk$2d$KMN6V4NS$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__modal_default__as__Modal$3e$__["Modal"], {
+                isOpen: warningOn,
+                onClose: ()=>setWarningOn(false),
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$modal$2f$dist$2f$chunk$2d$KMN6V4NS$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__modal_default__as__Modal$3e$__["Modal"].Header, {
+                        children: "Warning"
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                        lineNumber: 82,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$modal$2f$dist$2f$chunk$2d$KMN6V4NS$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__modal_default__as__Modal$3e$__["Modal"].Content, {
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            children: "Are you sure you want to leave this page?"
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                            lineNumber: 84,
+                            columnNumber: 21
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                        lineNumber: 83,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$modal$2f$dist$2f$chunk$2d$KMN6V4NS$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__modal_default__as__Modal$3e$__["Modal"].Footer, {
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$button$2f$dist$2f$chunk$2d$G5TSEPD3$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__button_default__as__Button$3e$__["Button"], {
+                                color: "error",
+                                onClick: ()=>setWarningOn(false),
+                                children: "Cancel"
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                                lineNumber: 87,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$button$2f$dist$2f$chunk$2d$G5TSEPD3$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__button_default__as__Button$3e$__["Button"], {
+                                color: "success",
+                                onClick: ()=>console.log('Leave Page'),
+                                children: "Leave"
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                                lineNumber: 88,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                        lineNumber: 86,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/app/playlists/[id]/page.tsx",
+                lineNumber: 81,
+                columnNumber: 13
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/src/app/playlists/[id]/page.tsx",
+        lineNumber: 77,
+        columnNumber: 9
+    }, this);
+}
+_s(Playlist, "GImBdLRR3P8ktfQf5VnxjM3itaI=");
+_c = Playlist;
+var _c;
+__turbopack_refresh__.register(_c, "Playlist");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_refresh__.registerExports(module, globalThis.$RefreshHelpers$);
+}
+}}),
+"[project]/src/app/playlists/[id]/page.tsx [app-rsc] (ecmascript, Next.js server component, client modules)": ((__turbopack_context__) => {
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, t: __turbopack_require_real__ } = __turbopack_context__;
+{
+}}),
+"[project]/node_modules/@heroicons/react/16/solid/esm/ArrowsRightLeftIcon.js [app-client] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, z: __turbopack_require_stub__ } = __turbopack_context__;
+{
+__turbopack_esm__({
+    "default": (()=>__TURBOPACK__default__export__)
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+;
+function ArrowsRightLeftIcon({ title, titleId, ...props }, svgRef) {
+    return /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__.createElement("svg", Object.assign({
+        xmlns: "http://www.w3.org/2000/svg",
+        viewBox: "0 0 16 16",
+        fill: "currentColor",
+        "aria-hidden": "true",
+        "data-slot": "icon",
+        ref: svgRef,
+        "aria-labelledby": titleId
+    }, props), title ? /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__.createElement("title", {
+        id: titleId
+    }, title) : null, /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__.createElement("path", {
+        fillRule: "evenodd",
+        d: "M10.47 2.22a.75.75 0 0 1 1.06 0l2.25 2.25a.75.75 0 0 1 0 1.06l-2.25 2.25a.75.75 0 1 1-1.06-1.06l.97-.97H5.75a.75.75 0 0 1 0-1.5h5.69l-.97-.97a.75.75 0 0 1 0-1.06Zm-4.94 6a.75.75 0 0 1 0 1.06l-.97.97h5.69a.75.75 0 0 1 0 1.5H4.56l.97.97a.75.75 0 1 1-1.06 1.06l-2.25-2.25a.75.75 0 0 1 0-1.06l2.25-2.25a.75.75 0 0 1 1.06 0Z",
+        clipRule: "evenodd"
+    }));
+}
+const ForwardRef = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__.forwardRef(ArrowsRightLeftIcon);
+const __TURBOPACK__default__export__ = ForwardRef;
+}}),
+"[project]/node_modules/@heroicons/react/16/solid/esm/ArrowsRightLeftIcon.js [app-client] (ecmascript) <export default as ArrowsRightLeftIcon>": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, t: __turbopack_require_real__ } = __turbopack_context__;
+{
+__turbopack_esm__({
+    "ArrowsRightLeftIcon": (()=>__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$16$2f$solid$2f$esm$2f$ArrowsRightLeftIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"])
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$16$2f$solid$2f$esm$2f$ArrowsRightLeftIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@heroicons/react/16/solid/esm/ArrowsRightLeftIcon.js [app-client] (ecmascript)");
+}}),
+"[project]/node_modules/@nextui-org/theme/dist/chunk-CLS6PP7O.mjs [app-client] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, z: __turbopack_require_stub__ } = __turbopack_context__;
+{
+__turbopack_esm__({
+    "card": (()=>card)
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$theme$2f$dist$2f$chunk$2d$UWE6H66T$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/theme/dist/chunk-UWE6H66T.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$theme$2f$dist$2f$chunk$2d$GH5E4FQB$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/theme/dist/chunk-GH5E4FQB.mjs [app-client] (ecmascript)");
+;
+;
+// src/components/card.ts
+var card = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$theme$2f$dist$2f$chunk$2d$UWE6H66T$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["tv"])({
+    slots: {
+        base: [
+            "flex",
+            "flex-col",
+            "relative",
+            "overflow-hidden",
+            "h-auto",
+            "outline-none",
+            "text-foreground",
+            "box-border",
+            "bg-content1",
+            ...__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$theme$2f$dist$2f$chunk$2d$GH5E4FQB$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["dataFocusVisibleClasses"]
+        ],
+        header: [
+            "flex",
+            "p-3",
+            "z-10",
+            "w-full",
+            "justify-start",
+            "items-center",
+            "shrink-0",
+            "overflow-inherit",
+            "color-inherit",
+            "subpixel-antialiased"
+        ],
+        body: [
+            "relative",
+            "flex",
+            "flex-1",
+            "w-full",
+            "p-3",
+            "flex-auto",
+            "flex-col",
+            "place-content-inherit",
+            "align-items-inherit",
+            "h-auto",
+            "break-words",
+            "text-left",
+            "overflow-y-auto",
+            "subpixel-antialiased"
+        ],
+        footer: [
+            "p-3",
+            "h-auto",
+            "flex",
+            "w-full",
+            "items-center",
+            "overflow-hidden",
+            "color-inherit",
+            "subpixel-antialiased"
+        ]
+    },
+    variants: {
+        shadow: {
+            none: {
+                base: "shadow-none"
+            },
+            sm: {
+                base: "shadow-small"
+            },
+            md: {
+                base: "shadow-medium"
+            },
+            lg: {
+                base: "shadow-large"
+            }
+        },
+        radius: {
+            none: {
+                base: "rounded-none",
+                header: "rounded-none",
+                footer: "rounded-none"
+            },
+            sm: {
+                base: "rounded-small",
+                header: "rounded-t-small",
+                footer: "rounded-b-small"
+            },
+            md: {
+                base: "rounded-medium",
+                header: "rounded-t-medium",
+                footer: "rounded-b-medium"
+            },
+            lg: {
+                base: "rounded-large",
+                header: "rounded-t-large",
+                footer: "rounded-b-large"
+            }
+        },
+        fullWidth: {
+            true: {
+                base: "w-full"
+            }
+        },
+        isHoverable: {
+            true: {
+                base: "data-[hover=true]:bg-content2 dark:data-[hover=true]:bg-content2"
+            }
+        },
+        isPressable: {
+            true: {
+                base: "cursor-pointer"
+            }
+        },
+        isBlurred: {
+            true: {
+                base: [
+                    "bg-background/80",
+                    "dark:bg-background/20",
+                    "backdrop-blur-md",
+                    "backdrop-saturate-150"
+                ]
+            }
+        },
+        isFooterBlurred: {
+            true: {
+                footer: [
+                    "bg-background/10",
+                    "backdrop-blur",
+                    "backdrop-saturate-150"
+                ]
+            }
+        },
+        isDisabled: {
+            true: {
+                base: "opacity-disabled cursor-not-allowed"
+            }
+        },
+        disableAnimation: {
+            true: "",
+            false: {
+                base: "transition-transform-background motion-reduce:transition-none"
+            }
+        }
+    },
+    compoundVariants: [
+        {
+            isPressable: true,
+            class: "data-[pressed=true]:scale-[0.97] tap-highlight-transparent"
+        }
+    ],
+    defaultVariants: {
+        radius: "lg",
+        shadow: "md",
+        fullWidth: false,
+        isHoverable: false,
+        isPressable: false,
+        isDisabled: false,
+        isFooterBlurred: false
+    }
+});
+;
+}}),
+"[project]/node_modules/@nextui-org/card/dist/chunk-3GIHCET7.mjs [app-client] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, z: __turbopack_require_stub__ } = __turbopack_context__;
+{
+__turbopack_esm__({
+    "useCard": (()=>useCard)
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$system$2f$dist$2f$chunk$2d$Q66YAGZJ$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/system/dist/chunk-Q66YAGZJ.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$system$2d$rsc$2f$dist$2f$chunk$2d$DRE2DOBH$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/system-rsc/dist/chunk-DRE2DOBH.mjs [app-client] (ecmascript)");
+// src/use-card.ts
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$theme$2f$dist$2f$chunk$2d$CLS6PP7O$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/theme/dist/chunk-CLS6PP7O.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$react$2d$utils$2f$dist$2f$chunk$2d$RQNQ5XFG$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/react-utils/dist/chunk-RQNQ5XFG.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$shared$2d$utils$2f$dist$2f$chunk$2d$6BQDBGF4$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/shared-utils/dist/chunk-6BQDBGF4.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$ripple$2f$dist$2f$chunk$2d$A6KBW6T5$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/ripple/dist/chunk-A6KBW6T5.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$use$2d$aria$2d$button$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/use-aria-button/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$utils$2f$dist$2f$chain$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@react-aria/utils/dist/chain.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$interactions$2f$dist$2f$useHover$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@react-aria/interactions/dist/useHover.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$focus$2f$dist$2f$useFocusRing$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@react-aria/focus/dist/useFocusRing.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$shared$2d$utils$2f$dist$2f$chunk$2d$RFEIBVIG$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/shared-utils/dist/chunk-RFEIBVIG.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$shared$2d$utils$2f$dist$2f$chunk$2d$MCFSCOSB$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/shared-utils/dist/chunk-MCFSCOSB.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$utils$2f$dist$2f$mergeProps$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@react-aria/utils/dist/mergeProps.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$react$2d$rsc$2d$utils$2f$dist$2f$chunk$2d$RJKRL3AU$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/react-rsc-utils/dist/chunk-RJKRL3AU.mjs [app-client] (ecmascript)");
+"use client";
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+function useCard(originalProps) {
+    var _a, _b, _c, _d;
+    const globalContext = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$system$2f$dist$2f$chunk$2d$Q66YAGZJ$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useProviderContext"])();
+    const [props, variantProps] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$system$2d$rsc$2f$dist$2f$chunk$2d$DRE2DOBH$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["mapPropsVariants"])(originalProps, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$theme$2f$dist$2f$chunk$2d$CLS6PP7O$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["card"].variantKeys);
+    const { ref, as, children, onClick, onPress, autoFocus, className, classNames, allowTextSelectionOnPress = true, ...otherProps } = props;
+    const domRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$react$2d$utils$2f$dist$2f$chunk$2d$RQNQ5XFG$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useDOMRef"])(ref);
+    const Component = as || (originalProps.isPressable ? "button" : "div");
+    const shouldFilterDOMProps = typeof Component === "string";
+    const disableAnimation = (_b = (_a = originalProps.disableAnimation) != null ? _a : globalContext == null ? void 0 : globalContext.disableAnimation) != null ? _b : false;
+    const disableRipple = (_d = (_c = originalProps.disableRipple) != null ? _c : globalContext == null ? void 0 : globalContext.disableRipple) != null ? _d : false;
+    const baseStyles = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$shared$2d$utils$2f$dist$2f$chunk$2d$6BQDBGF4$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["clsx"])(classNames == null ? void 0 : classNames.base, className);
+    const { onClear: onClearRipple, onPress: onRipplePressHandler, ripples } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$ripple$2f$dist$2f$chunk$2d$A6KBW6T5$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRipple"])();
+    const handlePress = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useCard.useCallback[handlePress]": (e)=>{
+            if (disableRipple || disableAnimation) return;
+            domRef.current && onRipplePressHandler(e);
+        }
+    }["useCard.useCallback[handlePress]"], [
+        disableRipple,
+        disableAnimation,
+        domRef,
+        onRipplePressHandler
+    ]);
+    const { buttonProps, isPressed } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$use$2d$aria$2d$button$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAriaButton"])({
+        onPress: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$utils$2f$dist$2f$chain$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["chain"])(onPress, handlePress),
+        elementType: as,
+        isDisabled: !originalProps.isPressable,
+        onClick,
+        allowTextSelectionOnPress,
+        ...otherProps
+    }, domRef);
+    const { hoverProps, isHovered } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$interactions$2f$dist$2f$useHover$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useHover"])({
+        isDisabled: !originalProps.isHoverable,
+        ...otherProps
+    });
+    const { isFocusVisible, isFocused, focusProps } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$focus$2f$dist$2f$useFocusRing$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useFocusRing"])({
+        autoFocus
+    });
+    const slots = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "useCard.useMemo[slots]": ()=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$theme$2f$dist$2f$chunk$2d$CLS6PP7O$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["card"])({
+                ...variantProps,
+                disableAnimation
+            })
+    }["useCard.useMemo[slots]"], [
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$shared$2d$utils$2f$dist$2f$chunk$2d$RFEIBVIG$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["objectToDeps"])(variantProps),
+        disableAnimation
+    ]);
+    const context = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "useCard.useMemo[context]": ()=>({
+                slots,
+                classNames,
+                disableAnimation,
+                isDisabled: originalProps.isDisabled,
+                isFooterBlurred: originalProps.isFooterBlurred,
+                fullWidth: originalProps.fullWidth
+            })
+    }["useCard.useMemo[context]"], [
+        slots,
+        classNames,
+        originalProps.isDisabled,
+        originalProps.isFooterBlurred,
+        disableAnimation,
+        originalProps.fullWidth
+    ]);
+    const getCardProps = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useCard.useCallback[getCardProps]": (props2 = {})=>{
+            return {
+                ref: domRef,
+                className: slots.base({
+                    class: baseStyles
+                }),
+                tabIndex: originalProps.isPressable ? 0 : -1,
+                "data-hover": (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$shared$2d$utils$2f$dist$2f$chunk$2d$MCFSCOSB$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["dataAttr"])(isHovered),
+                "data-pressed": (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$shared$2d$utils$2f$dist$2f$chunk$2d$MCFSCOSB$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["dataAttr"])(isPressed),
+                "data-focus": (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$shared$2d$utils$2f$dist$2f$chunk$2d$MCFSCOSB$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["dataAttr"])(isFocused),
+                "data-focus-visible": (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$shared$2d$utils$2f$dist$2f$chunk$2d$MCFSCOSB$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["dataAttr"])(isFocusVisible),
+                "data-disabled": (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$shared$2d$utils$2f$dist$2f$chunk$2d$MCFSCOSB$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["dataAttr"])(originalProps.isDisabled),
+                ...(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$utils$2f$dist$2f$mergeProps$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["mergeProps"])(originalProps.isPressable ? {
+                    ...buttonProps,
+                    ...focusProps,
+                    role: "button"
+                } : {}, originalProps.isHoverable ? hoverProps : {}, (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$react$2d$rsc$2d$utils$2f$dist$2f$chunk$2d$RJKRL3AU$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["filterDOMProps"])(otherProps, {
+                    enabled: shouldFilterDOMProps
+                }), (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$react$2d$rsc$2d$utils$2f$dist$2f$chunk$2d$RJKRL3AU$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["filterDOMProps"])(props2))
+            };
+        }
+    }["useCard.useCallback[getCardProps]"], [
+        domRef,
+        slots,
+        baseStyles,
+        shouldFilterDOMProps,
+        originalProps.isPressable,
+        originalProps.isHoverable,
+        originalProps.isDisabled,
+        isHovered,
+        isPressed,
+        isFocusVisible,
+        buttonProps,
+        focusProps,
+        hoverProps,
+        otherProps
+    ]);
+    const getRippleProps = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useCard.useCallback[getRippleProps]": ()=>({
+                ripples,
+                onClear: onClearRipple
+            })
+    }["useCard.useCallback[getRippleProps]"], [
+        ripples,
+        onClearRipple
+    ]);
+    return {
+        context,
+        domRef,
+        Component,
+        classNames,
+        children,
+        isHovered,
+        isPressed,
+        disableAnimation,
+        isPressable: originalProps.isPressable,
+        isHoverable: originalProps.isHoverable,
+        disableRipple,
+        handlePress,
+        isFocusVisible,
+        getCardProps,
+        getRippleProps
+    };
+}
+;
+}}),
+"[project]/node_modules/@nextui-org/card/dist/chunk-QVMTN7ZJ.mjs [app-client] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, z: __turbopack_require_stub__ } = __turbopack_context__;
+{
+__turbopack_esm__({
+    "CardProvider": (()=>CardProvider),
+    "useCardContext": (()=>useCardContext)
+});
+// src/card-context.ts
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$react$2d$utils$2f$dist$2f$chunk$2d$3XT5V4LF$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/react-utils/dist/chunk-3XT5V4LF.mjs [app-client] (ecmascript)");
+"use client";
+;
+var [CardProvider, useCardContext] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$react$2d$utils$2f$dist$2f$chunk$2d$3XT5V4LF$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["createContext"])({
+    name: "CardContext",
+    strict: true,
+    errorMessage: "useCardContext: `context` is undefined. Seems you forgot to wrap component within <Card />"
+});
+;
+}}),
+"[project]/node_modules/@nextui-org/card/dist/chunk-46NETW2U.mjs [app-client] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, z: __turbopack_require_stub__ } = __turbopack_context__;
+{
+__turbopack_esm__({
+    "card_default": (()=>card_default)
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/compiled/react/jsx-runtime.js [app-client] (ecmascript)");
+// src/card.tsx
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$system$2d$rsc$2f$dist$2f$chunk$2d$DRE2DOBH$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/system-rsc/dist/chunk-DRE2DOBH.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$card$2f$dist$2f$chunk$2d$3GIHCET7$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/card/dist/chunk-3GIHCET7.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$card$2f$dist$2f$chunk$2d$QVMTN7ZJ$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/card/dist/chunk-QVMTN7ZJ.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$ripple$2f$dist$2f$chunk$2d$MRKSP4U5$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__ripple_default__as__Ripple$3e$__ = __turbopack_import__("[project]/node_modules/@nextui-org/ripple/dist/chunk-MRKSP4U5.mjs [app-client] (ecmascript) <export ripple_default as Ripple>");
+"use client";
+;
+;
+;
+;
+;
+var Card = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$system$2d$rsc$2f$dist$2f$chunk$2d$DRE2DOBH$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"])((props, ref)=>{
+    const { children, context, Component, isPressable, disableAnimation, disableRipple, getCardProps, getRippleProps } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$card$2f$dist$2f$chunk$2d$3GIHCET7$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCard"])({
+        ...props,
+        ref
+    });
+    return /* @__PURE__ */ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxs"])(Component, {
+        ...getCardProps(),
+        children: [
+            /* @__PURE__ */ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$card$2f$dist$2f$chunk$2d$QVMTN7ZJ$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardProvider"], {
+                value: context,
+                children
+            }),
+            isPressable && !disableAnimation && !disableRipple && /* @__PURE__ */ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$ripple$2f$dist$2f$chunk$2d$MRKSP4U5$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__ripple_default__as__Ripple$3e$__["Ripple"], {
+                ...getRippleProps()
+            })
+        ]
+    });
+});
+Card.displayName = "NextUI.Card";
+var card_default = Card;
+;
+}}),
+"[project]/node_modules/@nextui-org/card/dist/chunk-46NETW2U.mjs [app-client] (ecmascript) <export card_default as Card>": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, t: __turbopack_require_real__ } = __turbopack_context__;
+{
+__turbopack_esm__({
+    "Card": (()=>__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$card$2f$dist$2f$chunk$2d$46NETW2U$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["card_default"])
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$card$2f$dist$2f$chunk$2d$46NETW2U$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/card/dist/chunk-46NETW2U.mjs [app-client] (ecmascript)");
+}}),
+"[project]/node_modules/@heroicons/react/16/solid/esm/ChevronUpIcon.js [app-client] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, z: __turbopack_require_stub__ } = __turbopack_context__;
+{
+__turbopack_esm__({
+    "default": (()=>__TURBOPACK__default__export__)
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+;
+function ChevronUpIcon({ title, titleId, ...props }, svgRef) {
+    return /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__.createElement("svg", Object.assign({
+        xmlns: "http://www.w3.org/2000/svg",
+        viewBox: "0 0 16 16",
+        fill: "currentColor",
+        "aria-hidden": "true",
+        "data-slot": "icon",
+        ref: svgRef,
+        "aria-labelledby": titleId
+    }, props), title ? /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__.createElement("title", {
+        id: titleId
+    }, title) : null, /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__.createElement("path", {
+        fillRule: "evenodd",
+        d: "M11.78 9.78a.75.75 0 0 1-1.06 0L8 7.06 5.28 9.78a.75.75 0 0 1-1.06-1.06l3.25-3.25a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06Z",
+        clipRule: "evenodd"
+    }));
+}
+const ForwardRef = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__.forwardRef(ChevronUpIcon);
+const __TURBOPACK__default__export__ = ForwardRef;
+}}),
+"[project]/node_modules/@heroicons/react/16/solid/esm/ChevronUpIcon.js [app-client] (ecmascript) <export default as ChevronUpIcon>": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, t: __turbopack_require_real__ } = __turbopack_context__;
+{
+__turbopack_esm__({
+    "ChevronUpIcon": (()=>__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$16$2f$solid$2f$esm$2f$ChevronUpIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"])
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$16$2f$solid$2f$esm$2f$ChevronUpIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@heroicons/react/16/solid/esm/ChevronUpIcon.js [app-client] (ecmascript)");
+}}),
+"[project]/node_modules/@heroicons/react/16/solid/esm/ChevronDownIcon.js [app-client] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, z: __turbopack_require_stub__ } = __turbopack_context__;
+{
+__turbopack_esm__({
+    "default": (()=>__TURBOPACK__default__export__)
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+;
+function ChevronDownIcon({ title, titleId, ...props }, svgRef) {
+    return /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__.createElement("svg", Object.assign({
+        xmlns: "http://www.w3.org/2000/svg",
+        viewBox: "0 0 16 16",
+        fill: "currentColor",
+        "aria-hidden": "true",
+        "data-slot": "icon",
+        ref: svgRef,
+        "aria-labelledby": titleId
+    }, props), title ? /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__.createElement("title", {
+        id: titleId
+    }, title) : null, /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__.createElement("path", {
+        fillRule: "evenodd",
+        d: "M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z",
+        clipRule: "evenodd"
+    }));
+}
+const ForwardRef = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__.forwardRef(ChevronDownIcon);
+const __TURBOPACK__default__export__ = ForwardRef;
+}}),
+"[project]/node_modules/@heroicons/react/16/solid/esm/ChevronDownIcon.js [app-client] (ecmascript) <export default as ChevronDownIcon>": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, t: __turbopack_require_real__ } = __turbopack_context__;
+{
+__turbopack_esm__({
+    "ChevronDownIcon": (()=>__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$16$2f$solid$2f$esm$2f$ChevronDownIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"])
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$heroicons$2f$react$2f$16$2f$solid$2f$esm$2f$ChevronDownIcon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@heroicons/react/16/solid/esm/ChevronDownIcon.js [app-client] (ecmascript)");
+}}),
+"[project]/node_modules/@nextui-org/theme/dist/chunk-NVK4XVTT.mjs [app-client] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, z: __turbopack_require_stub__ } = __turbopack_context__;
+{
+__turbopack_esm__({
+    "modal": (()=>modal)
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$theme$2f$dist$2f$chunk$2d$UWE6H66T$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/theme/dist/chunk-UWE6H66T.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$theme$2f$dist$2f$chunk$2d$GH5E4FQB$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/theme/dist/chunk-GH5E4FQB.mjs [app-client] (ecmascript)");
+;
+;
+// src/components/modal.ts
+var modal = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$theme$2f$dist$2f$chunk$2d$UWE6H66T$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["tv"])({
+    slots: {
+        wrapper: [
+            "flex",
+            "w-screen",
+            "h-[100dvh]",
+            "fixed",
+            "inset-0",
+            "z-50",
+            "overflow-x-auto",
+            "justify-center",
+            "h-[--visual-viewport-height]"
+        ],
+        base: [
+            "flex",
+            "flex-col",
+            "relative",
+            "bg-white",
+            "z-50",
+            "w-full",
+            "box-border",
+            "bg-content1",
+            "outline-none",
+            "mx-1",
+            "my-1",
+            "sm:mx-6",
+            "sm:my-16"
+        ],
+        backdrop: "z-50",
+        header: "flex py-4 px-6 flex-initial text-large font-semibold",
+        body: "flex flex-1 flex-col gap-3 px-6 py-2",
+        footer: "flex flex-row gap-2 px-6 py-4 justify-end",
+        closeButton: [
+            "absolute",
+            "appearance-none",
+            "outline-none",
+            "select-none",
+            "top-1",
+            "end-1",
+            "p-2",
+            "text-foreground-500",
+            "rounded-full",
+            "hover:bg-default-100",
+            "active:bg-default-200",
+            "tap-highlight-transparent",
+            ...__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$theme$2f$dist$2f$chunk$2d$GH5E4FQB$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["dataFocusVisibleClasses"]
+        ]
+    },
+    variants: {
+        size: {
+            xs: {
+                base: "max-w-xs"
+            },
+            sm: {
+                base: "max-w-sm"
+            },
+            md: {
+                base: "max-w-md"
+            },
+            lg: {
+                base: "max-w-lg"
+            },
+            xl: {
+                base: "max-w-xl"
+            },
+            "2xl": {
+                base: "max-w-2xl"
+            },
+            "3xl": {
+                base: "max-w-3xl"
+            },
+            "4xl": {
+                base: "max-w-4xl"
+            },
+            "5xl": {
+                base: "max-w-5xl"
+            },
+            full: {
+                base: "my-0 mx-0 sm:mx-0 sm:my-0 max-w-full h-[100dvh] min-h-[100dvh] !rounded-none"
+            }
+        },
+        radius: {
+            none: {
+                base: "rounded-none"
+            },
+            sm: {
+                base: "rounded-small"
+            },
+            md: {
+                base: "rounded-medium"
+            },
+            lg: {
+                base: "rounded-large"
+            }
+        },
+        placement: {
+            auto: {
+                wrapper: "items-end sm:items-center"
+            },
+            center: {
+                wrapper: "items-center sm:items-center"
+            },
+            top: {
+                wrapper: "items-start sm:items-start"
+            },
+            "top-center": {
+                wrapper: "items-start sm:items-center"
+            },
+            bottom: {
+                wrapper: "items-end sm:items-end"
+            },
+            "bottom-center": {
+                wrapper: "items-end sm:items-center"
+            }
+        },
+        shadow: {
+            sm: {
+                base: "shadow-small"
+            },
+            md: {
+                base: "shadow-medium"
+            },
+            lg: {
+                base: "shadow-large"
+            }
+        },
+        backdrop: {
+            transparent: {
+                backdrop: "hidden"
+            },
+            opaque: {
+                backdrop: "bg-overlay/50 backdrop-opacity-disabled"
+            },
+            blur: {
+                backdrop: "backdrop-blur-md backdrop-saturate-150 bg-overlay/30"
+            }
+        },
+        scrollBehavior: {
+            normal: {
+                base: "overflow-y-hidden"
+            },
+            inside: {
+                base: "max-h-[calc(100%_-_8rem)]",
+                body: "overflow-y-auto"
+            },
+            outside: {
+                wrapper: "items-start sm:items-start overflow-y-auto",
+                base: "my-16"
+            }
+        },
+        disableAnimation: {
+            false: {
+                wrapper: [
+                    "[--scale-enter:100%]",
+                    "[--scale-exit:100%]",
+                    "[--slide-enter:0px]",
+                    "[--slide-exit:80px]",
+                    "sm:[--scale-enter:100%]",
+                    "sm:[--scale-exit:103%]",
+                    "sm:[--slide-enter:0px]",
+                    "sm:[--slide-exit:0px]"
+                ]
+            }
+        }
+    },
+    defaultVariants: {
+        size: "md",
+        radius: "lg",
+        shadow: "sm",
+        placement: "auto",
+        backdrop: "opaque",
+        scrollBehavior: "normal"
+    },
+    compoundVariants: [
+        {
+            backdrop: [
+                "opaque",
+                "blur"
+            ],
+            class: {
+                backdrop: "w-screen h-screen fixed inset-0"
+            }
+        }
+    ]
+});
+;
+}}),
+"[project]/node_modules/@nextui-org/use-aria-modal-overlay/dist/index.mjs [app-client] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, z: __turbopack_require_stub__ } = __turbopack_context__;
+{
+// src/index.ts
+__turbopack_esm__({
+    "useAriaModalOverlay": (()=>useAriaModalOverlay)
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$overlays$2f$dist$2f$useOverlay$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@react-aria/overlays/dist/useOverlay.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$overlays$2f$dist$2f$usePreventScroll$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@react-aria/overlays/dist/usePreventScroll.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$overlays$2f$dist$2f$Overlay$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@react-aria/overlays/dist/Overlay.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$overlays$2f$dist$2f$ariaHideOutside$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@react-aria/overlays/dist/ariaHideOutside.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$utils$2f$dist$2f$mergeProps$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@react-aria/utils/dist/mergeProps.mjs [app-client] (ecmascript)");
+;
+;
+;
+function useAriaModalOverlay(props = {
+    shouldBlockScroll: true
+}, state, ref) {
+    let { overlayProps, underlayProps } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$overlays$2f$dist$2f$useOverlay$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useOverlay"])({
+        ...props,
+        isOpen: state.isOpen,
+        onClose: state.close
+    }, ref);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$overlays$2f$dist$2f$usePreventScroll$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["usePreventScroll"])({
+        isDisabled: !state.isOpen || !props.shouldBlockScroll
+    });
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$overlays$2f$dist$2f$Overlay$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useOverlayFocusContain"])();
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useAriaModalOverlay.useEffect": ()=>{
+            if (state.isOpen && ref.current) {
+                return (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$overlays$2f$dist$2f$ariaHideOutside$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ariaHideOutside"])([
+                    ref.current
+                ]);
+            }
+        }
+    }["useAriaModalOverlay.useEffect"], [
+        state.isOpen,
+        ref
+    ]);
+    return {
+        modalProps: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$utils$2f$dist$2f$mergeProps$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["mergeProps"])(overlayProps),
+        underlayProps
+    };
+}
+;
+}}),
+"[project]/node_modules/@nextui-org/modal/dist/chunk-S5DIVYM4.mjs [app-client] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, z: __turbopack_require_stub__ } = __turbopack_context__;
+{
+__turbopack_esm__({
+    "useModal": (()=>useModal)
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$system$2f$dist$2f$chunk$2d$Q66YAGZJ$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/system/dist/chunk-Q66YAGZJ.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$system$2d$rsc$2f$dist$2f$chunk$2d$DRE2DOBH$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/system-rsc/dist/chunk-DRE2DOBH.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$theme$2f$dist$2f$chunk$2d$NVK4XVTT$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/theme/dist/chunk-NVK4XVTT.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$react$2d$utils$2f$dist$2f$chunk$2d$RQNQ5XFG$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/react-utils/dist/chunk-RQNQ5XFG.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$stately$2f$overlays$2f$dist$2f$useOverlayTriggerState$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@react-stately/overlays/dist/useOverlayTriggerState.mjs [app-client] (ecmascript)");
+// src/use-modal.ts
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$use$2d$aria$2d$modal$2d$overlay$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/use-aria-modal-overlay/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$use$2d$aria$2d$button$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/use-aria-button/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$focus$2f$dist$2f$useFocusRing$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@react-aria/focus/dist/useFocusRing.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$shared$2d$utils$2f$dist$2f$chunk$2d$6BQDBGF4$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/shared-utils/dist/chunk-6BQDBGF4.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$shared$2d$utils$2f$dist$2f$chunk$2d$RFEIBVIG$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/shared-utils/dist/chunk-RFEIBVIG.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$utils$2f$dist$2f$mergeRefs$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@react-aria/utils/dist/mergeRefs.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$utils$2f$dist$2f$mergeProps$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@react-aria/utils/dist/mergeProps.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$shared$2d$utils$2f$dist$2f$chunk$2d$MCFSCOSB$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/shared-utils/dist/chunk-MCFSCOSB.mjs [app-client] (ecmascript)");
+"use client";
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+function useModal(originalProps) {
+    var _a, _b, _c;
+    const globalContext = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$system$2f$dist$2f$chunk$2d$Q66YAGZJ$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useProviderContext"])();
+    const [props, variantProps] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$system$2d$rsc$2f$dist$2f$chunk$2d$DRE2DOBH$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["mapPropsVariants"])(originalProps, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$theme$2f$dist$2f$chunk$2d$NVK4XVTT$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["modal"].variantKeys);
+    const { ref, as, className, classNames, isOpen, defaultOpen, onOpenChange, motionProps, closeButton, isDismissable = true, hideCloseButton = false, shouldBlockScroll = true, portalContainer, isKeyboardDismissDisabled = false, onClose, ...otherProps } = props;
+    const Component = as || "section";
+    const domRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$react$2d$utils$2f$dist$2f$chunk$2d$RQNQ5XFG$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useDOMRef"])(ref);
+    const closeButtonRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
+    const [headerMounted, setHeaderMounted] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [bodyMounted, setBodyMounted] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const disableAnimation = (_b = (_a = originalProps.disableAnimation) != null ? _a : globalContext == null ? void 0 : globalContext.disableAnimation) != null ? _b : false;
+    const dialogId = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useId"])();
+    const headerId = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useId"])();
+    const bodyId = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useId"])();
+    const state = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$stately$2f$overlays$2f$dist$2f$useOverlayTriggerState$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useOverlayTriggerState"])({
+        isOpen,
+        defaultOpen,
+        onOpenChange: {
+            "useModal.useOverlayTriggerState[state]": (isOpen2)=>{
+                onOpenChange == null ? void 0 : onOpenChange(isOpen2);
+                if (!isOpen2) {
+                    onClose == null ? void 0 : onClose();
+                }
+            }
+        }["useModal.useOverlayTriggerState[state]"]
+    });
+    const { modalProps, underlayProps } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$use$2d$aria$2d$modal$2d$overlay$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAriaModalOverlay"])({
+        isDismissable,
+        shouldBlockScroll,
+        isKeyboardDismissDisabled
+    }, state, domRef);
+    const { buttonProps: closeButtonProps } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$use$2d$aria$2d$button$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAriaButton"])({
+        onPress: state.close
+    }, closeButtonRef);
+    const { isFocusVisible: isCloseButtonFocusVisible, focusProps: closeButtonFocusProps } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$focus$2f$dist$2f$useFocusRing$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useFocusRing"])();
+    const baseStyles = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$shared$2d$utils$2f$dist$2f$chunk$2d$6BQDBGF4$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["clsx"])(classNames == null ? void 0 : classNames.base, className);
+    const slots = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "useModal.useMemo[slots]": ()=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$theme$2f$dist$2f$chunk$2d$NVK4XVTT$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["modal"])({
+                ...variantProps,
+                disableAnimation
+            })
+    }["useModal.useMemo[slots]"], [
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$shared$2d$utils$2f$dist$2f$chunk$2d$RFEIBVIG$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["objectToDeps"])(variantProps),
+        disableAnimation
+    ]);
+    const getDialogProps = (props2 = {}, ref2 = null)=>{
+        var _a2;
+        return {
+            ref: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$utils$2f$dist$2f$mergeRefs$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["mergeRefs"])(ref2, domRef),
+            ...(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$utils$2f$dist$2f$mergeProps$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["mergeProps"])(modalProps, otherProps, props2),
+            className: slots.base({
+                class: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$shared$2d$utils$2f$dist$2f$chunk$2d$6BQDBGF4$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["clsx"])(baseStyles, props2.className)
+            }),
+            id: dialogId,
+            "data-open": (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$shared$2d$utils$2f$dist$2f$chunk$2d$MCFSCOSB$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["dataAttr"])(state.isOpen),
+            "data-dismissable": (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$shared$2d$utils$2f$dist$2f$chunk$2d$MCFSCOSB$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["dataAttr"])(isDismissable),
+            "aria-modal": (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$shared$2d$utils$2f$dist$2f$chunk$2d$MCFSCOSB$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["dataAttr"])(true),
+            "data-placement": (_a2 = originalProps == null ? void 0 : originalProps.placement) != null ? _a2 : "right",
+            "aria-labelledby": headerMounted ? headerId : void 0,
+            "aria-describedby": bodyMounted ? bodyId : void 0
+        };
+    };
+    const getBackdropProps = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useModal.useCallback[getBackdropProps]": (props2 = {})=>({
+                className: slots.backdrop({
+                    class: classNames == null ? void 0 : classNames.backdrop
+                }),
+                onClick: ({
+                    "useModal.useCallback[getBackdropProps]": ()=>state.close()
+                })["useModal.useCallback[getBackdropProps]"],
+                ...underlayProps,
+                ...props2
+            })
+    }["useModal.useCallback[getBackdropProps]"], [
+        slots,
+        classNames,
+        underlayProps
+    ]);
+    const getCloseButtonProps = ()=>{
+        return {
+            role: "button",
+            tabIndex: 0,
+            "aria-label": "Close",
+            "data-focus-visible": (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$shared$2d$utils$2f$dist$2f$chunk$2d$MCFSCOSB$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["dataAttr"])(isCloseButtonFocusVisible),
+            className: slots.closeButton({
+                class: classNames == null ? void 0 : classNames.closeButton
+            }),
+            ...(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$utils$2f$dist$2f$mergeProps$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["mergeProps"])(closeButtonProps, closeButtonFocusProps)
+        };
+    };
+    return {
+        Component,
+        slots,
+        domRef,
+        headerId,
+        bodyId,
+        motionProps,
+        classNames,
+        isDismissable,
+        closeButton,
+        hideCloseButton,
+        portalContainer,
+        shouldBlockScroll,
+        backdrop: (_c = originalProps.backdrop) != null ? _c : "opaque",
+        isOpen: state.isOpen,
+        onClose: state.close,
+        disableAnimation,
+        setBodyMounted,
+        setHeaderMounted,
+        getDialogProps,
+        getBackdropProps,
+        getCloseButtonProps
+    };
+}
+;
+}}),
+"[project]/node_modules/@nextui-org/modal/dist/chunk-6JNB4JMH.mjs [app-client] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, z: __turbopack_require_stub__ } = __turbopack_context__;
+{
+__turbopack_esm__({
+    "ModalProvider": (()=>ModalProvider),
+    "useModalContext": (()=>useModalContext)
+});
+// src/modal-context.ts
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$react$2d$utils$2f$dist$2f$chunk$2d$3XT5V4LF$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/react-utils/dist/chunk-3XT5V4LF.mjs [app-client] (ecmascript)");
+"use client";
+;
+var [ModalProvider, useModalContext] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$react$2d$utils$2f$dist$2f$chunk$2d$3XT5V4LF$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["createContext"])({
+    name: "ModalContext",
+    errorMessage: "useModalContext: `context` is undefined. Seems you forgot to wrap all popover components within `<Modal />`"
+});
+;
+}}),
+"[project]/node_modules/@nextui-org/modal/dist/chunk-KMN6V4NS.mjs [app-client] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, z: __turbopack_require_stub__ } = __turbopack_context__;
+{
+__turbopack_esm__({
+    "modal_default": (()=>modal_default)
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/compiled/react/jsx-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$system$2d$rsc$2f$dist$2f$chunk$2d$DRE2DOBH$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/system-rsc/dist/chunk-DRE2DOBH.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$modal$2f$dist$2f$chunk$2d$S5DIVYM4$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/modal/dist/chunk-S5DIVYM4.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$overlays$2f$dist$2f$Overlay$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@react-aria/overlays/dist/Overlay.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$modal$2f$dist$2f$chunk$2d$6JNB4JMH$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/modal/dist/chunk-6JNB4JMH.mjs [app-client] (ecmascript)");
+// src/modal.tsx
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$components$2f$AnimatePresence$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs [app-client] (ecmascript)");
+"use client";
+;
+;
+;
+;
+;
+;
+var Modal = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$system$2d$rsc$2f$dist$2f$chunk$2d$DRE2DOBH$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"])((props, ref)=>{
+    const { children, ...otherProps } = props;
+    const context = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$modal$2f$dist$2f$chunk$2d$S5DIVYM4$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useModal"])({
+        ...otherProps,
+        ref
+    });
+    const overlay = /* @__PURE__ */ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$react$2d$aria$2f$overlays$2f$dist$2f$Overlay$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Overlay"], {
+        portalContainer: context.portalContainer,
+        children
+    });
+    return /* @__PURE__ */ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$modal$2f$dist$2f$chunk$2d$6JNB4JMH$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ModalProvider"], {
+        value: context,
+        children: context.disableAnimation && context.isOpen ? overlay : /* @__PURE__ */ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$components$2f$AnimatePresence$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AnimatePresence"], {
+            children: context.isOpen ? overlay : null
+        })
+    });
+});
+Modal.displayName = "NextUI.Modal";
+var modal_default = Modal;
+;
+}}),
+"[project]/node_modules/@nextui-org/modal/dist/chunk-KMN6V4NS.mjs [app-client] (ecmascript) <export modal_default as Modal>": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, t: __turbopack_require_real__ } = __turbopack_context__;
+{
+__turbopack_esm__({
+    "Modal": (()=>__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$modal$2f$dist$2f$chunk$2d$KMN6V4NS$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["modal_default"])
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$nextui$2d$org$2f$modal$2f$dist$2f$chunk$2d$KMN6V4NS$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@nextui-org/modal/dist/chunk-KMN6V4NS.mjs [app-client] (ecmascript)");
+}}),
+}]);
+
+//# sourceMappingURL=_fea673._.js.map

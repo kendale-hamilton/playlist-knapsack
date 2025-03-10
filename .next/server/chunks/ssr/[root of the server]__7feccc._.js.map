@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 15, "column": 0}, "map": {"version":3,"sources":["file://C%3A/VSCodeRepos/playlist-knapsack/src/app/provider.tsx"],"sourcesContent":["\"use client\"\r\nimport { NextUIProvider } from \"@nextui-org/react\";\r\nimport React from \"react\";\r\n\r\nexport default function Providers({children}: { children: React.ReactNode}) {\r\n    return (\r\n        <NextUIProvider>\r\n            {children}\r\n        </NextUIProvider>\r\n    )\r\n}"],"names":[],"mappings":";;;;AACA;AADA;;;AAIe,SAAS,UAAU,EAAC,QAAQ,EAA+B;IACtE,qBACI,8OAAC,uKAAA,CAAA,iBAAc;kBACV;;;;;;AAGb"}},
+    {"offset": {"line": 32, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"A"}}]
+}

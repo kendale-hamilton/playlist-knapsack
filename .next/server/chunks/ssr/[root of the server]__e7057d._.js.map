@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 15, "column": 0}, "map": {"version":3,"sources":["file://C%3A/VSCodeRepos/playlist-knapsack/src/app/components/main-app-bar.tsx"],"sourcesContent":["\"use client\"\r\n\r\n\r\nexport default function MainAppBar() {\r\n    return (\r\n        <div className=\"\">\r\n\r\n        </div>\r\n    )\r\n}"],"names":[],"mappings":";;;;AAAA;;AAGe,SAAS;IACpB,qBACI,8OAAC;QAAI,WAAU;;;;;;AAIvB"}},
+    {"offset": {"line": 30, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"A"}}]
+}
