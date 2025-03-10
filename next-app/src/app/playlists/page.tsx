@@ -12,7 +12,7 @@ export default function Builder() {
     useEffect(() => {
         const fetchPlaylists = async () => {
             const cookies = getCookies();
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/spotify/users/${cookies.userId}/playlists`, {
+            const response = await fetch(`/api/spotify/users/${cookies.userId}/playlists`, {
                 headers: {
                     Authorization: `Bearer ${cookies.accessToken}`
                 }

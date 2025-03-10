@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file://C%3A/VSCodeRepos/playlist-knapsack/src/app/builder/page.tsx"],"sourcesContent":["\"use client\"\r\n\r\nimport { useSession } from \"next-auth/react\"\r\n\r\nexport default function Builder() {\r\n    const session = useSession()\r\n    console.log({session})\r\n    return (\r\n        <div className=\"text-purple-300\">Welcome</div>\r\n    )\r\n}"],"names":[],"mappings":";;;;AAEA;;;AAFA;;AAIe,SAAS;;IACpB,MAAM,UAAU,CAAA,GAAA,iJAAA,CAAA,aAAU,AAAD;IACzB,QAAQ,GAAG,CAAC;QAAC;IAAO;IACpB,qBACI,6LAAC;QAAI,WAAU;kBAAkB;;;;;;AAEzC;GANwB;;QACJ,iJAAA,CAAA,aAAU;;;KADN"}},
-    {"offset": {"line": 42, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"A"}}]
-}

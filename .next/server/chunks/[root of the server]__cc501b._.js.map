@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 55, "column": 0}, "map": {"version":3,"sources":["file://C%3A/VSCodeRepos/playlist-knapsack/src/app/api/logout/route.ts"],"sourcesContent":["import { NextRequest, NextResponse } from \"next/server\";\r\nimport { cookies } from \"next/headers\";\r\n\r\nexport async function GET(req: NextRequest) {\r\n    const baseUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}`;\r\n\r\n    const cookieStore = await cookies();\r\n\r\n    cookieStore.set('userId', '');\r\n    cookieStore.set('userDisplayName', '');\r\n    cookieStore.set('userEmail', '');\r\n    cookieStore.set('userAvatar', '');\r\n    cookieStore.set('accessToken', '');\r\n    cookieStore.set('refreshToken', '');\r\n\r\n    return NextResponse.redirect(baseUrl);\r\n}"],"names":[],"mappings":";;;AAAA;AACA;;;AAEO,eAAe,IAAI,GAAgB;IACtC,MAAM,UAAU,GAAG,IAAI,OAAO,CAAC,QAAQ,CAAC,EAAE,EAAE,IAAI,OAAO,CAAC,IAAI,EAAE;IAE9D,MAAM,cAAc,MAAM,CAAA,GAAA,iIAAA,CAAA,UAAO,AAAD;IAEhC,YAAY,GAAG,CAAC,UAAU;IAC1B,YAAY,GAAG,CAAC,mBAAmB;IACnC,YAAY,GAAG,CAAC,aAAa;IAC7B,YAAY,GAAG,CAAC,cAAc;IAC9B,YAAY,GAAG,CAAC,eAAe;IAC/B,YAAY,GAAG,CAAC,gBAAgB;IAEhC,OAAO,gIAAA,CAAA,eAAY,CAAC,QAAQ,CAAC;AACjC"}},
-    {"offset": {"line": 73, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"A"}}]
-}

@@ -34,7 +34,7 @@ export default function Playlist({params}: any) {
         const fetchPlaylist = async () => {
             const { id } = await params;
             const cookies = getCookies();
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/spotify/playlists/${id}`, {
+            const response = await fetch(`/api/spotify/playlists/${id}`, {
                 headers: {
                     Authorization: `Bearer ${cookies.accessToken}`
                 }
@@ -54,7 +54,7 @@ export default function Playlist({params}: any) {
                 tracks: tracks,
                 length: submission.desiredLength
             }
-            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${cookies?.userId}/playlists`, 
+            const res = await fetch(`/api/knapsack/users/${cookies?.userId}/playlists`, 
             {
                 method: 'POST',
                 headers: {
