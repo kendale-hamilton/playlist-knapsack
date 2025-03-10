@@ -1,5 +1,6 @@
 
 using System.Net.Http.Headers;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
@@ -108,6 +109,17 @@ namespace Controllers.SpotifyController
                 Tracks = playlistTracks
             };
             return Ok(playlistInfo);
+        }
+        [Function("SpotifyPostPlaylist")]
+        public async Task<IActionResult> PostPlaylist([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = RouteConstants.SpotifyUserPlaylists)] HttpRequestData req, string userId)
+        {
+            Console.WriteLine("Creating Playlist...");
+            var accessToken = req.Headers.GetValues("Authorization").FirstOrDefault().Replace("Bearer ", "");
+
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            Playlist? playlist = JsonSerializer.Deserialize<Playlist>(requestBody);
+            string href = await _spotifyService.UploadPlaylist(userId, playlist, accessToken);
+            return Ok(href);
         }
     }
 }

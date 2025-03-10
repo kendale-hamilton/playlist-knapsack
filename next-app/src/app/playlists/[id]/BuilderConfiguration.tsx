@@ -1,5 +1,5 @@
 "use client"
-import { toSecs } from "@/app/helpers/ms-convert"
+import { toSecs } from "@/app/helpers/time-functions"
 import { ChevronLeftIcon } from "@heroicons/react/16/solid"
 import { Button, Input } from "@nextui-org/react"
 import { useState } from "react"

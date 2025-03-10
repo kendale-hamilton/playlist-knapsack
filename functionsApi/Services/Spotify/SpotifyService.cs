@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json;
 using Models.Knapsack;
 using Models.Spotify;
@@ -65,6 +66,45 @@ namespace Services.SpotifyService
             }
 
             return tracks;
+        }
+
+        public async Task<string> UploadPlaylist(string userId, Playlist playlist, string token)
+        {
+            SpotifyCreatePlaylistBody body = new SpotifyCreatePlaylistBody
+            {
+                Name = playlist.Details.Name,
+                Description = playlist.Details.Description
+            };
+            string bodyJson = JsonSerializer.Serialize(body);
+            HttpContent content = new StringContent(bodyJson, Encoding.UTF8, "application/json");
+            var createResponse = await _httpService.MakePostRequest($"https://api.spotify.com/v1/users/{userId}/playlists", token, content);
+            string createContent = await createResponse.Content.ReadAsStringAsync();
+            SpotifyPlaylistsItem newPlaylist = JsonSerializer.Deserialize<SpotifyPlaylistsItem>(createContent);
+            string id = newPlaylist.Id;
+            string href = newPlaylist.Href;
+
+            List<string> allUris = [.. playlist.Tracks.Select(t => t.Uri)];
+
+            for (int i = 0; i < allUris.Count; i += 100)
+            {
+                int n = 100;
+                if (i + n >= allUris.Count)
+                {
+                    n = allUris.Count - i;
+                }
+                List<string> uris = allUris.GetRange(i, n);
+                SpotifyAddTracksBody addBody = new SpotifyAddTracksBody
+                {
+                    Uris = uris
+                };
+                string addBodyJson = JsonSerializer.Serialize(addBody);
+                HttpContent addContent = new StringContent(addBodyJson, Encoding.UTF8, "application/json");
+                var addResponse = await _httpService.MakePostRequest($"https://api.spotify.com/v1/playlists/{id}/tracks", token, addContent);
+            }
+
+            // TODO: Add Custom Image here
+
+            return href;
         }
     }
 }

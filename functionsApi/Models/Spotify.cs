@@ -133,6 +133,7 @@ namespace Models.Spotify
         public string? Type { get; set; }
         [JsonPropertyName("uri")]
         public string? Uri { get; set; }
+        public List<Track>? Tracks { get; set; }
         public PlaylistDetails Simplify()
         {
             return new PlaylistDetails
@@ -223,13 +224,28 @@ namespace Models.Spotify
         {
             return new Track
             {
-                Album = Album,
-                Artists = Artists,
+                // Album = Album,
+                // Artists = Artists,
                 Seconds = DurationMs / 1000 ?? -1,
                 Name = Name,
-                Popularity = Popularity
+                Popularity = Popularity,
+                Uri = Uri
             };
         }
+    }
+
+    public class SpotifyCreatePlaylistBody
+    {
+        [JsonPropertyName("name")]
+        public string? Name { get; set; }
+        [JsonPropertyName("description")]
+        public string? Description { get; set; }
+    }
+
+    public class SpotifyAddTracksBody
+    {
+        [JsonPropertyName("uris")]
+        public required List<string> Uris { get; set; }
     }
 
 

@@ -93,7 +93,7 @@ export default function Playlist({params}: any) {
         <>
             <div className="flex flex-row text-white">
                 <PlaylistDetails playlist={playlist} setWarningOn={setWarningOn} />
-                <TrackList tracks={playlist.tracks} setPlaylist={(tracks: Track[]) => setPlaylist({...playlist, tracks: tracks})} w="w-1/2" />
+                <TrackList tracks={playlist.tracks} setPlaylist={(tracks: Track[]) => setPlaylist({...playlist, tracks: tracks})} classes="w-1/2" />
                 <BuilderConfiguration onSubmit={onSubmit}/>
             </div>
             <Modal isOpen={warningOn} onClose={onClose}>

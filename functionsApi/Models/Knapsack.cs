@@ -38,9 +38,11 @@ namespace Models.Knapsack
         [JsonPropertyName("seconds")]
         public required int Seconds { get; set; }
         [JsonPropertyName("name")]
-        public string? Name { get; set; }
+        public required string Name { get; set; }
         [JsonPropertyName("popularity")]
         public int? Popularity { get; set; }
+        [JsonPropertyName("uri")]
+        public required string Uri { get; set; }
     }
     #endregion
 

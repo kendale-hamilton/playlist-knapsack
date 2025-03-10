@@ -17,6 +17,7 @@ namespace Services.KnapsackService
         {
             string blob = $"{userId}/{customId}.json";
             List<Track> tracks = await _blobService.DownloadFile<List<Track>>(blob);
+            //TODO: Think about better way to delete after
             await _blobService.DeleteFile(blob);
             return tracks;
         }
