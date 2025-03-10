@@ -4,12 +4,13 @@ import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/16/solid";
 import { Button, Card } from "@nextui-org/react";
 
 type TrackListProps = {
+    w: string,
     tracks: Track[],
     setPlaylist?: (playlist: Track[]) => void
 }
 
 export default function TrackList(props: TrackListProps) {
-    const { tracks, setPlaylist } = props;
+    const { w, tracks, setPlaylist } = props;
 
     const swapTracks = (index_1: number, index_2: number) => {
         const newTracks: Track[] = [...tracks];
@@ -18,7 +19,7 @@ export default function TrackList(props: TrackListProps) {
     }
 
     return (
-        <div className="flex flex-col space-y-2 rounded-xl">
+        <div className={`flex flex-col space-y-2 rounded-xl ${w}`}>
             {tracks.map((track, index) => (
                 <div className="flex flex-row" key={index}>
                     <Card className="bg-white flex flex-row px-4 py-2 justify-between w-4/5">

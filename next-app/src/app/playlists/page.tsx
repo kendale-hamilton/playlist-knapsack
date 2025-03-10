@@ -1,7 +1,7 @@
 "use client"
 import { Playlist } from "@/types/Playlist"
 import { useEffect, useState } from "react"
-import getCookies from "../helpers/get-cookies"
+import getCookies from "../helpers/cookie-functions"
 import { useRouter } from "next/navigation"
 import { Card, CardHeader, Divider, CardBody, Image, user } from "@nextui-org/react"
 

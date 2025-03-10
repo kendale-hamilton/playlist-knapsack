@@ -1,5 +1,5 @@
 import { Cookies } from "@/types/cookies";
-import { getCookie } from "cookies-next";
+import { deleteCookie, getCookie } from "cookies-next";
 
 export default function getCookies(): Cookies {
     const cookieStore: Cookies = {
@@ -12,4 +12,14 @@ export default function getCookies(): Cookies {
     };
     console.log('cookieStore:', cookieStore);
     return cookieStore;
+}
+
+export function clearCookies() {
+    deleteCookie('userId');
+    deleteCookie('userDisplayName');
+    deleteCookie('userEmail');
+    deleteCookie('userAvatar');
+    deleteCookie('accessToken');
+    deleteCookie('refreshToken');
+    return getCookies();
 }

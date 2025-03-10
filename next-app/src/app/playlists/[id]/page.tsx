@@ -1,8 +1,8 @@
 "use client";
-import getCookies from "@/app/helpers/get-cookies";
+import getCookies from "@/app/helpers/cookie-functions";
 import { FullPlaylist } from "@/types/Playlist";
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import PlaylistDetails from "./PlaylistDetails";
 import BuilderConfiguration from "./BuilderConfiguration";
@@ -12,8 +12,6 @@ import TrackList from "../components/TrackList";
 
 
 export default function Playlist({params}: any) {
-    const router = useRouter()
-
     const [warningOn, setWarningOn] = useState(false)
     const [cookies, setCookies] = useState<Cookies | null>();
     const [submission, setSubmission] = useState<{
@@ -64,7 +62,7 @@ export default function Playlist({params}: any) {
             })
             const json = await res.json()
             const customId = json.id
-            router.push(`/playlists/custom/${customId}`)
+            redirect(`/playlists/custom/${customId}`)
         }
 
         const weightedTracks: Track[] = playlist ? playlist.tracks.map((track, index) => {
@@ -93,9 +91,9 @@ export default function Playlist({params}: any) {
 
     return (
         <>
-            <div className="flex h-full flex-row text-white">
+            <div className="flex flex-row text-white">
                 <PlaylistDetails playlist={playlist} setWarningOn={setWarningOn} />
-                <TrackList tracks={playlist.tracks} setPlaylist={(tracks: Track[]) => setPlaylist({...playlist, tracks: tracks})} />
+                <TrackList tracks={playlist.tracks} setPlaylist={(tracks: Track[]) => setPlaylist({...playlist, tracks: tracks})} w="w-1/2" />
                 <BuilderConfiguration onSubmit={onSubmit}/>
             </div>
             <Modal isOpen={warningOn} onClose={onClose}>
@@ -108,7 +106,7 @@ export default function Playlist({params}: any) {
                             </ModalBody>
                             <ModalFooter>
                                 <Button color="danger" onPress={onClose}>Cancel</Button>
-                                <Button color="primary" onPress={() => router.push('/playlists')}>Leave</Button>
+                                <Button color="primary" onPress={() => redirect('/playlists')}>Leave</Button>
                             </ModalFooter>
                         </div>
                     )}

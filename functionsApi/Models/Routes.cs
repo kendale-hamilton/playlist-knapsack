@@ -4,6 +4,7 @@ namespace Models.Routes
     public static class RouteConstants
     {
         #region Spotify
+        public const string SpotifyCallback = "spotify/callback";
         public const string SpotifyUserPlaylists = "spotify/users/{userId}/playlists";
         public const string SpotifyPlaylist = "spotify/playlists/{playlistId}";
         #endregion

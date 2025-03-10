@@ -1,5 +1,5 @@
 "use client";
-import getCookies from "@/app/helpers/get-cookies";
+import getCookies from "@/app/helpers/cookie-functions";
 import { Track } from "@/types/Track";
 import { useEffect, useState } from "react";
 import TrackList from "../../components/TrackList";
@@ -29,7 +29,7 @@ export default function CustomPlaylist({params}: any){
     }
 
     return (
-        <TrackList tracks={tracks} />
+        <TrackList tracks={tracks} w="w-full" />
     )
 
 }
