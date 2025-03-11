@@ -210,12 +210,9 @@ namespace Models.Knapsack
             List<int> otherIndexes = vector.GetNonZeroIndexes();
             foreach (int selfIndex in selfIndexes)
             {
-                foreach (int otherIndex in otherIndexes)
+                if (vector.ContainsValue(selfIndex))
                 {
-                    if (selfIndex == otherIndex)
-                    {
-                        return selfIndex;
-                    }
+                    return selfIndex;
                 }
             }
             return -1;
@@ -238,6 +235,11 @@ namespace Models.Knapsack
                 return true;
             }
             return false;
+        }
+
+        public void Pop(int value)
+        {
+            _values[value] = new Complex(0, 0);
         }
     }
     #endregion

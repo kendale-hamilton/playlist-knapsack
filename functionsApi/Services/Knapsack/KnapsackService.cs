@@ -2,6 +2,7 @@ using System.Numerics;
 using System.Text;
 using System.Text.Json;
 using Models.Knapsack;
+using Models.Requests.Knapsack;
 using Services.BlobService;
 
 namespace Services.KnapsackService
@@ -22,9 +23,9 @@ namespace Services.KnapsackService
             return tracks;
         }
 
-        public async Task<string> SolveKnapsack(int length, List<Track> tracks, string userId)
+        public async Task<string> SolveKnapsack(DesiredLengths desiredLengths, List<Track> tracks, string userId)
         {
-            Console.WriteLine($"Length: {length}");
+            Console.WriteLine($"Length: {desiredLengths.Length}, Min: {desiredLengths.Min}, Max: {desiredLengths.Max}");
             SubsetNode[] nodes = new SubsetNode[tracks.Count];
             for (int i = 0; i < tracks.Count; i++)
             {
@@ -58,13 +59,45 @@ namespace Services.KnapsackService
 
             Console.WriteLine("Starting Backwards Pass");
             SubsetNode top = level[0];
+            top.Vector.Print("Top Vector: ");
 
-            if (!top.Vector.ContainsValue(length))
+            int length = desiredLengths.Length;
+            int max = desiredLengths.Max ?? 0;
+            int min = desiredLengths.Min ?? 0;
+            int foundTotal = 0;
+
+            if (!top.Vector.ContainsValue(length) && (max == 0) && (min == 0))
             {
-                Console.WriteLine("No solution found");
-                return "";
+                throw new Exception("No solution found");
             }
-            Vec total = new Vec(length, 1);
+            else if (top.Vector.ContainsValue(length))
+            {
+                foundTotal = length;
+            }
+            else if (max != 0 && min != 0)
+            {
+                for (int i = 0; i + length <= max || length - i >= min; i++)
+                {
+                    if (length + i <= max && top.Vector.ContainsValue(length + i))
+                    {
+                        foundTotal = length + 1;
+                        break;
+                    }
+                    else if (length + i >= min && top.Vector.ContainsValue(length - i))
+                    {
+                        foundTotal = length - i;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                throw new Exception("No solution found");
+            }
+
+            Vec total = new Vec(foundTotal, 1);
+
+            total.Print("Total: ");
 
             List<Track> selections = BackwardsPass(total, top);
             Console.WriteLine("Finished Backwards Pass");
@@ -165,11 +198,23 @@ namespace Services.KnapsackService
 
             List<Track> leftPass;
             List<Track> rightPass;
-            int lMatch = left.Vector.FirstMatch(leftoverLeft);
+            int lMatch = 0;
+            int rMatch = 0;
+            while (lMatch + rMatch != sum.Length - 1)
+            {
+                lMatch = left.Vector.FirstMatch(leftoverLeft);
+                if (leftoverRight.ContainsValue(sum.Length - 1 - lMatch) && right.Vector.ContainsValue(sum.Length - 1 - lMatch))
+                {
+                    rMatch = sum.Length - 1 - lMatch;
+                    break;
+                }
+                left.Vector.Pop(lMatch);
+            }
+            
             Vec lMatchVec = new Vec(lMatch, 1);
-            leftPass = BackwardsPass(lMatchVec, left);
-            int rMatch = right.Vector.FirstMatch(leftoverRight);
             Vec rMatchVec = new Vec(rMatch, 1);
+
+            leftPass = BackwardsPass(lMatchVec, left);
             rightPass = BackwardsPass(rMatchVec, right);
             List<Track> children = [.. leftPass, .. rightPass];
             return children;

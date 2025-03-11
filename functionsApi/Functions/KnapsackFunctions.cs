@@ -22,9 +22,9 @@ namespace Controllers.KnapsackController
             Console.WriteLine("Solving Playlist...");
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             SolvePlaylistRequest? body = JsonSerializer.Deserialize<SolvePlaylistRequest>(requestBody);
-            int length = body.Length;
+            DesiredLengths lengths = body.DesiredLengths;
             List<Track> tracks = body.Tracks;
-            string id = await _knapsackService.SolveKnapsack(length, tracks, spotifyUserId);
+            string id = await _knapsackService.SolveKnapsack(lengths, tracks, spotifyUserId);
             return Ok(new {id});
         }
         [Function("KnapsackGetSolvedPlaylist")]

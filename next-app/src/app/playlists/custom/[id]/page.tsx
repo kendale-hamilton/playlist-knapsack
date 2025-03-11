@@ -56,7 +56,7 @@ export default function CustomPlaylist({params}: any){
     return (
         <div className="flex flex-row text-white">
             <PlaylistDetailSelector id={id} tracks={tracks} setPlaylist={setPlaylist}/>
-            <TrackList tracks={tracks} classes="w-1/2 justify-center" />
+            <TrackList tracks={tracks} classes="w-1/2" />
         </div>
     )
 

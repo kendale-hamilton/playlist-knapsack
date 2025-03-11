@@ -10,14 +10,17 @@ import { Track } from "@/types/Track";
 import { Cookies } from "@/types/cookies";
 import TrackList from "../components/TrackList";
 
+export type SubmissionProps = {
+    desiredLength: number,
+    max?: number,
+    min?: number,
+    weightingFunction: Function
+}
 
 export default function Playlist({params}: any) {
     const [warningOn, setWarningOn] = useState(false)
     const [cookies, setCookies] = useState<Cookies | null>();
-    const [submission, setSubmission] = useState<{
-        desiredLength: number,
-        weightingFunction: Function
-    } | null>();
+    const [submission, setSubmission] = useState<SubmissionProps | null>();
 
     useEffect(() => {
         const setCookieState = async () => {
@@ -50,7 +53,11 @@ export default function Playlist({params}: any) {
         const postPlaylist = async (tracks?: Track[]) => {
             const body = {
                 tracks: tracks,
-                length: submission.desiredLength
+                desiredLengths: {
+                   length: submission.desiredLength,
+                   max: submission.max,
+                   min: submission.min
+                }
             }
             const res = await fetch(`/api/knapsack/users/${cookies?.userId}/playlists`, 
             {
@@ -82,9 +89,13 @@ export default function Playlist({params}: any) {
 
     const onClose = () => { setWarningOn(false) }
 
-    const onSubmit = (desiredLength: number, weightingFunction: Function) => {
+    
+    const onSubmit = (props: SubmissionProps) => {
+        const { desiredLength, max, min, weightingFunction } = props
         setSubmission({
             desiredLength: desiredLength,
+            max: max ?? 0,
+            min: min ?? 0,
             weightingFunction: weightingFunction
         })
     }

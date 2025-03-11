@@ -32,6 +32,9 @@ export function toTimeStringSeconds(seconds: number): string {
 // }
 
 export function toSecs(timeString: string): number {
+    if (timeString === "") {
+        return 0
+    }
     console.log("timeString: ", timeString)
     const [hours, minutes, seconds] = timeString.split(':').map(Number)
     return (hours * 60 * 60 + minutes * 60 + seconds)

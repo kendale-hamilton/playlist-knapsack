@@ -1,11 +1,12 @@
 "use client"
 import { toSecs } from "@/app/helpers/time-functions"
 import { ChevronLeftIcon } from "@heroicons/react/16/solid"
-import { Button, Input } from "@nextui-org/react"
+import { Button, Input, Switch, Image } from "@nextui-org/react"
 import { useState } from "react"
+import { SubmissionProps } from "./page"
 
 type BuilderConfigurationProps = {
-    onSubmit: (desiredLength: number, weightingFunction: Function) => void
+    onSubmit: (submission: SubmissionProps) => void
 }
 
 type WeightingFunction = (index: number, playlistSize: number) => number
@@ -19,6 +20,9 @@ type WeightingSystem = {
 export default function BuilderConfiguration(props: BuilderConfigurationProps) {
     const { onSubmit } = props
     const [desiredLength, setDesireLength] = useState<string>("")
+    const [max, setMax] = useState<string>("")
+    const [min, setMin] = useState<string>("")
+    const [strict, setStrict] = useState<boolean>(true)
 
     const weightingSystems: WeightingSystem[] = [
         {name: "Unweighted", image: "/UnweightedGraph.png", function: (index, size) => 1  },
@@ -50,7 +54,7 @@ export default function BuilderConfiguration(props: BuilderConfigurationProps) {
                     <ChevronLeftIcon className="w-8 h-8 rotate-180" />
                 </Button>
             </div>
-            <img className="w-64 h-64" src={weightingSystems[weightingIndex].image} />
+            <Image className="w-64 h-64" src={weightingSystems[weightingIndex].image} />
             <Input
                 value={desiredLength}
                 onValueChange={setDesireLength}
@@ -63,7 +67,49 @@ export default function BuilderConfiguration(props: BuilderConfigurationProps) {
                     </div>
                 }
             />
-            <Button color="primary" isDisabled={!desiredLength.length} onPress={() => onSubmit(toSecs(desiredLength), weightingSystems[weightingIndex].function)}>Submit Playlist</Button>
+            { !strict && (
+                <>
+                    <Input
+                        value={max}
+                        onValueChange={setMax}
+                        label="Max Time"
+                        pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
+                        endContent={
+                            <div className="pointer-events-none flex items-center">
+                                <span className="text-default-400 text-small">hh:mm:ss</span>
+                            </div>
+                        }
+                    />
+                    <Input
+                        value={min}
+                        onValueChange={setMin}
+                        label="Min Time"
+                        pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
+                        endContent={
+                            <div className="pointer-events-none flex items-center">
+                                <span className="text-default-400 text-small">hh:mm:ss</span>
+                            </div>
+                        }
+                    />
+                </>
+            )}
+            <div className="mr-auto">
+                <Switch isSelected={strict} onValueChange={setStrict}>
+                    <p className="text-white">Strict Time?</p>
+                </Switch>
+            </div>
+            <Button 
+                color="primary" 
+                isDisabled={!desiredLength.length} 
+                onPress={() => onSubmit({
+                    desiredLength: toSecs(desiredLength), 
+                    max: toSecs(max), 
+                    min: toSecs(min), 
+                    weightingFunction: weightingSystems[weightingIndex].function
+                })}
+            >
+                Submit Playlist
+            </Button>
         </div>
     )
 }
