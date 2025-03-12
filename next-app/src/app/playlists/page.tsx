@@ -3,7 +3,7 @@ import { Playlist } from "@/types/Playlist"
 import { useEffect, useState } from "react"
 import getCookies from "../helpers/cookie-functions"
 import { useRouter } from "next/navigation"
-import { Card, CardHeader, Divider, CardBody, Image, user } from "@nextui-org/react"
+import { Card, CardBody, Image } from "@nextui-org/react"
 
 export default function Builder() {
     const router = useRouter()

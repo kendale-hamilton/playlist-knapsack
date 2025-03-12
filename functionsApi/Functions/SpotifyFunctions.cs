@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Models.Knapsack;
+using Models.Requests.Spotify;
 using Models.Routes;
 using Services.SpotifyService;
 
@@ -117,9 +118,11 @@ namespace Controllers.SpotifyController
             var accessToken = req.Headers.GetValues("Authorization").FirstOrDefault().Replace("Bearer ", "");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            Playlist? playlist = JsonSerializer.Deserialize<Playlist>(requestBody);
-            string href = await _spotifyService.UploadPlaylist(userId, playlist, accessToken);
-            return Ok(href);
+            SpotifyPostPlaylistRequest? body = JsonSerializer.Deserialize<SpotifyPostPlaylistRequest>(requestBody);
+            Playlist playlist = body.Playlist;
+            // string image = body.Image;
+            string url = await _spotifyService.UploadPlaylist(userId, playlist, accessToken);
+            return Ok(new {url});
         }
     }
 }

@@ -2,7 +2,7 @@
 import getCookies from "@/app/helpers/cookie-functions";
 import { FullPlaylist } from "@/types/Playlist";
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import PlaylistDetails from "./PlaylistDetails";
 import BuilderConfiguration from "./BuilderConfiguration";
@@ -18,6 +18,7 @@ export type SubmissionProps = {
 }
 
 export default function Playlist({params}: any) {
+    const router = useRouter()
     const [warningOn, setWarningOn] = useState(false)
     const [cookies, setCookies] = useState<Cookies | null>();
     const [submission, setSubmission] = useState<SubmissionProps | null>();
@@ -47,9 +48,7 @@ export default function Playlist({params}: any) {
     }, [])
 
     useEffect(() => {
-        if (!submission) {
-            return
-        }
+        if (submission) {
         const postPlaylist = async (tracks?: Track[]) => {
             const body = {
                 tracks: tracks,
@@ -69,7 +68,7 @@ export default function Playlist({params}: any) {
             })
             const json = await res.json()
             const customId = json.id
-            redirect(`/playlists/custom/${customId}`)
+            router.push(`/playlists/custom/${customId}?desired-length=${submission.desiredLength}`)
         }
 
         const weightedTracks: Track[] = playlist ? playlist.tracks.map((track, index) => {
@@ -80,7 +79,7 @@ export default function Playlist({params}: any) {
         }) : []
 
         postPlaylist(weightedTracks)
-
+    }
     }, [submission])
 
     if (!playlist) {

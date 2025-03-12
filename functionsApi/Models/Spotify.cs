@@ -248,6 +248,12 @@ namespace Models.Spotify
         public required List<string> Uris { get; set; }
     }
 
+    public class SpotifyAddPlaylistImageBody
+    {
+        [JsonPropertyName("image")]
+        public required string Image { get; set; }
+    }
+
 
     #endregion
 }

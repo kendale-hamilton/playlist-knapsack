@@ -20,6 +20,7 @@ type WeightingSystem = {
 export default function BuilderConfiguration(props: BuilderConfigurationProps) {
     const { onSubmit } = props
     const [desiredLength, setDesireLength] = useState<string>("")
+    const [margin, setMargin] = useState<string>("00:02:30")
     const [max, setMax] = useState<string>("")
     const [min, setMin] = useState<string>("")
     const [strict, setStrict] = useState<boolean>(true)
@@ -55,6 +56,20 @@ export default function BuilderConfiguration(props: BuilderConfigurationProps) {
                 </Button>
             </div>
             <Image className="w-64 h-64" src={weightingSystems[weightingIndex].image} />
+            { !strict && (
+                <Input
+                    value={min}
+                    onValueChange={setMin}
+                    label="Min Time"
+                    pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
+                    endContent={
+                        <div className="pointer-events-none flex items-center">
+                            <span className="text-default-400 text-small">hh:mm:ss</span>
+                        </div>
+                    }
+                />
+                
+            )}
             <Input
                 value={desiredLength}
                 onValueChange={setDesireLength}
@@ -67,31 +82,36 @@ export default function BuilderConfiguration(props: BuilderConfigurationProps) {
                     </div>
                 }
             />
+            { strict && (
+                <Input
+                    value={margin}
+                    onValueChange={setMargin}
+                    label="Margin"
+                    pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
+                    startContent={
+                        <div className="pointer-events-none flex items-center">
+                            <span className="text-default-400 text-small">+/-</span>
+                        </div>
+                    }
+                    endContent={
+                        <div className="pointer-events-none flex items-center">
+                            <span className="text-default-400 text-small">hh:mm:ss</span>
+                        </div>
+                    }
+                />
+            )}
             { !strict && (
-                <>
-                    <Input
-                        value={max}
-                        onValueChange={setMax}
-                        label="Max Time"
-                        pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
-                        endContent={
-                            <div className="pointer-events-none flex items-center">
-                                <span className="text-default-400 text-small">hh:mm:ss</span>
-                            </div>
-                        }
-                    />
-                    <Input
-                        value={min}
-                        onValueChange={setMin}
-                        label="Min Time"
-                        pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
-                        endContent={
-                            <div className="pointer-events-none flex items-center">
-                                <span className="text-default-400 text-small">hh:mm:ss</span>
-                            </div>
-                        }
-                    />
-                </>
+                <Input
+                    value={max}
+                    onValueChange={setMax}
+                    label="Max Time"
+                    pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
+                    endContent={
+                        <div className="pointer-events-none flex items-center">
+                            <span className="text-default-400 text-small">hh:mm:ss</span>
+                        </div>
+                    }
+                />
             )}
             <div className="mr-auto">
                 <Switch isSelected={strict} onValueChange={setStrict}>
@@ -103,8 +123,8 @@ export default function BuilderConfiguration(props: BuilderConfigurationProps) {
                 isDisabled={!desiredLength.length} 
                 onPress={() => onSubmit({
                     desiredLength: toSecs(desiredLength), 
-                    max: toSecs(max), 
-                    min: toSecs(min), 
+                    max: max ? toSecs(max) : length + toSecs(margin), 
+                    min: min ? toSecs(min) : length - toSecs(margin), 
                     weightingFunction: weightingSystems[weightingIndex].function
                 })}
             >

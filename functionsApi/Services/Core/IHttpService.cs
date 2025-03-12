@@ -5,5 +5,6 @@ namespace Services.HttpService
     {
         Task<HttpResponseMessage> MakeGetRequest(string url, string token);
         Task<HttpResponseMessage> MakePostRequest(string url, string token, HttpContent content);
+        Task<HttpResponseMessage> MakePutRequest(string url, string token, HttpContent content, string contentType);
     }
 }

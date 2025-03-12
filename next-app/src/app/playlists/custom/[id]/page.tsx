@@ -5,27 +5,32 @@ import { useEffect, useState } from "react";
 import TrackList from "../../components/TrackList";
 import PlaylistDetailSelector from "./components/PlaylistDetailSelector";
 import { FullPlaylist } from "@/types/Playlist";
+import { Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
+import { redirect, useSearchParams } from "next/navigation";
 
 
 export default function CustomPlaylist({params}: any){
+    const searchParams = useSearchParams()
+    const desiredLength = searchParams.get("desired-length")
+    
     const [id, setId] = useState<string>("")
     const [tracks, setTracks] = useState<Track[]>()
     const [playlist, setPlaylist] = useState<FullPlaylist>()
+    const [url, setUrl] = useState<string | null>()
+    const [open, setOpen] = useState(false)
+    // const [image, setImage] = useState<string | null>()
     useEffect(() => {
+        console.log("Component Mounted")
         if(!tracks){
-            console.log("Fetching tracks")
             const fetchCustomPlaylist = async () => {
                 const { id } = await params;
                 setId(id)
-                console.log("Fetching playlist: ", id)
                 const cookies = getCookies();
                 const response = await fetch(`/api/knapsack/users/${cookies.userId}/playlists/${id}`)
                 const customPlaylist = await response.json()
-                console.log("Response: ", customPlaylist)
                 setTracks(customPlaylist)
             }
-        
-        fetchCustomPlaylist()
+            fetchCustomPlaylist()
         }
     }, [])
 
@@ -34,16 +39,22 @@ export default function CustomPlaylist({params}: any){
         {
             const postSpotifyPlaylist = async () => {
                 const cookies = getCookies();
+                const body = {
+                    playlist: playlist,
+                    // image: btoa(image || "")
+                }
+                console.log("Posting playlist: ", body)
                 const response = await fetch(`/api/spotify/users/${cookies.userId}/playlists`, {
                     method: "POST",
                     headers: {
                         Authorization: `Bearer ${cookies.accessToken}`,
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify(playlist)
+                    body: JSON.stringify(body)
                 })
                 const newPlaylist = await response.json()
-                console.log("New Playlist: ", newPlaylist)
+                setUrl(newPlaylist.url)
+                setOpen(true)
             }
             postSpotifyPlaylist()
         }
@@ -55,8 +66,21 @@ export default function CustomPlaylist({params}: any){
 
     return (
         <div className="flex flex-row text-white">
-            <PlaylistDetailSelector id={id} tracks={tracks} setPlaylist={setPlaylist}/>
+            <PlaylistDetailSelector id={id} tracks={tracks} desiredLength={Number(desiredLength)} setPlaylist={setPlaylist} />
             <TrackList tracks={tracks} classes="w-1/2" />
+            <Modal isOpen={open} onClose={() => setOpen(false)}>
+                <ModalContent>
+                    <div className="text-white">
+                        <ModalHeader>Your playlist has been uploaded to spotify!</ModalHeader>
+                        <ModalBody>
+                            <Link href={url ?? '/'}>Click here to view your playlist on spotify</Link>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="primary" onPress={() => {redirect('/')}}>Home</Button>
+                        </ModalFooter>
+                    </div>
+                </ModalContent>
+            </Modal>
         </div>
     )
 

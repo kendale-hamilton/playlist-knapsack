@@ -81,7 +81,7 @@ namespace Services.SpotifyService
             string createContent = await createResponse.Content.ReadAsStringAsync();
             SpotifyPlaylistsItem newPlaylist = JsonSerializer.Deserialize<SpotifyPlaylistsItem>(createContent);
             string id = newPlaylist.Id;
-            string href = newPlaylist.Href;
+            string url = newPlaylist.ExternalUrls.Spotify;
 
             List<string> allUris = [.. playlist.Tracks.Select(t => t.Uri)];
 
@@ -103,8 +103,16 @@ namespace Services.SpotifyService
             }
 
             // TODO: Add Custom Image here
+            // Console.WriteLine("Image: " + image);
+            // if (image != null)
+            // {
+            //     string replaced = image.Replace("data:image/jpeg;base64,", "");
+            //     byte[] imageBytes = Convert.FromBase64String(image);
+            //     HttpContent imageContent = new ByteArrayContent(imageBytes);
+            //     var imageResponse = await _httpService.MakePutRequest($"https://api.spotify.com/v1/playlists/{id}/images", token, imageContent, "image/jpeg");
+            // }
 
-            return href;
+            return url;
         }
     }
 }
