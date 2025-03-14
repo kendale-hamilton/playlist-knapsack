@@ -23,7 +23,7 @@ export default function BuilderConfiguration(props: BuilderConfigurationProps) {
     const [margin, setMargin] = useState<string>("00:02:30")
     const [max, setMax] = useState<string>("")
     const [min, setMin] = useState<string>("")
-    const [strict, setStrict] = useState<boolean>(true)
+    const [useMargin, setUseMargin] = useState<boolean>(true)
 
     const weightingSystems: WeightingSystem[] = [
         {name: "Unweighted", image: "/UnweightedGraph.png", function: (index, size) => 1  },
@@ -56,7 +56,7 @@ export default function BuilderConfiguration(props: BuilderConfigurationProps) {
                 </Button>
             </div>
             <Image className="w-64 h-64" src={weightingSystems[weightingIndex].image} />
-            { !strict && (
+            { !useMargin && (
                 <Input
                     value={min}
                     onValueChange={setMin}
@@ -82,7 +82,7 @@ export default function BuilderConfiguration(props: BuilderConfigurationProps) {
                     </div>
                 }
             />
-            { strict && (
+            { useMargin && (
                 <Input
                     value={margin}
                     onValueChange={setMargin}
@@ -100,7 +100,7 @@ export default function BuilderConfiguration(props: BuilderConfigurationProps) {
                     }
                 />
             )}
-            { !strict && (
+            { !useMargin && (
                 <Input
                     value={max}
                     onValueChange={setMax}
@@ -113,9 +113,9 @@ export default function BuilderConfiguration(props: BuilderConfigurationProps) {
                     }
                 />
             )}
-            <div className="mr-auto">
-                <Switch isSelected={strict} onValueChange={setStrict}>
-                    <p className="text-white">Strict Time?</p>
+            <div className="mr-auto flex flex-row space-x-2 items-center">
+                <Switch isSelected={useMargin} onValueChange={setUseMargin}>
+                    <p className="text-white">Margin</p>
                 </Switch>
             </div>
             <Button 

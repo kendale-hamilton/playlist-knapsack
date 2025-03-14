@@ -28,7 +28,7 @@ export default function Builder() {
     }
 
     return (
-        <div className="m-4 text-center">
+        <div className="m-4 text-center bg-neutral-900">
             <p className="text-purple-300 my-4 font-bold">Select one of your playlists to begin</p>
             <div className="flex justify-center">
                 <div className="grid grid-cols-3 gap-8">

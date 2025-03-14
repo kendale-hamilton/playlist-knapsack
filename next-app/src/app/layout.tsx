@@ -20,7 +20,7 @@ export default async function RootLayout({
         <Providers>
           <div className="flex flex-col h-screen">
             <MainAppBar />
-            <div className="flex-grow" >
+            <div className="flex-grow">
               {children}
             </div>
           </div>

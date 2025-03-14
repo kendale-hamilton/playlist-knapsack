@@ -100,8 +100,8 @@ export default function Playlist({params}: any) {
     }
 
     return (
-        <>
-            <div className="flex flex-row text-white">
+        <div className="min-h-screen bg-neutral-900">
+            <div className="flex flex-row text-white h-fit">
                 <PlaylistDetails playlist={playlist} setWarningOn={setWarningOn} />
                 <TrackList tracks={playlist.tracks} setPlaylist={(tracks: Track[]) => setPlaylist({...playlist, tracks: tracks})} classes="w-1/2" />
                 <BuilderConfiguration onSubmit={onSubmit}/>
@@ -122,6 +122,6 @@ export default function Playlist({params}: any) {
                     )}
                 </ModalContent>
             </Modal>
-        </>
+        </div>
     ) 
 }

@@ -207,7 +207,6 @@ namespace Models.Knapsack
         public int FirstMatch(Vec vector)
         {
             List<int> selfIndexes = GetNonZeroIndexes();
-            List<int> otherIndexes = vector.GetNonZeroIndexes();
             foreach (int selfIndex in selfIndexes)
             {
                 if (vector.ContainsValue(selfIndex))
@@ -215,7 +214,7 @@ namespace Models.Knapsack
                     return selfIndex;
                 }
             }
-            return -1;
+            throw new Exception($"No match found between {this} and {vector}");
         }
 
         public Vec DeepCopy()

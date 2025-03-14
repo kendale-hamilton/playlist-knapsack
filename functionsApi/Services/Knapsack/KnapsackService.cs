@@ -25,14 +25,12 @@ namespace Services.KnapsackService
 
         public async Task<string> SolveKnapsack(DesiredLengths desiredLengths, List<Track> tracks, string userId)
         {
-            Console.WriteLine($"Length: {desiredLengths.Length}, Min: {desiredLengths.Min}, Max: {desiredLengths.Max}");
             SubsetNode[] nodes = new SubsetNode[tracks.Count];
             for (int i = 0; i < tracks.Count; i++)
             {
                 nodes[i] = new SubsetNode(tracks[i]);
             }
             
-            Console.WriteLine("Starting FFT Convolution");
             SubsetNode[] level = nodes;
             while (level.Length > 1)
             {
@@ -55,9 +53,6 @@ namespace Services.KnapsackService
                 }
                 level = nextLevel;
             }   
-            Console.WriteLine("Finished FFT Convolution");
-
-            Console.WriteLine("Starting Backwards Pass");
             SubsetNode top = level[0];
             top.Vector.Print("Top Vector: ");
 
@@ -96,11 +91,7 @@ namespace Services.KnapsackService
             }
 
             Vec total = new Vec(foundTotal, 1);
-
-            total.Print("Total: ");
-
             List<Track> selections = BackwardsPass(total, top);
-            Console.WriteLine("Finished Backwards Pass");
 
             string json = JsonSerializer.Serialize(selections);
             var stream = new MemoryStream(Encoding.UTF8.GetBytes(json));
@@ -196,8 +187,6 @@ namespace Services.KnapsackService
             Vec leftoverLeft = VectorSubtraction(sum, right.Vector);
             Vec leftoverRight = VectorSubtraction(sum, left.Vector);
 
-            List<Track> leftPass;
-            List<Track> rightPass;
             int lMatch = 0;
             int rMatch = 0;
             while (lMatch + rMatch != sum.Length - 1)
@@ -214,8 +203,9 @@ namespace Services.KnapsackService
             Vec lMatchVec = new Vec(lMatch, 1);
             Vec rMatchVec = new Vec(rMatch, 1);
 
-            leftPass = BackwardsPass(lMatchVec, left);
-            rightPass = BackwardsPass(rMatchVec, right);
+
+            List<Track> leftPass = BackwardsPass(lMatchVec, left);
+            List<Track> rightPass = BackwardsPass(rMatchVec, right);
             List<Track> children = [.. leftPass, .. rightPass];
             return children;
         }
