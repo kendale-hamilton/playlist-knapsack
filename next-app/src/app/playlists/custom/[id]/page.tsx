@@ -66,8 +66,14 @@ export default function CustomPlaylist({params}: any){
 
     return (
         <div className="flex flex-row text-white bg-neutral-900">
-            <PlaylistDetailSelector id={id} tracks={tracks} desiredLength={Number(desiredLength)} setPlaylist={setPlaylist} />
-            <TrackList tracks={tracks} classes="w-1/2" />
+            <div className="hidden md:flex flex-row w-full">
+                <PlaylistDetailSelector width="1/2" id={id} tracks={tracks} desiredLength={Number(desiredLength)} setPlaylist={setPlaylist} />
+                <TrackList title="Selected Tracks" tracks={tracks} width="1/2" />
+            </div>
+            <div className="flex flex-col md:hidden w-full">
+                <PlaylistDetailSelector width="full" id={id} tracks={tracks} desiredLength={Number(desiredLength)} setPlaylist={setPlaylist} />
+                <TrackList title="Selected Tracks" tracks={tracks} width="full" />
+            </div>
             <Modal isOpen={open} onClose={() => setOpen(false)}>
                 <ModalContent>
                     <div className="text-white">

@@ -5,6 +5,7 @@ import { Button, Input, Image, Form } from "@nextui-org/react"
 import { useState } from "react"
 
 type PlaylistDetailSelectorProps = {
+    width: string,
     id: string,
     tracks: Track[],
     desiredLength: number,
@@ -13,7 +14,7 @@ type PlaylistDetailSelectorProps = {
 }
 
 export default function PlaylistDetailSelector(props: PlaylistDetailSelectorProps) {
-    const { id, tracks, desiredLength, setPlaylist } = props
+    const { width, id, tracks, desiredLength, setPlaylist } = props
     const length = playlistDuration(tracks)
     // const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     //     const file = event.target.files?.[0];
@@ -68,8 +69,8 @@ export default function PlaylistDetailSelector(props: PlaylistDetailSelectorProp
     }
 
     return (
-        <div className="w-1/4 flex flex-col m-2 p-4 space-y-4 items-center">
-            <h2>Enter Your Playlist Details</h2>
+        <div className={`w-${width} flex flex-col m-2 p-8 space-y-4 items-center`}>
+            <p className="font-bold underline">Enter Your Playlist Details</p>
             <Input label="Name" placeholder="Enter your new playlist name" type="text" value={newPlaylist.details.name} onValueChange={(value) => setName(value)} isRequired/>
             <Input label="Description" placeholder="Enter your new playlist description" type="text" value={newPlaylist.details.description} onValueChange={(value) => setDescription(value) } isClearable />
             {/*Figure out how to have the user upload an image */}

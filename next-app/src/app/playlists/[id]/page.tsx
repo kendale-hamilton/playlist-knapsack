@@ -1,7 +1,7 @@
 "use client";
 import getCookies from "@/app/helpers/cookie-functions";
 import { FullPlaylist } from "@/types/Playlist";
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs } from "@nextui-org/react";
 import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import PlaylistDetails from "./PlaylistDetails";
@@ -22,6 +22,7 @@ export default function Playlist({params}: any) {
     const [warningOn, setWarningOn] = useState(false)
     const [cookies, setCookies] = useState<Cookies | null>();
     const [submission, setSubmission] = useState<SubmissionProps | null>();
+    const [activeTab, setActiveTab] = useState(0)
 
     useEffect(() => {
         const setCookieState = async () => {
@@ -102,9 +103,26 @@ export default function Playlist({params}: any) {
     return (
         <div className="min-h-screen bg-neutral-900">
             <div className="flex flex-row text-white h-fit">
-                <PlaylistDetails playlist={playlist} setWarningOn={setWarningOn} />
-                <TrackList tracks={playlist.tracks} setPlaylist={(tracks: Track[]) => setPlaylist({...playlist, tracks: tracks})} classes="w-1/2" />
-                <BuilderConfiguration onSubmit={onSubmit}/>
+                <div className="hidden md:flex flex-row w-full">
+                    <PlaylistDetails width="1/4" playlist={playlist} setWarningOn={setWarningOn} />
+                    <TrackList 
+                        title="Tracks"
+                        tracks={playlist.tracks} 
+                        setPlaylist={(tracks: Track[]) => setPlaylist({...playlist, tracks: tracks})} 
+                        width="1/2"
+                    />
+                    <BuilderConfiguration width="1/4" onSubmit={onSubmit}/>
+                </div>
+                <div className="flex flex-col md:hidden w-full">
+                    <PlaylistDetails width="full" playlist={playlist} setWarningOn={setWarningOn} />
+                    <BuilderConfiguration width="full" onSubmit={onSubmit}/>
+                    <TrackList 
+                        title="Tracks"
+                        tracks={playlist.tracks} 
+                        setPlaylist={(tracks: Track[]) => setPlaylist({...playlist, tracks: tracks})} 
+                        width="full"
+                    />
+                </div>
             </div>
             <Modal isOpen={warningOn} onClose={onClose}>
                 <ModalContent>

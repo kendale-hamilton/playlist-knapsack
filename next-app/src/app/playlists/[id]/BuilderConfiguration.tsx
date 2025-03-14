@@ -6,7 +6,8 @@ import { useState } from "react"
 import { SubmissionProps } from "./page"
 
 type BuilderConfigurationProps = {
-    onSubmit: (submission: SubmissionProps) => void
+    onSubmit: (submission: SubmissionProps) => void,
+    width: string
 }
 
 type WeightingFunction = (index: number, playlistSize: number) => number
@@ -18,7 +19,7 @@ type WeightingSystem = {
 }
 
 export default function BuilderConfiguration(props: BuilderConfigurationProps) {
-    const { onSubmit } = props
+    const { width, onSubmit } = props
     const [desiredLength, setDesireLength] = useState<string>("")
     const [margin, setMargin] = useState<string>("00:02:30")
     const [max, setMax] = useState<string>("")
@@ -42,9 +43,10 @@ export default function BuilderConfiguration(props: BuilderConfigurationProps) {
     }
 
     return (
-        <div className="w-1/4 flex flex-col m-8 space-y-4 items-center">
+        <div className={`w-${width} flex flex-col p-8 space-y-4 items-center`}>
             <p className="font-bold underline">Configuration</p>
-            <p>Select your desired weighting scheme below</p>
+            <p>Playlist Weighting coming soon!</p>
+            {/* <p>Select your desired weighting scheme below</p>
             <p>(x: track number, y: preference in final playlist) </p>
             <div className="flex flex-row space-x-4 items-center justify-center">
                 <Button isIconOnly onPress={() => left() } variant="light">
@@ -54,8 +56,10 @@ export default function BuilderConfiguration(props: BuilderConfigurationProps) {
                 <Button isIconOnly onPress={() => right()} variant="light">
                     <ChevronLeftIcon className="w-8 h-8 rotate-180" />
                 </Button>
-            </div>
+            </div> 
             <Image className="w-64 h-64" src={weightingSystems[weightingIndex].image} />
+            */}
+            <p className="font-bold">Length</p>
             { !useMargin && (
                 <Input
                     value={min}
