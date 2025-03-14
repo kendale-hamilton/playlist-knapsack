@@ -19,10 +19,8 @@ export type SubmissionProps = {
 
 export default function Playlist({params}: any) {
     const router = useRouter()
-    const [warningOn, setWarningOn] = useState(false)
     const [cookies, setCookies] = useState<Cookies | null>();
     const [submission, setSubmission] = useState<SubmissionProps | null>();
-    const [activeTab, setActiveTab] = useState(0)
 
     useEffect(() => {
         const setCookieState = async () => {
@@ -86,9 +84,6 @@ export default function Playlist({params}: any) {
     if (!playlist) {
         return <div>Loading...</div>
     }
-
-    const onClose = () => { setWarningOn(false) }
-
     
     const onSubmit = (props: SubmissionProps) => {
         const { desiredLength, max, min, weightingFunction } = props
@@ -104,7 +99,7 @@ export default function Playlist({params}: any) {
         <div className="min-h-screen bg-neutral-900">
             <div className="flex flex-row text-white h-fit">
                 <div className="hidden md:flex flex-row w-full">
-                    <PlaylistDetails width="1/4" playlist={playlist} setWarningOn={setWarningOn} />
+                    <PlaylistDetails onSwitch={() => router.push('/playlists')} width="1/4" playlist={playlist} />
                     <TrackList 
                         title="Tracks"
                         tracks={playlist.tracks} 
@@ -114,7 +109,7 @@ export default function Playlist({params}: any) {
                     <BuilderConfiguration width="1/4" onSubmit={onSubmit}/>
                 </div>
                 <div className="flex flex-col md:hidden w-full">
-                    <PlaylistDetails width="full" playlist={playlist} setWarningOn={setWarningOn} />
+                    <PlaylistDetails onSwitch={() => router.push('/playlists')} width="full" playlist={playlist}  />
                     <BuilderConfiguration width="full" onSubmit={onSubmit}/>
                     <TrackList 
                         title="Tracks"
@@ -124,22 +119,6 @@ export default function Playlist({params}: any) {
                     />
                 </div>
             </div>
-            <Modal isOpen={warningOn} onClose={onClose}>
-                <ModalContent>
-                    {(onClose) => (
-                        <div className="text-white">
-                            <ModalHeader>Are you sure you want to leave this page?</ModalHeader>
-                            <ModalBody>
-                                <p>Any changes will not be saved.</p>
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button color="danger" onPress={onClose}>Cancel</Button>
-                                <Button color="primary" onPress={() => redirect('/playlists')}>Leave</Button>
-                            </ModalFooter>
-                        </div>
-                    )}
-                </ModalContent>
-            </Modal>
         </div>
     ) 
 }

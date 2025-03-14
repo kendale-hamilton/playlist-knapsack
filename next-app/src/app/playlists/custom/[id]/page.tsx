@@ -6,12 +6,14 @@ import TrackList from "../../components/TrackList";
 import PlaylistDetailSelector from "./components/PlaylistDetailSelector";
 import { FullPlaylist } from "@/types/Playlist";
 import { Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
-import { redirect, useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 
 export default function CustomPlaylist({params}: any){
     const searchParams = useSearchParams()
     const desiredLength = searchParams.get("desired-length")
+
+    const router = useRouter()
     
     const [id, setId] = useState<string>("")
     const [tracks, setTracks] = useState<Track[]>()
@@ -19,8 +21,8 @@ export default function CustomPlaylist({params}: any){
     const [url, setUrl] = useState<string | null>()
     const [open, setOpen] = useState(false)
     // const [image, setImage] = useState<string | null>()
+
     useEffect(() => {
-        console.log("Component Mounted")
         if(!tracks){
             const fetchCustomPlaylist = async () => {
                 const { id } = await params;
@@ -82,7 +84,7 @@ export default function CustomPlaylist({params}: any){
                             <Link href={url ?? '/'}>Click here to view your playlist on spotify</Link>
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="primary" onPress={() => {redirect('/')}}>Home</Button>
+                            <Button color="primary" onPress={() => {router.push('/')}}>Home</Button>
                         </ModalFooter>
                     </div>
                 </ModalContent>
