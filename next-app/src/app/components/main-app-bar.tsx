@@ -6,9 +6,24 @@ import querystring from 'querystring';
 import { useEffect, useState } from "react";
 import getCookies, { clearCookies } from "../helpers/cookie-functions";
 
+export const signIn = async () => {
+    const state = window.location.href;
+    redirect('https://accounts.spotify.com/authorize?' +
+        querystring.stringify({
+            response_type: 'code',
+            client_id: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
+            scope: 'playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private user-read-private user-read-email ugc-image-upload',
+            redirect_uri: 'http://localhost:7071/api/spotify/callback',
+            state: state,
+            show_dialog: true
+        })
+    );
+}
+
 export default function MainAppBar() {
     const router = useRouter();
     const [cookies, setCookies] = useState<Cookies | null>();
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const setCookieState = async () => {
@@ -16,25 +31,17 @@ export default function MainAppBar() {
             setCookies(cookieStore);
         }
         setCookieState()
+        setLoading(false);
     }, [])
-
-    const signIn = async () => {
-        const state = window.location.href;
-        redirect('https://accounts.spotify.com/authorize?' +
-            querystring.stringify({
-                response_type: 'code',
-                client_id: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
-                scope: 'playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private user-read-private user-read-email ugc-image-upload',
-                redirect_uri: 'http://localhost:7071/api/spotify/callback',
-                state: state,
-                show_dialog: true
-            })
-        );
-    }
 
     const signOut = async () => {
         const emptyStore = await clearCookies();
         setCookies(emptyStore);
+        if (window.location.pathname === "/") {
+            window.location.reload();
+        } else {
+            router.push("/");
+        }
     }
 
     return (
@@ -51,27 +58,31 @@ export default function MainAppBar() {
                     Playlist Knapsack
                 </Button>
             </NavbarBrand>
-            {cookies?.userDisplayName && (
-                <NavbarItem>
-                    <Dropdown>
-                        <DropdownTrigger>
-                            <Avatar src={cookies?.userAvatar} />
-                        </DropdownTrigger>
-                        <DropdownMenu>
-                            <DropdownItem key="Sign Out" onPress={() => signOut()}>
-                                <p className="text-white">Sign out</p>
-                            </DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>
-                </NavbarItem>
-            )}
-            {!cookies?.userDisplayName && (
-                <NavbarItem>
-                    <Button onPress={() => signIn()}>
-                        Sign in
-                    </Button>
-                </NavbarItem>
-            )}
+            {!loading && (
+                <>
+                    {cookies?.userDisplayName && (
+                        <NavbarItem>
+                            <Dropdown>
+                                <DropdownTrigger>
+                                    <Avatar src={cookies?.userAvatar} />
+                                </DropdownTrigger>
+                                <DropdownMenu>
+                                    <DropdownItem key="Sign Out" onPress={() => signOut()}>
+                                        <p className="text-white">Sign out</p>
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
+                        </NavbarItem>
+                    )} 
+                    {!cookies?.userDisplayName && (
+                        <NavbarItem>
+                            <Button onPress={() => signIn()}>
+                                Sign in
+                            </Button>
+                        </NavbarItem>
+                    )}
+                </>
+            )}  
         </Navbar>
     )
 }
