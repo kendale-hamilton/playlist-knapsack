@@ -69,7 +69,7 @@ export default function PlaylistDetailSelector(props: PlaylistDetailSelectorProp
     }
 
     return (
-        <div className={`w-${width} flex flex-col m-2 p-8 space-y-4 items-center`}>
+        <div className={`${width} flex flex-col m-2 p-8 space-y-4 items-center`}>
             <p className="font-bold underline">Enter Your Playlist Details</p>
             <Input label="Name" placeholder="Enter your new playlist name" type="text" value={newPlaylist.details.name} onValueChange={(value) => setName(value)} isRequired/>
             <Input label="Description" placeholder="Enter your new playlist description" type="text" value={newPlaylist.details.description} onValueChange={(value) => setDescription(value) } isClearable />

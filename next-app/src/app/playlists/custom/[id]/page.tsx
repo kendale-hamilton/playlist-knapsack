@@ -59,8 +59,8 @@ export default function CustomPlaylist({params}: any){
 
             const runPostSpotifyPlaylist = async () => {
                 const response = await fetchWithRetry(postSpotifyPlaylist)
-                const newPlaylist = await response.json()
-                setUrl(newPlaylist.url)
+                const url = await response.text()
+                setUrl(url)
                 setOpen(true)
             }
 
@@ -74,13 +74,13 @@ export default function CustomPlaylist({params}: any){
 
     return (
         <div className="flex flex-row text-white bg-neutral-900">
-            <div className="hidden md:flex flex-row w-full">
-                <PlaylistDetailSelector width="1/2" id={id} tracks={tracks} desiredLength={Number(desiredLength)} setPlaylist={setPlaylist} />
-                <TrackList title="Selected Tracks" tracks={tracks} width="1/2" />
+            <div className="hidden md:flex flex-row w-full justify-center">
+                <PlaylistDetailSelector width="w-1/2" id={id} tracks={tracks} desiredLength={Number(desiredLength)} setPlaylist={setPlaylist} />
+                <TrackList title="Selected Tracks" tracks={tracks} width="w-1/2" />
             </div>
             <div className="flex flex-col md:hidden w-full">
-                <PlaylistDetailSelector width="full" id={id} tracks={tracks} desiredLength={Number(desiredLength)} setPlaylist={setPlaylist} />
-                <TrackList title="Selected Tracks" tracks={tracks} width="full" />
+                <PlaylistDetailSelector width="w-full" id={id} tracks={tracks} desiredLength={Number(desiredLength)} setPlaylist={setPlaylist} />
+                <TrackList title="Selected Tracks" tracks={tracks} width="w-full" />
             </div>
             <Modal isOpen={open} onClose={() => setOpen(false)}>
                 <ModalContent>

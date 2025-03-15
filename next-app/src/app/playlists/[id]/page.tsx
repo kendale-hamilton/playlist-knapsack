@@ -105,23 +105,23 @@ export default function Playlist({params}: any) {
     return (
         <div className="bg-neutral-900 text-white h-fit">
             <div className="hidden md:flex flex-row w-full justify-center">
-                <PlaylistDetails onSwitch={() => router.push('/playlists')} width="1/4" playlist={playlist} />
+                <PlaylistDetails onSwitch={() => router.push('/playlists')} width="w-1/4" playlist={playlist} />
                 <TrackList 
                     title="Tracks"
                     tracks={playlist.tracks} 
                     setPlaylist={(tracks: Track[]) => setPlaylist({...playlist, tracks: tracks})} 
-                    width="1/2"
+                    width="w-1/2"
                 />
-                <BuilderConfiguration width="1/4" onSubmit={onSubmit}/>
+                <BuilderConfiguration width="w-1/4" onSubmit={onSubmit}/>
             </div>
             <div className="flex flex-col md:hidden w-full">
-                <PlaylistDetails onSwitch={() => router.push('/playlists')} width="full" playlist={playlist}  />
-                <BuilderConfiguration width="full" onSubmit={onSubmit}/>
+                <PlaylistDetails onSwitch={() => router.push('/playlists')} width="w-full" playlist={playlist}  />
+                <BuilderConfiguration width="w-full" onSubmit={onSubmit}/>
                 <TrackList 
                     title="Tracks"
                     tracks={playlist.tracks} 
                     setPlaylist={(tracks: Track[]) => setPlaylist({...playlist, tracks: tracks})} 
-                    width="full"
+                    width="w-full"
                 />
             </div>
         </div>

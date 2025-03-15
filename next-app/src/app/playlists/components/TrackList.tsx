@@ -20,7 +20,7 @@ export default function TrackList(props: TrackListProps) {
     }
 
     return (
-        <div className={`flex flex-col p-8 space-y-4 items-center w-${width}`}>
+        <div className={`flex flex-col p-8 space-y-4 items-center ${width}`}>
             <p className="font-bold underline">{title}</p>
             <div className="flex flex-col p-2 space-y-2 w-full">
                 {tracks.map((track, index) => (
