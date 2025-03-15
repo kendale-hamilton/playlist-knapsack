@@ -7,6 +7,7 @@ import PlaylistDetailSelector from "./components/PlaylistDetailSelector";
 import { FullPlaylist } from "@/types/Playlist";
 import { Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { fetchWithRetry } from "@/app/helpers/retry-fetch";
 
 
 export default function CustomPlaylist({params}: any){
@@ -45,8 +46,7 @@ export default function CustomPlaylist({params}: any){
                     playlist: playlist,
                     // image: btoa(image || "")
                 }
-                console.log("Posting playlist: ", body)
-                const response = await fetch(`/api/spotify/users/${cookies.userId}/playlists`, {
+                const res = await fetch(`/api/spotify/users/${cookies.userId}/playlists`, {
                     method: "POST",
                     headers: {
                         Authorization: `Bearer ${cookies.accessToken}`,
@@ -54,11 +54,17 @@ export default function CustomPlaylist({params}: any){
                     },
                     body: JSON.stringify(body)
                 })
+                return res;
+            }
+
+            const runPostSpotifyPlaylist = async () => {
+                const response = await fetchWithRetry(postSpotifyPlaylist)
                 const newPlaylist = await response.json()
                 setUrl(newPlaylist.url)
                 setOpen(true)
             }
-            postSpotifyPlaylist()
+
+            runPostSpotifyPlaylist()
         }
     }, [playlist])
 

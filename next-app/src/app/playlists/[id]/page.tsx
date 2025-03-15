@@ -1,14 +1,14 @@
 "use client";
 import getCookies from "@/app/helpers/cookie-functions";
 import { FullPlaylist } from "@/types/Playlist";
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs } from "@nextui-org/react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import PlaylistDetails from "./PlaylistDetails";
 import BuilderConfiguration from "./BuilderConfiguration";
 import { Track } from "@/types/Track";
 import { Cookies } from "@/types/cookies";
 import TrackList from "../components/TrackList";
+import { fetchWithRetry } from "@/app/helpers/retry-fetch";
 
 export type SubmissionProps = {
     desiredLength: number,
@@ -35,15 +35,22 @@ export default function Playlist({params}: any) {
         const fetchPlaylist = async () => {
             const { id } = await params;
             const cookies = getCookies();
-            const response = await fetch(`/api/spotify/playlists/${id}`, {
+            const res = await fetch(`/api/spotify/playlists/${id}`, {
                 headers: {
                     Authorization: `Bearer ${cookies.accessToken}`
                 }
             });
-            const fullPlaylist = await response.json()
-            setPlaylist(fullPlaylist)
+            return res;
         }
-        fetchPlaylist()
+
+        const runFetchPlaylists = async () => {
+            const response = await fetchWithRetry(fetchPlaylist)
+            const playlist = await response.json()
+            console.log("playlist", playlist)
+            setPlaylist(playlist)
+        }
+        
+        runFetchPlaylists()
     }, [])
 
     useEffect(() => {
@@ -96,28 +103,26 @@ export default function Playlist({params}: any) {
     }
 
     return (
-        <div className="min-h-screen bg-neutral-900">
-            <div className="flex flex-row text-white h-fit">
-                <div className="hidden md:flex flex-row w-full">
-                    <PlaylistDetails onSwitch={() => router.push('/playlists')} width="1/4" playlist={playlist} />
-                    <TrackList 
-                        title="Tracks"
-                        tracks={playlist.tracks} 
-                        setPlaylist={(tracks: Track[]) => setPlaylist({...playlist, tracks: tracks})} 
-                        width="1/2"
-                    />
-                    <BuilderConfiguration width="1/4" onSubmit={onSubmit}/>
-                </div>
-                <div className="flex flex-col md:hidden w-full">
-                    <PlaylistDetails onSwitch={() => router.push('/playlists')} width="full" playlist={playlist}  />
-                    <BuilderConfiguration width="full" onSubmit={onSubmit}/>
-                    <TrackList 
-                        title="Tracks"
-                        tracks={playlist.tracks} 
-                        setPlaylist={(tracks: Track[]) => setPlaylist({...playlist, tracks: tracks})} 
-                        width="full"
-                    />
-                </div>
+        <div className="bg-neutral-900 text-white h-fit">
+            <div className="hidden md:flex flex-row w-full justify-center">
+                <PlaylistDetails onSwitch={() => router.push('/playlists')} width="1/4" playlist={playlist} />
+                <TrackList 
+                    title="Tracks"
+                    tracks={playlist.tracks} 
+                    setPlaylist={(tracks: Track[]) => setPlaylist({...playlist, tracks: tracks})} 
+                    width="1/2"
+                />
+                <BuilderConfiguration width="1/4" onSubmit={onSubmit}/>
+            </div>
+            <div className="flex flex-col md:hidden w-full">
+                <PlaylistDetails onSwitch={() => router.push('/playlists')} width="full" playlist={playlist}  />
+                <BuilderConfiguration width="full" onSubmit={onSubmit}/>
+                <TrackList 
+                    title="Tracks"
+                    tracks={playlist.tracks} 
+                    setPlaylist={(tracks: Track[]) => setPlaylist({...playlist, tracks: tracks})} 
+                    width="full"
+                />
             </div>
         </div>
     ) 

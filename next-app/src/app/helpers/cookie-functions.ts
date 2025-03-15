@@ -10,7 +10,7 @@ export default function getCookies(): Cookies {
         accessToken: getCookie('accessToken') as string | undefined,
         refreshToken: getCookie('refreshToken') as string | undefined,
     };
-    console.log('cookieStore:', cookieStore);
+    // console.log('cookieStore:', cookieStore);
     return cookieStore;
 }
 

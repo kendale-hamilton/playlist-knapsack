@@ -22,7 +22,7 @@ export default function TrackList(props: TrackListProps) {
     return (
         <div className={`flex flex-col p-8 space-y-4 items-center w-${width}`}>
             <p className="font-bold underline">{title}</p>
-            <div className={`flex flex-col space-y-2 rounded-xl w-full`}>
+            <div className="flex flex-col p-2 space-y-2 w-full">
                 {tracks.map((track, index) => (
                     <div className="flex flex-row" key={index}>
                         <Card className="bg-white flex flex-row px-4 py-2 justify-between w-full">

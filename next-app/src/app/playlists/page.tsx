@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import getCookies from "../helpers/cookie-functions"
 import { useRouter } from "next/navigation"
 import { Card, CardBody, Image } from "@nextui-org/react"
+import { fetchWithRetry } from "../helpers/retry-fetch"
 
 export default function Builder() {
     const router = useRouter()
@@ -12,15 +13,24 @@ export default function Builder() {
     useEffect(() => {
         const fetchPlaylists = async () => {
             const cookies = getCookies();
-            const response = await fetch(`/api/spotify/users/${cookies.userId}/playlists`, {
+            const res = await fetch(`/api/spotify/users/${cookies.userId}/playlists`, {
                 headers: {
                     Authorization: `Bearer ${cookies.accessToken}`
                 }
             })
+            return res;
+        }
+
+        const runFetchPlaylists = async () => {
+            const response = await fetchWithRetry(fetchPlaylists)
             const playlists = await response.json()
+            console.log("playlists", playlists)
             setPlaylists(playlists)
         }
-        fetchPlaylists()
+
+
+       
+        runFetchPlaylists()
     }, [])
 
     if (!playlists.length) {
