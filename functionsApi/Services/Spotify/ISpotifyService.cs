@@ -1,12 +1,14 @@
 using Models.Knapsack;
+using Models.ServiceResponse;
 
 namespace Services.SpotifyService
 {
     public interface ISpotifyService
     {
-        Task<List<PlaylistDetails>> GetUserPlaylists(string userId, string token);
-        Task<PlaylistDetails> GetPlaylistDetails(string playlistId, string token);
-        Task<List<Track>> GetPlaylistTracks(string playlistId, string token);
-        Task<string> UploadPlaylist(string userId, Playlist playlist, string token);
+        Task<ServiceResponse<List<PlaylistDetails>>> GetUserPlaylists(string userId, string token);
+        Task<ServiceResponse<PlaylistDetails>> GetPlaylistDetails(string playlistId, string token);
+        Task<ServiceResponse<List<Track>>> GetPlaylistTracks(string playlistId, string token);
+        Task<ServiceResponse<string>> UploadPlaylist(string userId, Playlist playlist, string token);
+        Task<string> RefreshAccessToken(string refreshToken);
     }
 }

@@ -1,6 +1,9 @@
+using System.Net;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Models.Knapsack;
+using Models.ServiceResponse;
 using Models.Spotify;
 using Services.HttpService;
 
@@ -13,15 +16,27 @@ namespace Services.SpotifyService
         {
             _httpService = httpService;
         }
-        public async Task<List<PlaylistDetails>> GetUserPlaylists(string userId, string token)
+        public async Task<ServiceResponse<List<PlaylistDetails>>> GetUserPlaylists(string userId, string token)
         {
             var response = await _httpService.MakeGetRequest($"https://api.spotify.com/v1/users/{userId}/playlists", token);
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return new ServiceResponse<List<PlaylistDetails>>
+                {
+                    Status = HttpStatusCode.Unauthorized,
+                    ErrorMessage = "Unauthorized"
+                };
+            }
             string content = await response.Content.ReadAsStringAsync();
             SpotifyUserPlaylists? jsonResponse = JsonSerializer.Deserialize<SpotifyUserPlaylists>(content);
 
             if (jsonResponse == null || jsonResponse.Items == null)
             {
-                throw new Exception("Failed to fetch user playlists");
+                return new ServiceResponse<List<PlaylistDetails>>
+                {
+                    Status = HttpStatusCode.NotFound,
+                    ErrorMessage = "Failed to fetch users playlists"
+                };
             }
 
             List<PlaylistDetails> playlists = [];
@@ -33,29 +48,65 @@ namespace Services.SpotifyService
                     playlists.Add(details);
                 }
             }
-            return playlists;
+            return new ServiceResponse<List<PlaylistDetails>>
+            {
+                Status = HttpStatusCode.OK,
+                Data = playlists
+            };
         }
 
-        public async Task<PlaylistDetails> GetPlaylistDetails(string playlistId, string token)
+        public async Task<ServiceResponse<PlaylistDetails>> GetPlaylistDetails(string playlistId, string token)
         {
             var response = await _httpService.MakeGetRequest($"https://api.spotify.com/v1/playlists/{playlistId}", token);
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return new ServiceResponse<PlaylistDetails>
+                {
+                    Status = HttpStatusCode.Unauthorized,
+                    ErrorMessage = "Unauthorized"
+                };
+            }
             string content = await response.Content.ReadAsStringAsync();
             SpotifyPlaylistsItem? playlist = JsonSerializer.Deserialize<SpotifyPlaylistsItem>(content);
             if (playlist == null)
             {
-                throw new Exception("Failed to fetch playlist");
+                return new ServiceResponse<PlaylistDetails>
+                {
+                    Status = HttpStatusCode.NotFound,
+                    ErrorMessage = "Failed to fetch playlist details"
+                };
             }
 
             PlaylistDetails simpPlaylist = playlist.Simplify();
 
-            return simpPlaylist;
+            return new ServiceResponse<PlaylistDetails>
+            {
+                Status = HttpStatusCode.OK,
+                Data = simpPlaylist
+            };
         }
         
-        public async Task<List<Track>> GetPlaylistTracks(string playlistId, string token)
+        public async Task<ServiceResponse<List<Track>>> GetPlaylistTracks(string playlistId, string token)
         {
             var response = await _httpService.MakeGetRequest($"https://api.spotify.com/v1/playlists/{playlistId}/tracks", token);
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return new ServiceResponse<List<Track>>
+                {
+                    Status = HttpStatusCode.Unauthorized,
+                    ErrorMessage = "Unauthorized"
+                };
+            }
             string content = await response.Content.ReadAsStringAsync();
             SpotifyPlaylistItems? playlistItems = JsonSerializer.Deserialize<SpotifyPlaylistItems>(content);
+            if (playlistItems == null || playlistItems.Items == null)
+            {
+                return new ServiceResponse<List<Track>>
+                {
+                    Status = HttpStatusCode.NotFound,
+                    ErrorMessage = "Failed to fetch playlist tracks"
+                };
+            }
             
             List<Track> tracks = [];
             foreach (SpotifyPlaylistTrack fullTrack in playlistItems.Items)
@@ -65,10 +116,14 @@ namespace Services.SpotifyService
                 tracks.Add(simpleTrack);
             }
 
-            return tracks;
+            return new ServiceResponse<List<Track>>
+            {
+                Status = HttpStatusCode.OK,
+                Data = tracks
+            };
         }
 
-        public async Task<string> UploadPlaylist(string userId, Playlist playlist, string token)
+        public async Task<ServiceResponse<string>> UploadPlaylist(string userId, Playlist playlist, string token)
         {
             SpotifyCreatePlaylistBody body = new SpotifyCreatePlaylistBody
             {
@@ -78,8 +133,25 @@ namespace Services.SpotifyService
             string bodyJson = JsonSerializer.Serialize(body);
             HttpContent content = new StringContent(bodyJson, Encoding.UTF8, "application/json");
             var createResponse = await _httpService.MakePostRequest($"https://api.spotify.com/v1/users/{userId}/playlists", token, content);
+            if (createResponse.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return new ServiceResponse<string>
+                {
+                    Status = HttpStatusCode.Unauthorized,
+                    ErrorMessage = "Unauthorized"
+                };
+            }
             string createContent = await createResponse.Content.ReadAsStringAsync();
             SpotifyPlaylistsItem newPlaylist = JsonSerializer.Deserialize<SpotifyPlaylistsItem>(createContent);
+            if (newPlaylist == null)
+            {
+                return new ServiceResponse<string>
+                {
+                    Status = HttpStatusCode.NotFound,
+                    ErrorMessage = "Failed to create playlist"
+                };
+            }
+
             string id = newPlaylist.Id;
             string url = newPlaylist.ExternalUrls.Spotify;
 
@@ -100,6 +172,14 @@ namespace Services.SpotifyService
                 string addBodyJson = JsonSerializer.Serialize(addBody);
                 HttpContent addContent = new StringContent(addBodyJson, Encoding.UTF8, "application/json");
                 var addResponse = await _httpService.MakePostRequest($"https://api.spotify.com/v1/playlists/{id}/tracks", token, addContent);
+                if (addResponse.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    return new ServiceResponse<string>
+                    {
+                        Status = HttpStatusCode.Unauthorized,
+                        ErrorMessage = "Unauthorized"
+                    };
+                }
             }
 
             // TODO: Add Custom Image here
@@ -112,7 +192,35 @@ namespace Services.SpotifyService
             //     var imageResponse = await _httpService.MakePutRequest($"https://api.spotify.com/v1/playlists/{id}/images", token, imageContent, "image/jpeg");
             // }
 
-            return url;
+            return new ServiceResponse<string>
+            {
+                Status = HttpStatusCode.OK,
+                Data = url
+            };
+        }
+        public async Task<string> RefreshAccessToken(string refreshToken)
+        {
+            var clientId = Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_ID");
+            var clientSecret = Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_SECRET");
+            string auth = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{clientId}:{clientSecret}"));
+            SpotifyRefreshTokenBody body = new SpotifyRefreshTokenBody
+            {
+                GrantType = "refresh_token",
+                RefreshToken = refreshToken
+            };
+            string bodyJson = JsonSerializer.Serialize(body);
+            var formContent = new Dictionary<string, string>
+            {
+                { "grant_type", body.GrantType },
+                { "refresh_token", body.RefreshToken }
+            };
+            HttpContent content = new FormUrlEncodedContent(formContent);
+
+            var response = await _httpService.MakePostRequest("https://accounts.spotify.com/api/token", auth, content, "Basic");
+            string tokenContent = await response.Content.ReadAsStringAsync();
+            var tokenJson = JsonObject.Parse(tokenContent);
+            string accessToken = tokenJson["access_token"]?.ToString();
+            return accessToken;
         }
     }
 }

@@ -254,6 +254,14 @@ namespace Models.Spotify
         public required string Image { get; set; }
     }
 
+    public class SpotifyRefreshTokenBody
+    {
+        [JsonPropertyName("grant_type")]
+        public required string GrantType { get; set; }
+        [JsonPropertyName("refresh_token")]
+        public required string RefreshToken { get; set; }
+    }
+
 
     #endregion
 }

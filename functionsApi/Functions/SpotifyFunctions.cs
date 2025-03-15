@@ -1,4 +1,5 @@
 
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -8,6 +9,7 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Models.Knapsack;
 using Models.Requests.Spotify;
 using Models.Routes;
+using Models.ServiceResponse;
 using Services.SpotifyService;
 
 namespace Controllers.SpotifyController
@@ -20,7 +22,7 @@ namespace Controllers.SpotifyController
             _spotifyService = spotifyService;
         }
         [Function("SpotifyCallback")]
-        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.SpotifyCallback)] HttpRequestData req)
+        public static async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.SpotifyCallback)] HttpRequestData req)
         {
             Console.WriteLine("Callback...");
             var query = System.Web.HttpUtility.ParseQueryString(req.Url.Query);
@@ -83,21 +85,44 @@ namespace Controllers.SpotifyController
                 
             }
         }
+
+        //Expired accessToken: BQCbXlxbX9dUYebc1Dt7s5DPe94ymaVIoiDNyW1Fh8gVutdSLbom2gotqzW0Vj5EsoeuRhE1HnwwCdX1R0Kcw-Sr_UH76WCyM8IAUEHiMzv7Gtr8B_j4KQTnMRzEcHWXgrMJX8PPQZ4izVg6MynFGZbdeL6itu-k64NmhLQdgs_NyUeqKbecbByMdhcRJyfLoiiyBSCUsqy6PPhKe7hd-Bmg0vtl0V2T_d5r37bM5urmEizJeSOZZarj9YUw1m-5s_Yz3Sb1cEiPshxNW1TlWs1G-PYzxNO8ao7whwEO9-vvwYDkhNt_F_zTL-xJ
+        //Refresh token: AQAUhZBOcl-q7egJ0OYZDz8yatVZbHZIjmtzN1KzsljdR1M5vEQFAWIXERu55j_XrYwoqD6V6nk0PPwMwHDbK0dbbd6KRHOQMLX_GsJVqduQFDtfbZ_TV-0c1Cy-gZ6Qqd8
+        [Function("SpotifyRefreshToken")]
+        public async Task<HttpResponseData> RefreshToken([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.SpotifyRefreshToken)] HttpRequestData req, string refreshToken)
+        {
+            Console.WriteLine("Refreshing Token..." + refreshToken);
+            string accessToken = await _spotifyService.RefreshAccessToken(refreshToken);
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            response.Cookies.Append("accessToken", accessToken);
+            return response;
+        }
         [Function("SpotifyGetUserPlaylists")]
         public async Task<IActionResult> GetUserPlaylists([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.SpotifyUserPlaylists)] HttpRequestData req, string userId)
         {
             Console.WriteLine("Getting User Playlists...");
             var accessToken = req.Headers.GetValues("Authorization").FirstOrDefault().Replace("Bearer ", "");
-            List<PlaylistDetails> userPlaylists = await _spotifyService.GetUserPlaylists(userId, accessToken);
-            return Ok(userPlaylists);
+            ServiceResponse<List<PlaylistDetails>> userPlaylistsResponse = await _spotifyService.GetUserPlaylists(userId, accessToken);
+            Console.WriteLine(userPlaylistsResponse.Status);
+            return userPlaylistsResponse.ToActionResult();
         }
         [Function("SpotifyGetPlaylist")]
         public async Task<ActionResult> GetPlaylist([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.SpotifyPlaylist)] HttpRequestData req, string playlistId)
         {
             Console.WriteLine("Getting Playlist Tracks...");
             var accessToken = req.Headers.GetValues("Authorization").FirstOrDefault().Replace("Bearer ", "");
-            PlaylistDetails details = await _spotifyService.GetPlaylistDetails(playlistId, accessToken);
-            List<Track> playlistTracks = await _spotifyService.GetPlaylistTracks(playlistId, accessToken);
+            ServiceResponse<PlaylistDetails> detailsResponse = await _spotifyService.GetPlaylistDetails(playlistId, accessToken);
+            ServiceResponse<List<Track>> playlistTracksResponse = await _spotifyService.GetPlaylistTracks(playlistId, accessToken);
+            if (detailsResponse.Status == HttpStatusCode.Unauthorized || playlistTracksResponse.Status == HttpStatusCode.Unauthorized)
+            {
+                return Unauthorized();
+            }
+            else if (detailsResponse.Status != HttpStatusCode.OK || playlistTracksResponse.Status != HttpStatusCode.OK)
+            {
+                return BadRequest();
+            }
+            PlaylistDetails details = detailsResponse.Data;
+            List<Track> playlistTracks = playlistTracksResponse.Data;
             int duration = 0;
             foreach (Track t in playlistTracks)
             {
@@ -121,8 +146,16 @@ namespace Controllers.SpotifyController
             SpotifyPostPlaylistRequest? body = JsonSerializer.Deserialize<SpotifyPostPlaylistRequest>(requestBody);
             Playlist playlist = body.Playlist;
             // string image = body.Image;
-            string url = await _spotifyService.UploadPlaylist(userId, playlist, accessToken);
-            return Ok(new {url});
+            ServiceResponse<string> urlResponse = await _spotifyService.UploadPlaylist(userId, playlist, accessToken);
+            if (urlResponse.Status == HttpStatusCode.Unauthorized)
+            {
+                return Unauthorized();
+            }
+            else if (urlResponse.Status != HttpStatusCode.OK)
+            {
+                return BadRequest();
+            }
+            return urlResponse.ToActionResult();
         }
     }
 }

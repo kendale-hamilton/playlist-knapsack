@@ -12,19 +12,16 @@ namespace Services.HttpService
             request.Headers.Add("Authorization", $"Bearer {token}");
 
             var response = await _client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
 
             return response;
         }
-        public async Task<HttpResponseMessage> MakePostRequest(string url, string token, HttpContent content)
+        public async Task<HttpResponseMessage> MakePostRequest(string url, string token, HttpContent content, string tokenType = "Bearer")
         {
             var request = new HttpRequestMessage(HttpMethod.Post, url);
-            request.Headers.Add("Authorization", $"Bearer {token}");
+            request.Headers.Add("Authorization", $"{tokenType} {token}");
             request.Content = content;
 
             var response = await _client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-
             return response;
         }
 
@@ -32,13 +29,9 @@ namespace Services.HttpService
         {
             var request = new HttpRequestMessage(HttpMethod.Put, url);
             request.Headers.Add("Authorization", $"Bearer {token}");
-            Console.WriteLine("Request: " + request.ToString());
-            Console.WriteLine("Content: " + content.ReadAsStringAsync().Result);
 
             var response = await _client.SendAsync(request);
             Console.WriteLine(response.Content.ReadAsStringAsync().Result);
-            response.EnsureSuccessStatusCode();
-
             return response;
         }
     }
