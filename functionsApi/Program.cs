@@ -16,6 +16,14 @@ builder.Services.AddSingleton<IBlobService, BlobService>();
 builder.Services.AddScoped<IKnapsackService, KnapsackService>();
 builder.Services.AddScoped<ISpotifyService, SpotifyService>();
 
-
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("http://localhost:3000")
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+});
 
 builder.Build().Run();

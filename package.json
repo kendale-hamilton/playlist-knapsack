@@ -1,10 +1,6 @@
 {
   "scripts": {
     "app": "cd next-app && npm run dev",
-    "api": "cd functionsApi && dotnet watch run",
-    "start": "swa start --verbose"
-  },
-  "dependencies": {
-    "@azure/static-web-apps-cli": "^2.0.4"
+    "api": "cd functionsApi && dotnet watch run"
   }
 }
