@@ -1,9 +1,0 @@
-{
-    "IsEncrypted": false,
-    "Values": {
-        "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-        "FUNCTIONS_WORKER_RUNTIME": "node",
-        "NEXT_PUBLIC_SPOTIFY_CLIENT_ID": "341f9aa041fd4004ad0de98fa3ac5ea1",
-        "SPOTIFY_CLIENT_SECRET": "5726a92e0e2143b48752303d64524fa7"
-    }
-}
