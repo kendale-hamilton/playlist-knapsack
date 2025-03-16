@@ -38,7 +38,7 @@ export default function Playlist() {
     useEffect(() => {
         const fetchPlaylist = async () => {
             const cookies = getCookies();
-            const res = await fetch(`/api/spotify/playlists/${id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/spotify/playlists/${id}`, {
                 headers: {
                     Authorization: `Bearer ${cookies.accessToken}`
                 }
@@ -68,7 +68,7 @@ export default function Playlist() {
                    min: submission.min
                 }
             }
-            const res = await fetch(`/api/knapsack/users/${cookies?.userId}/playlists`, 
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/knapsack/users/${cookies?.userId}/playlists`, 
             {
                 method: 'POST',
                 headers: {

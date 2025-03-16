@@ -84,7 +84,9 @@ namespace Controllers.SpotifyController
                 response.Cookies.Append("userAvatar", avatar);
                 response.Cookies.Append("accessToken", accessToken);
                 response.Cookies.Append("refreshToken", refreshToken);
-                response.Headers.Add("Location", "http://localhost:4280");
+
+                string redirect_uri = Environment.GetEnvironmentVariable("FRONTEND_REDIRECT_URI");
+                response.Headers.Add("Location", redirect_uri);
                 return response;
                 
             }

@@ -12,8 +12,8 @@ import { fetchWithRetry } from "@/app/helpers/retry-fetch";
 
 export default function CustomPlaylist() {
     const params = useParams();
-    const { idValue } = params;
-    const id = idValue as string;
+    const { id } = params as { id: string };
+    console.log({params, id})
     const searchParams = useSearchParams()
     const desiredLength = searchParams.get("desired-length")
 
@@ -29,7 +29,7 @@ export default function CustomPlaylist() {
         if(!tracks){
             const fetchCustomPlaylist = async () => {
                 const cookies = getCookies();
-                const response = await fetch(`/api/knapsack/users/${cookies.userId}/playlists/${id}`)
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/knapsack/users/${cookies.userId}/playlists/${id}`)
                 const customPlaylist = await response.json()
                 setTracks(customPlaylist)
             }
@@ -47,7 +47,7 @@ export default function CustomPlaylist() {
                     playlist: playlist,
                     // image: btoa(image || "")
                 }
-                const res = await fetch(`/api/spotify/users/${cookies.userId}/playlists`, {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/spotify/users/${cookies.userId}/playlists`, {
                     method: "POST",
                     headers: {
                         Authorization: `Bearer ${cookies.accessToken}`,
