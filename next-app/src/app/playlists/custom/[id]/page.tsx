@@ -87,7 +87,7 @@ export default function CustomPlaylist({params}: any){
                     <div className="text-white">
                         <ModalHeader>Your playlist has been uploaded to spotify!</ModalHeader>
                         <ModalBody>
-                            <Link href={url ?? '/'}>Click here to view your playlist on spotify</Link>
+                            <Link href={url ?? '/'} isExternal>Click here to view your playlist on spotify</Link>
                         </ModalBody>
                         <ModalFooter>
                             <Button color="primary" onPress={() => {router.push('/')}}>Home</Button>

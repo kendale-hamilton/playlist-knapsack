@@ -60,7 +60,7 @@ export default function MainAppBar() {
                 </Button>
             </NavbarBrand>
             <NavbarItem>
-                <Link href="https://github.com/kendale-hamilton/playlist-knapsack/issues">
+                <Link href="https://github.com/kendale-hamilton/playlist-knapsack/issues" isExternal>
                     <Tooltip content="Report a bug" className="text-white">
                         <BugAntIcon className="w-4 h-4" />
                     </Tooltip>
