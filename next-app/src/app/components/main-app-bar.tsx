@@ -14,7 +14,7 @@ export const signIn = async () => {
             response_type: 'code',
             client_id: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
             scope: 'playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private user-read-private user-read-email ugc-image-upload',
-            redirect_uri: 'http://localhost:7071/api/spotify/callback',
+            redirect_uri: process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI,
             state: state,
             show_dialog: true
         })

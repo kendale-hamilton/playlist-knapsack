@@ -39,6 +39,9 @@ namespace Controllers.SpotifyController
             var clientId = Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_ID");
             var clientSecret = Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_SECRET");
             var redirectUri = Environment.GetEnvironmentVariable("SPOTIFY_REDIRECT_URI");
+            Console.WriteLine("Client ID: " + clientId);
+            Console.WriteLine("Client Secret: " + clientSecret);
+            Console.WriteLine("Redirect URI: " + redirectUri);
 
             using (var client = new HttpClient())
             {
@@ -52,6 +55,7 @@ namespace Controllers.SpotifyController
                 }));
 
                 var tokenContent = await tokenResponse.Content.ReadAsStringAsync();
+                Console.WriteLine($"Token content: {tokenContent}");
                 var tokenJson = JsonObject.Parse(tokenContent);
                 var accessToken = tokenJson["access_token"]?.ToString();
                 var refreshToken = tokenJson["refresh_token"]?.ToString();
