@@ -1,9 +1,8 @@
 "use client"
 import { toSecs } from "@/app/helpers/time-functions"
-import { ChevronLeftIcon } from "@heroicons/react/16/solid"
-import { Button, Input, Switch, Image } from "@nextui-org/react"
+import { Button, Input, Switch } from "@nextui-org/react"
 import { useState } from "react"
-import { SubmissionProps } from "./page"
+import { SubmissionProps } from "../page"
 
 type BuilderConfigurationProps = {
     onSubmit: (submission: SubmissionProps) => void,
@@ -11,7 +10,7 @@ type BuilderConfigurationProps = {
     width: string
 }
 
-type WeightingFunction = (index: number, playlistSize: number) => number
+export type WeightingFunction = (index: number, playlistSize: number) => number
 
 type WeightingSystem = {
     name: string,
@@ -34,14 +33,14 @@ export default function BuilderConfiguration(props: BuilderConfigurationProps) {
     ]
     const [weightingIndex, setWeightingIndex] = useState(0)
 
-    const left = () => {
-        const newIndex = weightingIndex == 0 ?  weightingSystems.length -1 : weightingIndex - 1
-        setWeightingIndex(newIndex)
-    }
-    const right = () => {
-        const newIndex = weightingIndex == weightingSystems.length - 1 ? 0 : weightingIndex + 1
-        setWeightingIndex(newIndex)
-    }
+    // const left = () => {
+    //     const newIndex = weightingIndex == 0 ?  weightingSystems.length -1 : weightingIndex - 1
+    //     setWeightingIndex(newIndex)
+    // }
+    // const right = () => {
+    //     const newIndex = weightingIndex == weightingSystems.length - 1 ? 0 : weightingIndex + 1
+    //     setWeightingIndex(newIndex)
+    // }
 
     return (
         <div className={`w-${width} flex flex-col p-8 space-y-4 items-center`}>

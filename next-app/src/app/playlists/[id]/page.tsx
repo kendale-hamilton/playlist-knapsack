@@ -3,8 +3,8 @@ import getCookies from "@/app/helpers/cookie-functions";
 import { FullPlaylist } from "@/types/Playlist";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import PlaylistDetails from "./PlaylistDetails";
-import BuilderConfiguration from "./BuilderConfiguration";
+import PlaylistDetails from "./components/PlaylistDetails";
+import BuilderConfiguration, { WeightingFunction } from "./components/BuilderConfiguration";
 import { Track } from "@/types/Track";
 import { Cookies } from "@/types/cookies";
 import TrackList from "../components/TrackList";
@@ -15,10 +15,9 @@ export type SubmissionProps = {
     desiredLength: number,
     max?: number,
     min?: number,
-    weightingFunction: Function
+    weightingFunction: WeightingFunction
 }
-
-export default function Playlist({params}: any) {
+export default function Playlist({params}: {params: {id: string}}) {
     const router = useRouter()
     const [cookies, setCookies] = useState<Cookies | null>();
     const [submission, setSubmission] = useState<SubmissionProps | null>();
@@ -52,6 +51,7 @@ export default function Playlist({params}: any) {
         }
         
         runFetchPlaylists()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
@@ -87,6 +87,7 @@ export default function Playlist({params}: any) {
 
         postPlaylist(weightedTracks)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [submission])
 
     if (!playlist) {

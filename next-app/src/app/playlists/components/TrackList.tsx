@@ -1,7 +1,6 @@
 import { toTimeStringSeconds } from "@/app/helpers/time-functions";
 import { Track } from "@/types/Track";
-import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/16/solid";
-import { Button, Card } from "@nextui-org/react";
+import { Card } from "@nextui-org/react";
 
 type TrackListProps = {
     title: string,
@@ -13,11 +12,11 @@ type TrackListProps = {
 export default function TrackList(props: TrackListProps) {
     const { title, width, tracks, setPlaylist } = props;
 
-    const swapTracks = (index_1: number, index_2: number) => {
-        const newTracks: Track[] = [...tracks];
-        [newTracks[index_1], newTracks[index_2]] = [newTracks[index_2], newTracks[index_1]];
-        setPlaylist && setPlaylist(newTracks);
-    }
+    // const swapTracks = (index_1: number, index_2: number) => {
+    //     const newTracks: Track[] = [...tracks];
+    //     [newTracks[index_1], newTracks[index_2]] = [newTracks[index_2], newTracks[index_1]];
+    //     setPlaylist && setPlaylist(newTracks);
+    // }
 
     return (
         <div className={`flex flex-col p-8 space-y-4 items-center ${width}`}>

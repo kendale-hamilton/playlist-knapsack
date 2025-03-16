@@ -63,7 +63,7 @@ export default function Home() {
         <p className="underline font-bold">The Algorithm:</p>
         <div className="flex flex-col gap-2 p-4">
           <p>Consider a menu of many items and you want to know how to spend exactly $50. How could you efficiently calculate what items you must buy? Complicating this problem, what if you only wanted each item one time at most? </p>
-          <p>This is essentially the problem that Playlist Knapsack solves. To solve this problem, which is called the "subset sum" problem, the algorithm represents each track in the playlist as a polynomial. For example, a song that is 120 seconds long is represented as: </p>
+          <p>This is essentially the problem that Playlist Knapsack solves. To solve this problem, which is called the &quot;subset sum&quot; problem, the algorithm represents each track in the playlist as a polynomial. For example, a song that is 120 seconds long is represented as: </p>
         <div className="flex flex-row justify-center items-center"><p className="text-center">1 + x</p><sup>120</sup></div>
         <p className="text-center">or</p>
         <div className="flex flex-row justify-center items-center"><p>1x</p><sup>0</sup><p> + x</p><sup>120</sup></div>
@@ -82,11 +82,11 @@ export default function Home() {
         <div>
           <span>Now, we simply need to check if this final polynomial has a positive coefficient for x</span><sup>t</sup><span>, where t is our desired total. Importantly, all of the polynomials that were multiplied iteratively to produce this polynomial are still needed.</span>
         </div>
-        <p>Next, we must figure out how to get from t back to which individual songs where included to build this total. This is called the "backwards pass". To accomplish this, we create a new polynomial: </p>
+        <p>Next, we must figure out how to get from t back to which individual songs where included to build this total. This is called the &quot;backwards pass&quot;. To accomplish this, we create a new polynomial: </p>
         <div className="flex flex-row justify-center items-center"><p>1 + x</p><sup>t</sup></div>
-        <p>and seperately subtract each of the two factors that formed the final product polynomial. These factors are refered to as the left and right polynomials. The new polynomial minus the left gives us "leftover right" and vice versa. Then, a match in the left polynomial and leftover left tell us which component of left was used to get to our desired total. The same is true for the right side.</p>
+        <p>and seperately subtract each of the two factors that formed the final product polynomial. These factors are refered to as the left and right polynomials. The new polynomial minus the left gives us &quot;leftover right&quot; and vice versa. Then, a match in the left polynomial and leftover left tell us which component of left was used to get to our desired total. The same is true for the right side.</p>
         <div>
-          <span>This process can be done iteratively until we know, for each track's polynomial, whether 1x</span><sup>0</sup><span>or the 1x</span><sup>length</sup><span> was used to get to the desired total. If 1x</span><sup>0</sup><span> was used, then the song was not used to get to the total. If the exponent with the songs length was used, then the song was used. We can then add all of the necessary songs to a new playlist, and it will be of length t.</span>
+          <span>This process can be done iteratively until we know, for each track&apos;s polynomial, whether 1x</span><sup>0</sup><span>or the 1x</span><sup>length</sup><span> was used to get to the desired total. If 1x</span><sup>0</sup><span> was used, then the song was not used to get to the total. If the exponent with the songs length was used, then the song was used. We can then add all of the necessary songs to a new playlist, and it will be of length t.</span>
         </div>
         <div>
           {/*TODO: Confirm the runtime*/}
@@ -95,7 +95,7 @@ export default function Home() {
       </div>
       <p className="underline font-bold">Upcoming Features:</p>
       <div className="flex flex-col gap-2 p-4">
-        <p>1. The above algorithm can be modified to consider the user's preference for each song. Using the same polynomial method, but replacing coeffecients of 1 with a value between 0 and 1 representing how much the user wants to include it, songs can be selected based on preference by using Max Convolution during the polynomial multiplication step.</p>
+        <p>1. The above algorithm can be modified to consider the user&apos;s preference for each song. Using the same polynomial method, but replacing coeffecients of 1 with a value between 0 and 1 representing how much the user wants to include it, songs can be selected based on preference by using Max Convolution during the polynomial multiplication step.</p>
         <p>2. While far less of the music streaming marketshare, Apple Music and other platforms also provide similar web apis. In the future, the app could easily be expanded to allow a user to sign in with any of these platforms.</p>
         <p>3. Playlists created by users could be saved to allow users to easily share a playlist of a specific duration with others. This would be most useful if a description or tag could be added to each new playlist that explains the use case. For example, if I created a playlist that is exactly as long as the drive from Columbus, Ohio to Saint Louis, Missouri, users making the same drive could easily find the playlist.</p>
         <p>4. Running the algorithm multiple times on smaller chunks of the playlist would allow the user to insert songs that they want to play at specific times in their playlist. For example, if they enter West Virignia exactly 1 hour and 42 minutes into their drive, they could force Country Roads to play at that time in their playlist, while still having the full playlist built using the app.</p>

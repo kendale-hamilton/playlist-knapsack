@@ -10,7 +10,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { fetchWithRetry } from "@/app/helpers/retry-fetch";
 
 
-export default function CustomPlaylist({params}: any){
+export default function CustomPlaylist({params}: {params: {id: string}}) {
     const searchParams = useSearchParams()
     const desiredLength = searchParams.get("desired-length")
 
@@ -35,6 +35,7 @@ export default function CustomPlaylist({params}: any){
             }
             fetchCustomPlaylist()
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
