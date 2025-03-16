@@ -6,17 +6,19 @@ import TrackList from "../../components/TrackList";
 import PlaylistDetailSelector from "./components/PlaylistDetailSelector";
 import { FullPlaylist } from "@/types/Playlist";
 import { Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, useParams } from "next/navigation";
 import { fetchWithRetry } from "@/app/helpers/retry-fetch";
 
 
-export default function CustomPlaylist({params}: {params: {id: string}}) {
+export default function CustomPlaylist() {
+    const params = useParams();
+    const { idValue } = params;
+    const id = idValue as string;
     const searchParams = useSearchParams()
     const desiredLength = searchParams.get("desired-length")
 
     const router = useRouter()
     
-    const [id, setId] = useState<string>("")
     const [tracks, setTracks] = useState<Track[]>()
     const [playlist, setPlaylist] = useState<FullPlaylist>()
     const [url, setUrl] = useState<string | null>()
@@ -26,8 +28,6 @@ export default function CustomPlaylist({params}: {params: {id: string}}) {
     useEffect(() => {
         if(!tracks){
             const fetchCustomPlaylist = async () => {
-                const { id } = await params;
-                setId(id)
                 const cookies = getCookies();
                 const response = await fetch(`/api/knapsack/users/${cookies.userId}/playlists/${id}`)
                 const customPlaylist = await response.json()

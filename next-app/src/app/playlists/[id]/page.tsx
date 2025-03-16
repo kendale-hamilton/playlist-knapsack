@@ -10,6 +10,7 @@ import { Cookies } from "@/types/cookies";
 import TrackList from "../components/TrackList";
 import { fetchWithRetry } from "@/app/helpers/retry-fetch";
 import { playlistDuration } from "@/app/helpers/time-functions";
+import { useParams } from "next/navigation";
 
 export type SubmissionProps = {
     desiredLength: number,
@@ -17,8 +18,11 @@ export type SubmissionProps = {
     min?: number,
     weightingFunction: WeightingFunction
 }
-export default function Playlist({params}: {params: {id: string}}) {
+
+export default function Playlist() {
     const router = useRouter()
+    const params = useParams()
+    const { id } = params
     const [cookies, setCookies] = useState<Cookies | null>();
     const [submission, setSubmission] = useState<SubmissionProps | null>();
 
@@ -33,7 +37,6 @@ export default function Playlist({params}: {params: {id: string}}) {
     const [playlist, setPlaylist] = useState<FullPlaylist>()
     useEffect(() => {
         const fetchPlaylist = async () => {
-            const { id } = await params;
             const cookies = getCookies();
             const res = await fetch(`/api/spotify/playlists/${id}`, {
                 headers: {
