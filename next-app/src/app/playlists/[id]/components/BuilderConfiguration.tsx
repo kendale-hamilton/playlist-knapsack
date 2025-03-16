@@ -26,11 +26,13 @@ export default function BuilderConfiguration(props: BuilderConfigurationProps) {
     const [min, setMin] = useState<string>("")
     const [useMargin, setUseMargin] = useState<boolean>(true)
 
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     const weightingSystems: WeightingSystem[] = [
-        {name: "Unweighted", image: "/UnweightedGraph.png", function: (_index, _size) => 1  },
-        {name: "Inverse", image: "/InverseGraph.png", function: (index, _size) => 1 / (index + 1) },
-        {name: "Linear", image: "/LinearGraph.png", function: (index, size) => size - index },
-    ]
+        { name: "Unweighted", image: "/UnweightedGraph.png", function: (_index: number, _size: number) => 1 },
+        { name: "Inverse", image: "/InverseGraph.png", function: (index: number, _size: number) => 1 / (index + 1) },
+        { name: "Linear", image: "/LinearGraph.png", function: (index: number, size: number) => size - index },
+    ];
+/* eslint-enable @typescript-eslint/no-unused-vars */
     const [weightingIndex] = useState(0)
 
     // const left = () => {
