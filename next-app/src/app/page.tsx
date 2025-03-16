@@ -3,9 +3,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import getCookies from "./helpers/cookie-functions";
 import { Cookies } from "@/types/cookies";
-import { Card, CardHeader, Divider, CardBody, Image } from "@nextui-org/react";
+import { Card, CardHeader, Divider, Image, Link } from "@nextui-org/react";
 import { signIn } from "./components/main-app-bar";
-import { XMarkIcon } from "@heroicons/react/16/solid";
 
 export default function Home() {
   const router = useRouter();
@@ -61,10 +60,10 @@ export default function Home() {
       </div>
       <Divider />
       <div className="flex flex-col items-start px-32">
-       <p className="underline font-bold">The Algorithm:</p>
-       <div className="flex flex-col gap-2 p-4">
-        <p>Consider a menu of many items and you want to know how to spend exactly $50. How could you efficiently calculate what items you must buy? Complicating this problem, what if you only wanted each item one time at most? </p>
-        <p>This is essentially the problem that Playlist Knapsack solves. To solve this problem, which is called the "subset sum" problem, the algorithm represents each track in the playlist as a polynomial. For example, a song that is 120 seconds long is represented as: </p>
+        <p className="underline font-bold">The Algorithm:</p>
+        <div className="flex flex-col gap-2 p-4">
+          <p>Consider a menu of many items and you want to know how to spend exactly $50. How could you efficiently calculate what items you must buy? Complicating this problem, what if you only wanted each item one time at most? </p>
+          <p>This is essentially the problem that Playlist Knapsack solves. To solve this problem, which is called the "subset sum" problem, the algorithm represents each track in the playlist as a polynomial. For example, a song that is 120 seconds long is represented as: </p>
         <div className="flex flex-row justify-center items-center"><p className="text-center">1 + x</p><sup>120</sup></div>
         <p className="text-center">or</p>
         <div className="flex flex-row justify-center items-center"><p>1x</p><sup>0</sup><p> + x</p><sup>120</sup></div>
@@ -101,6 +100,20 @@ export default function Home() {
         <p>3. Playlists created by users could be saved to allow users to easily share a playlist of a specific duration with others. This would be most useful if a description or tag could be added to each new playlist that explains the use case. For example, if I created a playlist that is exactly as long as the drive from Columbus, Ohio to Saint Louis, Missouri, users making the same drive could easily find the playlist.</p>
         <p>4. Running the algorithm multiple times on smaller chunks of the playlist would allow the user to insert songs that they want to play at specific times in their playlist. For example, if they enter West Virignia exactly 1 hour and 42 minutes into their drive, they could force Country Roads to play at that time in their playlist, while still having the full playlist built using the app.</p>
         <p>5. Most ambitiously, if the playlist could be played on a player built into the app, GPS location could be used to automatically insert or remove songs on the fly to ensure that certain songs play at the designated location.</p>
+      </div>
+      <p className="underline font-bold">About the Project:</p>
+      <div className="flex flex-col gap-2 p-4">
+        <p>Playlist Knapsack was built using NextJS and Azure Functions in C# and is deployed in an Azure Static Web App.</p>
+        <div className="flex flex-row gap-2">
+          <div className="flex flex-col gap-2">
+            <p>Playlist Knapsack was created by Kendale Hamilton, a Senior studying Politics and Computer Science at Hillsdale College, to graduate in May 2025.</p>
+            <div className="flex flex-row gap-8 px-8">
+              <Link href="https://www.linkedin.com/in/kendale-hamilton-b72563265/">LinkedIn</Link>
+              <Link href="https://github.com/kendale-hamilton">Github</Link>
+            </div>
+          </div>
+          <Image alt="Kendale Pic" src="./kendale-headshot.jpg" />
+        </div>
       </div>
       </div>
     </div>

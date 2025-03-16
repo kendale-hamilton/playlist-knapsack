@@ -9,6 +9,7 @@ import { Track } from "@/types/Track";
 import { Cookies } from "@/types/cookies";
 import TrackList from "../components/TrackList";
 import { fetchWithRetry } from "@/app/helpers/retry-fetch";
+import { playlistDuration } from "@/app/helpers/time-functions";
 
 export type SubmissionProps = {
     desiredLength: number,
@@ -112,11 +113,11 @@ export default function Playlist({params}: any) {
                     setPlaylist={(tracks: Track[]) => setPlaylist({...playlist, tracks: tracks})} 
                     width="w-1/2"
                 />
-                <BuilderConfiguration width="w-1/4" onSubmit={onSubmit}/>
+                <BuilderConfiguration width="w-1/4" length={playlistDuration(playlist.tracks)} onSubmit={onSubmit}/>
             </div>
             <div className="flex flex-col md:hidden w-full">
                 <PlaylistDetails onSwitch={() => router.push('/playlists')} width="w-full" playlist={playlist}  />
-                <BuilderConfiguration width="w-full" onSubmit={onSubmit}/>
+                <BuilderConfiguration width="w-full" length={playlistDuration(playlist.tracks)} onSubmit={onSubmit}/>
                 <TrackList 
                     title="Tracks"
                     tracks={playlist.tracks} 

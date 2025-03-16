@@ -7,6 +7,7 @@ import { SubmissionProps } from "./page"
 
 type BuilderConfigurationProps = {
     onSubmit: (submission: SubmissionProps) => void,
+    length: number,
     width: string
 }
 
@@ -80,6 +81,14 @@ export default function BuilderConfiguration(props: BuilderConfigurationProps) {
                 isRequired
                 label="Desired Time"
                 pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
+                validate={
+                    (desiredLength) => {
+                        if (toSecs(desiredLength) > props.length) {
+                            return "Desired length must be less than the total length of the playlist"
+                        }
+                        return true
+                    }
+                }
                 endContent={
                     <div className="pointer-events-none flex items-center">
                         <span className="text-default-400 text-small">hh:mm:ss</span>

@@ -1,10 +1,11 @@
 "use client"
 import { Cookies } from "@/types/cookies";
-import { Avatar, Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Navbar, NavbarBrand, NavbarItem } from "@nextui-org/react";
+import { Avatar, Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Link, Navbar, NavbarBrand, NavbarItem, Tooltip } from "@nextui-org/react";
 import { redirect, useRouter } from "next/navigation";
 import querystring from 'querystring';
 import { useEffect, useState } from "react";
 import getCookies, { clearCookies } from "../helpers/cookie-functions";
+import { BugAntIcon } from "@heroicons/react/16/solid";
 
 export const signIn = async () => {
     const state = window.location.href;
@@ -58,6 +59,13 @@ export default function MainAppBar() {
                     Playlist Knapsack
                 </Button>
             </NavbarBrand>
+            <NavbarItem>
+                <Link href="https://github.com/kendale-hamilton/playlist-knapsack/issues">
+                    <Tooltip content="Report a bug" className="text-white">
+                        <BugAntIcon className="w-4 h-4" />
+                    </Tooltip>
+                </Link>
+            </NavbarItem>
             {!loading && (
                 <>
                     {cookies?.userDisplayName && (
