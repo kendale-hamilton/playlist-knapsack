@@ -10,7 +10,7 @@ type TrackListProps = {
 }
 
 export default function TrackList(props: TrackListProps) {
-    const { title, width, tracks, setPlaylist } = props;
+    const { title, width, tracks } = props;
 
     // const swapTracks = (index_1: number, index_2: number) => {
     //     const newTracks: Track[] = [...tracks];

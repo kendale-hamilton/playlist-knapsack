@@ -77,7 +77,7 @@ export default function Home() {
         </div>
         <div>
           <span>Since multiplying numbers with exponents is the same as adding their exponents, the 1x</span><sup>0</sup><span> can be understood as adding neither song to the new playlist. 1x</span><sup>120</sup><span> can be understood as adding the first song, but not the second, to the playlist. 1x</span><sup>157</sup><span> can be understood as the opposite.</span>
-          <span>Lastly, 1x</span><sup>277</sup><span> can be understood as adding both songs to the playlist. By multiplying each track's polynomial together, we end with a polynomial that encodes all possible total durations (with each song included at most once) where the totals are exponents that have a nonzero value as their coefficient. </span>
+          <span>Lastly, 1x</span><sup>277</sup><span> can be understood as adding both songs to the playlist. By multiplying each track&apos;s polynomial together, we end with a polynomial that encodes all possible total durations (with each song included at most once) where the totals are exponents that have a nonzero value as their coefficient. </span>
         </div>
         <div>
           <span>Now, we simply need to check if this final polynomial has a positive coefficient for x</span><sup>t</sup><span>, where t is our desired total. Importantly, all of the polynomials that were multiplied iteratively to produce this polynomial are still needed.</span>
