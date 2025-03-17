@@ -41,5 +41,7 @@ jobs:
           slot-name: 'Production'
           package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4838CE156F9F4C679C1E2D12641E64C5 }}
+          scm-do-build-during-deployment: false
+          enable-oryx-build: false
           sku: 'consumption'
         
