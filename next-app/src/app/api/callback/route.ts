@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
             body: new URLSearchParams({
                 grant_type: 'authorization_code',
                 code,
-                redirect_uri: `${process.env.SPOTIFY_REDIRECT_URI}`,
+                redirect_uri: `${process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI}`,
             }),
         });
     
