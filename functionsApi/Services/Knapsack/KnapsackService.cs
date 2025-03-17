@@ -142,7 +142,7 @@ namespace Services.KnapsackService
             return convolve.Shift(shiftValue);
         }
 
-        private Vec FFTConvolve(Vec lhs, Vec rhs)
+        private static Vec FFTConvolve(Vec lhs, Vec rhs)
         {
             int size = Math.Max(lhs.Length, rhs.Length);
             int n = 1;
@@ -209,16 +209,7 @@ namespace Services.KnapsackService
             List<Track> children = [.. leftPass, .. rightPass];
             return children;
         }
-
-        private double MaxConvolution(int lhs, int rhs)
-        {
-            int p = 16;
-            double powered_lhs = Math.Pow(lhs, p);
-            double powered_rhs = Math.Pow(rhs, p);
-            double result = Math.Pow(powered_lhs + powered_rhs, 1.0 / p);
-            return result;
-        }
-        
+        //Used for checking accuracy of FFTConvolve
         private static double[] StandardConvolve(double[] lhs, double[] rhs)
         {
             int n = lhs.Length;
