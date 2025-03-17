@@ -60,6 +60,7 @@ export default function Home() {
       </div>
       <Divider />
       <div className="flex flex-col items-start px-32">
+        <p className="text-center font-bold">THE APP IS CURRENTLY IN DEV</p>
         <p className="underline font-bold">The Algorithm:</p>
         <div className="flex flex-col gap-2 p-4">
           <p>Consider a menu of many items and you want to know how to spend exactly $50. How could you efficiently calculate what items you must buy? Complicating this problem, what if you only wanted each item one time at most? </p>
