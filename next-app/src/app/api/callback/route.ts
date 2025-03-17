@@ -21,12 +21,12 @@ export async function GET(req: NextRequest) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                Authorization: `Basic ${btoa(`${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID}:${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET}`)}`,
+                Authorization: `Basic ${btoa(`${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`)}`,
             },
             body: new URLSearchParams({
                 grant_type: 'authorization_code',
                 code,
-                redirect_uri: `${process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI}`,
+                redirect_uri: `${process.env.SPOTIFY_REDIRECT_URI}`,
             }),
         });
     
