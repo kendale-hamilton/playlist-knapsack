@@ -24,7 +24,6 @@ export default function Builder() {
         const runFetchPlaylists = async () => {
             const response = await fetchWithRetry(fetchPlaylists)
             const playlists = await response.json()
-            console.log("playlists", playlists)
             setPlaylists(playlists)
         }
 

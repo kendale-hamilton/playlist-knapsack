@@ -49,7 +49,6 @@ export default function Playlist() {
         const runFetchPlaylists = async () => {
             const response = await fetchWithRetry(fetchPlaylist)
             const playlist = await response.json()
-            console.log("playlist", playlist)
             setPlaylist(playlist)
         }
         

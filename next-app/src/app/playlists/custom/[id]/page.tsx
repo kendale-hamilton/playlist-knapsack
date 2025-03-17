@@ -13,7 +13,6 @@ import { fetchWithRetry } from "@/app/helpers/retry-fetch";
 export default function CustomPlaylist() {
     const params = useParams();
     const { id } = params as { id: string };
-    console.log({params, id})
     const searchParams = useSearchParams()
     const desiredLength = searchParams.get("desired-length")
 
