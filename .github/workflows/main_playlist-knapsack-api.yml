@@ -16,6 +16,9 @@ env:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     
     steps:
       - name: 'Checkout GitHub Action'
@@ -32,6 +35,13 @@ jobs:
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           dotnet build --configuration Release --output ./output
           popd
+
+      - name: 'Run Azure Login Action'
+        uses: azure/login@v1
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
       
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
@@ -40,7 +50,7 @@ jobs:
           app-name: 'playlist-knapsack-api'
           slot-name: 'Production'
           package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4838CE156F9F4C679C1E2D12641E64C5 }}
+          publish-profile: ${{ secrets.AZURE_FUNCTIONS_PUBLISH_PROFILE }}
           scm-do-build-during-deployment: false
           enable-oryx-build: false
           sku: 'consumption'
