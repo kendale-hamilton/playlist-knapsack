@@ -60,7 +60,8 @@ export default function Home() {
       </div>
       <Divider />
       <div className="flex flex-col items-start px-32">
-        <p className="text-center font-bold">THE APP IS CURRENTLY IN DEV</p>
+        <p className="text-center font-bold">DISCLAIMER:</p>
+        <p className="italic">This app is not available for public use until Spotify approves the API Extension Request for it. In the meantime, users' spotify accounts must be added manually. Please reach out to me (contact info below) if you would like to be added.</p>
         <p className="underline font-bold">The Algorithm:</p>
         <div className="flex flex-col gap-2 p-4">
           <p>Consider a menu of many items and you want to know how to spend exactly $50. How could you efficiently calculate what items you must buy? Complicating this problem, what if you only wanted each item one time at most? </p>
@@ -105,15 +106,16 @@ export default function Home() {
       <p className="underline font-bold">About the Project:</p>
       <div className="flex flex-col gap-2 p-4">
         <p>Playlist Knapsack was built using NextJS and Azure Functions in C# and is deployed in an Azure Static Web App.</p>
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row">
           <div className="flex flex-col gap-2">
-            <p>Playlist Knapsack was created by Kendale Hamilton, a Senior studying Politics and Computer Science at Hillsdale College, to graduate in May 2025.</p>
+            <p>It was created by Kendale Hamilton, a Senior studying Politics and Computer Science at Hillsdale College, to graduate in May 2025.</p>
             <div className="flex flex-row gap-8 px-8">
+              <Link href="mailto:kendaleernest@gmail.com" isExternal>Email</Link>
               <Link href="https://www.linkedin.com/in/kendale-hamilton-b72563265/" isExternal>LinkedIn</Link>
-              <Link href="https://github.com/kendale-hamilton" isExternal>Github</Link>
+              <Link href="https://github.com/kendale-hamilton" isExternal>GitHub</Link>
             </div>
           </div>
-          <Image alt="Kendale Pic" src="./kendale-headshot.jpg" />
+          <Image alt="Kendale Pic" src="./kendale-headshot.jpg" className="mx-24"/>
         </div>
       </div>
       </div>
