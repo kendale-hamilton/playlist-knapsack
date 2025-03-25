@@ -10,7 +10,7 @@ Soon, the algorithm will be updated to solve the "Knapsack" problem, where a use
 ### Use the app
 
 Visit [Playlist Knapsack](https://www.playlist-knapsack.vercel.app) to use the app.
-> **Disclaimer**: At the moment, the app can only be used by certain preconfigured Spotify accounts, due to the way Spotify allows access to their APIs. This restriction will be removed soon with Spotify's approval. In the meantime, you can follow the guide below to run the app locally using your own Spotify Web API app.
+> **Disclaimer**: At the moment, the app can only be used by certain preconfigured Spotify accounts, due to the way Spotify allows access to their APIs. This restriction will be removed soon with Spotify's approval. In the meantime, you can follow the guide below to run the app locally using your own Spotify Web API app, or reach out to me at [kendaleernest@gmail.com](mailto:kendaleernest@gmail.com) to get access.
 
 ### Local use
 After cloning the repo, you will need a `.env.local` file in the next-app folder, and a `local.settings.json` in the functionsApi folder. 
@@ -19,30 +19,30 @@ After cloning the repo, you will need a `.env.local` file in the next-app folder
 
 In your `.env.local file`, you will need the following settings:
 ```env
-    NEXT_PUBLIC_SPOTIFY_CLIENT_ID="YOUR CLIENT ID"
-    SPOTIFY_CLIENT_SECRET="YOUR CLIENT SECRET"
-    NEXT_PUBLIC_SPOTIFY_REDIRECT_URI="http://localhost:7071/api/spotify/callback"
-    NEXT_PUBLIC_BACKEND_URL="http://localhost:7071"
+NEXT_PUBLIC_SPOTIFY_CLIENT_ID="YOUR CLIENT ID"
+SPOTIFY_CLIENT_SECRET="YOUR CLIENT SECRET"
+NEXT_PUBLIC_SPOTIFY_REDIRECT_URI="http://localhost:7071/api/spotify/callback"
+NEXT_PUBLIC_BACKEND_URL="http://localhost:7071"
 ```
 
 #### `local.settings.json` File
 
 The following is an example of the `local.settings.json` that you will need:
 ```local
-    {
-        "IsEncrypted": false,
-        "Values": {
-            "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-            "SPOTIFY_CLIENT_ID": "YOUR CLIENT ID",
-            "SPOTIFY_CLIENT_SECRET": "YOUR CLIENT SECRET",
-            "SPOTIFY_REDIRECT_URI": "http://localhost:7071/api/spotify/callback",
-            "FRONTEND_REDIRECT_URI": "http://localhost:3000",
-            "AZURE_BLOB_CONNECTION_STRING": "YOUR BLOB STORAGE CONNECTION STRING"
-        },
-        "Host": {
-            "CORS": "*"
-        }
+{
+    "IsEncrypted": false,
+    "Values": {
+        "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+        "SPOTIFY_CLIENT_ID": "YOUR CLIENT ID",
+        "SPOTIFY_CLIENT_SECRET": "YOUR CLIENT SECRET",
+        "SPOTIFY_REDIRECT_URI": "http://localhost:7071/api/spotify/callback",
+        "FRONTEND_REDIRECT_URI": "http://localhost:3000",
+        "AZURE_BLOB_CONNECTION_STRING": "YOUR BLOB STORAGE CONNECTION STRING"
+    },
+    "Host": {
+        "CORS": "*"
     }
+}
 ```
 
 You will also need Azure Functions Core Tools installed.
