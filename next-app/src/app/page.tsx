@@ -61,7 +61,7 @@ export default function Home() {
       <Divider />
       <div className="flex flex-col items-start px-32">
         <p className="text-center font-bold">DISCLAIMER:</p>
-        <p className="italic">This app is not available for public use until Spotify approves the API Extension Request for it. In the meantime, users' spotify accounts must be added manually. Please reach out to me (contact info below) if you would like to be added.</p>
+        <p className="italic">This app is not available for public use until Spotify approves the API Extension Request for it. In the meantime, users&apos; spotify accounts must be added manually. Please reach out to me (contact info below) if you would like to be added.</p>
         <p className="underline font-bold">The Algorithm:</p>
         <div className="flex flex-col gap-2 p-4">
           <p>Consider a menu of many items and you want to know how to spend exactly $50. How could you efficiently calculate what items you must buy? Complicating this problem, what if you only wanted each item one time at most? </p>
