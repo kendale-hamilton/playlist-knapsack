@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
         cookieStore.set('accessToken', access_token);
         cookieStore.set('refreshToken', refresh_token);
 
-        const res = NextResponse.redirect(`${baseUrl}`);
+        const res = NextResponse.redirect(`${state}`);
 
         return res;
     } catch (error) {
