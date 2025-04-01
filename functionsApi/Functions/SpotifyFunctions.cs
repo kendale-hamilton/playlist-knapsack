@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -27,7 +28,7 @@ namespace Controllers.SpotifyController
             Console.WriteLine("Refreshing Token..." + refreshToken);
             string accessToken = await _spotifyService.RefreshAccessToken(refreshToken);
             var response = req.CreateResponse(HttpStatusCode.OK);
-            response.Cookies.Append("accessToken", accessToken);
+            response.Headers.Add("Set-Cookie", $"accessToken={accessToken}; SameSite=None; Secure");
             return response;
         }
         [Function("SpotifyGetUserPlaylists")]
