@@ -50,7 +50,10 @@ export async function GET(req: NextRequest) {
         cookieStore.set('accessToken', access_token);
         cookieStore.set('refreshToken', refresh_token);
 
-        const res = NextResponse.redirect(`${baseUrl}`);
+        setTimeout(() => {
+            console.log("State: ", state);
+        }, 2000)
+        const res = NextResponse.redirect(`${state}`);
 
         return res;
     } catch (error) {
