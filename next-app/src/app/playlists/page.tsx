@@ -37,10 +37,10 @@ export default function Builder() {
     }
 
     return (
-        <div className="m-4 text-center bg-neutral-900">
+        <div className="m-4 text-center bg-neutral-900 w-full overflow-x-hidden">
             <p className="text-purple-300 my-4 font-bold">Select one of your playlists to begin</p>
             <div className="flex justify-center">
-                <div className="grid grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
                     {playlists.map(playlist => (
                         <Card isPressable onPress={() => router.push(`playlists/${playlist.id}`)} className="bg-gray-500 h-48 w-48" key={playlist.id}>
                             <CardBody className="flex flex-col gap-4 items-center">
@@ -52,7 +52,7 @@ export default function Builder() {
                                     src={playlist.images[0].url}
                                 />
                             </CardBody>
-                    </Card>
+                        </Card>
                     ))}
                 </div>
             </div>

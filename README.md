@@ -13,7 +13,9 @@ Visit [Playlist Knapsack](https://www.playlist-knapsack.vercel.app) to use the a
 > **Disclaimer**: At the moment, the app can only be used by certain preconfigured Spotify accounts, due to the way Spotify allows access to their APIs. This restriction will be removed soon with Spotify's approval. In the meantime, you can follow the guide below to run the app locally using your own Spotify Web API app, or reach out to me at [kendaleernest@gmail.com](mailto:kendaleernest@gmail.com) to get access.
 
 ### Local use
-After cloning the repo, you will need a `.env.local` file in the next-app folder, and a `local.settings.json` in the functionsApi folder. 
+To begin, follow [this guide](https://developer.spotify.com/documentation/web-api) to create your own Spotify Web API app.
+
+Then, after cloning the repo, you will need a `.env.local` file in the next-app folder, and a `local.settings.json` in the functionsApi folder. 
 
 #### `.env.local` File
 

@@ -21,7 +21,7 @@ export default function Home() {
   }, [])
 
   return (
-    <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white">
+    <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full overflow-x-scroll">
       <div className ="items-center justify-center flex flex-col gap-4">
         <p className="text-4xl font-bold underline">Welcome to Playlist Knapsack</p>
         <p>Keep reading to learn about the app, or click below to get started!</p>
@@ -59,7 +59,7 @@ export default function Home() {
         )}
       </div>
       <Divider />
-      <div className="flex flex-col items-start px-32">
+      <div className="flex flex-col items-start px-8 md:px-32">
         <p className="text-center font-bold">DISCLAIMER:</p>
         <p className="italic">This app is not available for public use until Spotify approves the API Extension Request for it. In the meantime, users&apos; spotify accounts must be added manually. Please reach out to me (contact info below) if you would like to be added.</p>
         <p className="underline font-bold">The Algorithm:</p>
@@ -106,7 +106,7 @@ export default function Home() {
       <p className="underline font-bold">About the Project:</p>
       <div className="flex flex-col gap-2 p-4">
         <p>Playlist Knapsack was built using NextJS and Azure Functions in C# and is deployed in an Azure Static Web App.</p>
-        <div className="flex flex-row">
+        <div className="flex flex-col gap-4 items-center md:flex-row md:items-start">
           <div className="flex flex-col gap-2">
             <p>It was created by Kendale Hamilton, a Senior studying Politics and Computer Science at Hillsdale College, to graduate in May 2025.</p>
             <div className="flex flex-row gap-8 px-8">
@@ -115,7 +115,7 @@ export default function Home() {
               <Link href="https://github.com/kendale-hamilton" isExternal>GitHub</Link>
             </div>
           </div>
-          <Image alt="Kendale Pic" src="./kendale-headshot.jpg" className="mx-24"/>
+          <Image alt="Kendale Pic" src="./kendale-headshot.jpg"/>
         </div>
       </div>
       </div>
