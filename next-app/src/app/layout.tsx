@@ -18,7 +18,7 @@ export default async function RootLayout({
     <html lang="en" className="dark">
       <body className="bg-neutral-900">
         <Providers>
-          <div className="flex flex-col h-screen">
+          <div className="flex flex-col h-screen w-full">
             <MainAppBar />
             <div className="flex-grow">
               {children}
