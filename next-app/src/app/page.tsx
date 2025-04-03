@@ -91,8 +91,7 @@ export default function Home() {
           <span>This process can be done iteratively until we know, for each track&apos;s polynomial, whether 1x</span><sup>0</sup><span>or the 1x</span><sup>length</sup><span> was used to get to the desired total. If 1x</span><sup>0</sup><span> was used, then the song was not used to get to the total. If the exponent with the songs length was used, then the song was used. We can then add all of the necessary songs to a new playlist, and it will be of length t.</span>
         </div>
         <div>
-          {/*TODO: Confirm the runtime*/}
-          <span>This process sounds simple, but multiplying massive polynomials is no quick task. In big O terms, naive polynomial multiplication is O(n</span><sup>2</sup><span>). However, using Fast Fourier Transform, this can be cut down to O(n log(n)), where n is the number of terms of in the polynomial. Using FFT and Inverse FFT to quickly multiply and subtract polynomials, this algorithm has a final runtime of O(nk log(nk) log(n)), where n is the size of the original playlist and k is the ?.</span>
+          <span>This process sounds simple, but multiplying massive polynomials is no quick task. In big O terms, naive polynomial multiplication is O(n</span><sup>2</sup><span>). However, using Fast Fourier Transform, this can be cut down to O(n log(n)), where n is the number of terms of in the polynomial. Using FFT and Inverse FFT to quickly multiply and subtract polynomials, this algorithm has a final runtime of O(nk log(nk) log(n)), where n is the size of the original playlist and k is the playlist with the largest length.</span>
         </div>
       </div>
       <p className="underline font-bold">Upcoming Features:</p>
