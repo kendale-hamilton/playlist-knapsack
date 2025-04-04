@@ -28,7 +28,7 @@ namespace Controllers.SpotifyController
             Console.WriteLine("Refreshing Token..." + refreshToken);
             string accessToken = await _spotifyService.RefreshAccessToken(refreshToken);
             Console.WriteLine("Access Token: " + accessToken);
-            return new OkObjectResult(accessToken);
+            return Ok(new { accessToken });
         }
         [Function("SpotifyGetUserPlaylists")]
         public async Task<IActionResult> GetUserPlaylists([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.SpotifyUserPlaylists)] HttpRequestData req, string userId)
