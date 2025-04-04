@@ -7,7 +7,7 @@ namespace Models.Spotify
     public class SpotifyExternalUrls
     {
         [JsonPropertyName("spotify")]
-        public string? Spotify { get; set; }
+        public required string Spotify { get; set; }
     }
     public class SpotifyImage
     {
@@ -112,9 +112,9 @@ namespace Models.Spotify
         [JsonPropertyName("description")]
         public string? Description { get; set; }
         [JsonPropertyName("external_urls")]
-        public SpotifyExternalUrls? ExternalUrls { get; set; }
+        public required SpotifyExternalUrls ExternalUrls { get; set; }
         [JsonPropertyName("href")]
-        public string? Href { get; set; }
+        public required string Href { get; set; }
         [JsonPropertyName("id")]
         public required string Id { get; set; }
         [JsonPropertyName("images")]
@@ -141,7 +141,8 @@ namespace Models.Spotify
                 Description = Description,
                 Id = Id,
                 Images = Images,
-                Name = Name
+                Name = Name,
+                SpotifyUrl = ExternalUrls.Spotify
             };
         }
     }
@@ -207,7 +208,7 @@ namespace Models.Spotify
         [JsonPropertyName("external_ids")]
         public SpotifyExternalIds? ExternalIds { get; set; }
         [JsonPropertyName("external_urls")]
-        public SpotifyExternalUrls? ExternalUrls { get; set; }
+        public required SpotifyExternalUrls ExternalUrls { get; set; }
         [JsonPropertyName("href")]
         public string? Href { get; set; }
         [JsonPropertyName("id")]
@@ -217,7 +218,7 @@ namespace Models.Spotify
         [JsonPropertyName("popularity")]
         public int? Popularity { get; set; }
         [JsonPropertyName("uri")]
-        public string? Uri { get; set; }
+        public required string Uri { get; set; }
         [JsonPropertyName("is_local")]
         public bool IsLocal { get; set; }
         public Track Simplify()
@@ -229,6 +230,7 @@ namespace Models.Spotify
                 Seconds = DurationMs / 1000 ?? -1,
                 Name = Name,
                 Popularity = Popularity,
+                SpotifyUrl = ExternalUrls.Spotify,
                 Uri = Uri
             };
         }

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import TrackList from "../../components/TrackList";
 import PlaylistDetailSelector from "./components/PlaylistDetailSelector";
 import { FullPlaylist } from "@/types/Playlist";
-import { Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
+import { Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
 import { useSearchParams, useRouter, useParams } from "next/navigation";
 import { fetchWithRetry } from "@/app/helpers/retry-fetch";
 

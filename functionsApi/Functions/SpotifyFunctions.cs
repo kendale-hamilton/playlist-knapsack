@@ -23,19 +23,19 @@ namespace Controllers.SpotifyController
             _spotifyService = spotifyService;
         }
         [Function("SpotifyRefreshToken")]
-        public async Task<HttpResponseData> RefreshToken([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.SpotifyRefreshToken)] HttpRequestData req, string refreshToken)
+        public async Task<IActionResult> RefreshToken([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.SpotifyRefreshToken)] HttpRequestData req, string refreshToken)
         {
             Console.WriteLine("Refreshing Token..." + refreshToken);
             string accessToken = await _spotifyService.RefreshAccessToken(refreshToken);
-            var response = req.CreateResponse(HttpStatusCode.OK);
-            response.Headers.Add("Set-Cookie", $"accessToken={accessToken}; SameSite=None; Secure");
-            return response;
+            Console.WriteLine("Access Token: " + accessToken);
+            return new OkObjectResult(accessToken);
         }
         [Function("SpotifyGetUserPlaylists")]
         public async Task<IActionResult> GetUserPlaylists([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.SpotifyUserPlaylists)] HttpRequestData req, string userId)
         {
             Console.WriteLine("Getting User Playlists...");
             var accessToken = req.Headers.GetValues("Authorization").FirstOrDefault().Replace("Bearer ", "");
+            Console.WriteLine("Access Token: " + accessToken);
             ServiceResponse<List<PlaylistDetails>> userPlaylistsResponse = await _spotifyService.GetUserPlaylists(userId, accessToken);
             Console.WriteLine(userPlaylistsResponse.Status);
             return userPlaylistsResponse.ToActionResult();

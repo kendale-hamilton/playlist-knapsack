@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import getCookies from "./helpers/cookie-functions";
 import { Cookies } from "@/types/cookies";
-import { Card, CardHeader, Divider, Image, Link } from "@nextui-org/react";
+import { Card, CardHeader, Divider, Image, Link } from "@heroui/react";
 import { signIn } from "./components/main-app-bar";
 
 export default function Home() {

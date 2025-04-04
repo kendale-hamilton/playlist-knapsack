@@ -1,6 +1,6 @@
 import { toTimeStringSeconds } from "@/app/helpers/time-functions";
 import { Track } from "@/types/Track";
-import { Card } from "@nextui-org/react";
+import { Card, Tooltip } from "@heroui/react";
 
 type TrackListProps = {
     title: string,
@@ -24,11 +24,13 @@ export default function TrackList(props: TrackListProps) {
             <div className="flex flex-col p-2 space-y-2 w-full">
                 {tracks.map((track, index) => (
                     <div className="flex flex-row" key={index}>
-                        <Card className="bg-white flex flex-row px-4 py-2 justify-between w-full">
-                            <p>{index + 1}</p>
-                            <p>{track.name}</p>
-                            <p>{toTimeStringSeconds(track.seconds)}</p>
-                        </Card>
+                        <Tooltip content={<p className="text-white">Click to view on Spotify</p>} placement="top-end">
+                            <Card className="bg-white flex flex-row px-4 py-2 justify-between w-full" isPressable onPress={() => window.open(track.spotify_url, "_blank")}>
+                                <p className="w-10 justify-start">{index + 1}</p>
+                                <p>{track.name}</p>
+                                <p className="w-10">{toTimeStringSeconds(track.seconds)}</p>
+                            </Card>
+                        </Tooltip>
                         {/* {setPlaylist && (
                             <div className="items-center justify-center flex flex-row w-1/5">
                                 {index > 0 && (

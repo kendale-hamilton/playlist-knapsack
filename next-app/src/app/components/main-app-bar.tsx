@@ -1,6 +1,6 @@
 "use client"
 import { Cookies } from "@/types/cookies";
-import { Avatar, Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Link, Navbar, NavbarBrand, NavbarItem, Tooltip } from "@nextui-org/react";
+import { Avatar, Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Link, Navbar, NavbarBrand, NavbarItem, Tooltip } from "@heroui/react";
 import { redirect, useRouter } from "next/navigation";
 import querystring from 'querystring';
 import { useEffect, useState } from "react";

@@ -3,7 +3,7 @@ import { Playlist } from "@/types/Playlist"
 import { useEffect, useState } from "react"
 import getCookies from "../helpers/cookie-functions"
 import { useRouter } from "next/navigation"
-import { Card, CardBody, Image } from "@nextui-org/react"
+import { Card, CardBody, CardFooter, Divider, Image, Link } from "@heroui/react"
 import { fetchWithRetry } from "../helpers/retry-fetch"
 
 export default function Builder() {
@@ -37,12 +37,12 @@ export default function Builder() {
     }
 
     return (
-        <div className="m-4 text-center bg-neutral-900 w-full overflow-x-hidden">
+        <div className="m-4 text-center bg-neutral-900 overflow-x-hidden">
             <p className="text-purple-300 my-4 font-bold">Select one of your playlists to begin</p>
             <div className="flex justify-center">
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
                     {playlists.map(playlist => (
-                        <Card isPressable onPress={() => router.push(`playlists/${playlist.id}`)} className="bg-gray-500 h-48 w-48" key={playlist.id}>
+                        <Card isPressable onPress={() => router.push(`playlists/${playlist.id}`)} className="bg-gray-500 w-56" key={playlist.id}>
                             <CardBody className="flex flex-col gap-4 items-center">
                                 <p>{playlist.name}</p>
                                 <Image
@@ -52,6 +52,19 @@ export default function Builder() {
                                     src={playlist.images[0].url}
                                 />
                             </CardBody>
+                            <Divider />
+                            <CardFooter className="flex flex-row gap-2">
+                                <Link isExternal href={playlist.spotify_url} className="text-purple-300 gap-2 font-bold">
+                                    <Image
+                                        alt="spotify logo"
+                                        height={40}
+                                        radius="sm"
+                                        src="./spotify-svgrepo-com.svg"
+                                        width={40}
+                                    />
+                                    <p>View on Spotify</p>
+                                </Link>
+                            </CardFooter>
                         </Card>
                     ))}
                 </div>

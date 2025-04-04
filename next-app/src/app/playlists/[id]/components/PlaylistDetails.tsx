@@ -2,7 +2,7 @@
 import { toTimeStringSeconds } from "@/app/helpers/time-functions"
 import { FullPlaylist } from "@/types/Playlist"
 import { ArrowsRightLeftIcon } from "@heroicons/react/16/solid"
-import { Button, Image } from "@nextui-org/react"
+import { Button, Image } from "@heroui/react"
 
 type PlaylistDetailsProps = {
     onSwitch: () => void,
