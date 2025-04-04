@@ -42,7 +42,8 @@ export default function PlaylistDetailSelector(props: PlaylistDetailSelectorProp
                 height: 0
             }],
             id: id,
-            description: ""
+            description: "",
+            spotify_url: "",
         },
         tracks: tracks
     }
