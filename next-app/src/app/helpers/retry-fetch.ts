@@ -5,8 +5,8 @@ export async function fetchWithRetry(fetchFunc: () => Promise<Response>): Promis
     const cookies = getCookies()
     let response = await fetchFunc()
     if (response.status == 401) {
-        const accessToken = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/spotify/refresh/${cookies.refreshToken}`)
-        console.log("Access token response: ", accessToken)
+        const accessTokenResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/spotify/refresh/${cookies.refreshToken}`)
+        const { accessToken } = await accessTokenResponse.json()
         document.cookie = `accessToken=${accessToken}`
         response = await fetchFunc()
     }
