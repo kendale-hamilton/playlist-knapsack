@@ -1,7 +1,7 @@
 import { playlistDuration, toTimeStringSeconds } from "@/app/helpers/time-functions"
 import { FullPlaylist } from "@/types/Playlist"
 import { Track } from "@/types/Track"
-import { Button, Input } from "@nextui-org/react"
+import { Button, Input } from "@heroui/react"
 import { useState } from "react"
 
 type PlaylistDetailSelectorProps = {
@@ -42,7 +42,8 @@ export default function PlaylistDetailSelector(props: PlaylistDetailSelectorProp
                 height: 0
             }],
             id: id,
-            description: ""
+            description: "",
+            spotify_url: "",
         },
         tracks: tracks
     }

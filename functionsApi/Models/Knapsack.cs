@@ -26,6 +26,8 @@ namespace Models.Knapsack
         public string? Name { get; set; } 
         [JsonPropertyName("seconds")]
         public int Seconds { get; set; }
+        [JsonPropertyName("spotify_url")]
+        public required string SpotifyUrl { get; set; }
     }
     #endregion
     #region Track
@@ -41,6 +43,8 @@ namespace Models.Knapsack
         public required string Name { get; set; }
         [JsonPropertyName("popularity")]
         public int? Popularity { get; set; }
+        [JsonPropertyName("spotify_url")]
+        public required string SpotifyUrl { get; set; }
         [JsonPropertyName("uri")]
         public required string Uri { get; set; }
     }

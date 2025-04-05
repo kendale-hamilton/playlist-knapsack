@@ -1,12 +1,13 @@
 "use client"
 import "./globals.css";
-import { NextUIProvider } from "@nextui-org/react";
+import { HeroUIProvider, ToastProvider } from "@heroui/react";
 import React from "react";
 
 export default function Providers({children}: {children: React.ReactNode}) {
     return (
-        <NextUIProvider>
+        <HeroUIProvider>
+            <ToastProvider />
             {children}
-        </NextUIProvider>
+        </HeroUIProvider>
     )
 }

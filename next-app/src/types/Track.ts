@@ -8,5 +8,6 @@ export type Track = {
     name: string
     popularity: number
     weight: number
+    spotify_url: string
     uri: string
 }

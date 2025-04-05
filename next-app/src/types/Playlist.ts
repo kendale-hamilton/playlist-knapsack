@@ -13,6 +13,7 @@ export type Playlist = {
         }
     ]
     seconds: number
+    spotify_url: string
 }
 
 export type FullPlaylist = {

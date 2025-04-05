@@ -1,6 +1,6 @@
 "use client"
 import { toSecs } from "@/app/helpers/time-functions"
-import { Button, Input, Switch } from "@nextui-org/react"
+import { Button, Input, Switch } from "@heroui/react"
 import { useState } from "react"
 import { SubmissionProps } from "../page"
 
