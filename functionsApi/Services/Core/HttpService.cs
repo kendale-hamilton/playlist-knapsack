@@ -31,7 +31,6 @@ namespace Services.HttpService
             request.Headers.Add("Authorization", $"Bearer {token}");
 
             var response = await _client.SendAsync(request);
-            Console.WriteLine(response.Content.ReadAsStringAsync().Result);
             return response;
         }
     }

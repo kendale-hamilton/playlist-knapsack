@@ -1,7 +1,6 @@
 import getCookies from "./cookie-functions"
 
 export async function fetchWithRetry(fetchFunc: () => Promise<Response>): Promise<Response> {
-    console.log("Fetching with retry")
     const cookies = getCookies()
     let response = await fetchFunc()
     if (response.status == 401) {

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import MainAppBar from "./components/main-app-bar";
 import Providers from "./provider";
+import { Analytics } from "@vercel/analytics/react"
 
 export const metadata: Metadata = {
   title: "Playlist Knapsack",
@@ -19,6 +20,7 @@ export default async function RootLayout({
       <body className="bg-neutral-900">
         <Providers>
           <div className="flex flex-col h-screen w-full">
+            <Analytics />
             <MainAppBar />
             <div className="flex-grow">
               {children}

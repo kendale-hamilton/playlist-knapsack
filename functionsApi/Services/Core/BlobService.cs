@@ -11,7 +11,6 @@ namespace Services.BlobService
         public BlobService() 
         {
             string connectionString = Environment.GetEnvironmentVariable("AZURE_BLOB_CONNECTION_STRING");
-            Console.WriteLine($"Connection String: {connectionString}");
             var blobServiceClient = new BlobServiceClient(connectionString);
             _containerClient = blobServiceClient.GetBlobContainerClient("custom-playlists");
         }
