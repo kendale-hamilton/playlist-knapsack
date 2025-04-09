@@ -6,10 +6,6 @@ export async function GET(req: NextRequest) {
     const code = searchParams.get('code');
     const state = searchParams.get('state');
     const baseUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}`;
-    console.log('Search params:', searchParams);
-    console.log('Code:', code);
-    console.log('State:', state);
-    console.log('Base URL:', baseUrl);
   
     if (!code || !state) {
       return NextResponse.redirect(`${baseUrl}/error?message=Missing%20parameters`);
@@ -40,8 +36,6 @@ export async function GET(req: NextRequest) {
 
         const { display_name, email, id, images } = await meRes.json();
 
-        console.log('User info:', { display_name, email, id, images });
-
         const cookieStore = await cookies();
         cookieStore.set('userId', id);
         cookieStore.set('userDisplayName', display_name);
@@ -50,9 +44,6 @@ export async function GET(req: NextRequest) {
         cookieStore.set('accessToken', access_token);
         cookieStore.set('refreshToken', refresh_token);
 
-        setTimeout(() => {
-            console.log("State: ", state);
-        }, 2000)
         const res = NextResponse.redirect(`${state}`);
 
         return res;

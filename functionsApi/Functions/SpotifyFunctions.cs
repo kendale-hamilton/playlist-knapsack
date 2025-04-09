@@ -35,9 +35,7 @@ namespace Controllers.SpotifyController
         {
             Console.WriteLine("Getting User Playlists...");
             var accessToken = req.Headers.GetValues("Authorization").FirstOrDefault().Replace("Bearer ", "");
-            Console.WriteLine("Access Token: " + accessToken);
             ServiceResponse<List<PlaylistDetails>> userPlaylistsResponse = await _spotifyService.GetUserPlaylists(userId, accessToken);
-            Console.WriteLine(userPlaylistsResponse.Status);
             return userPlaylistsResponse.ToActionResult();
         }
         [Function("SpotifyGetPlaylist")]
