@@ -84,7 +84,14 @@ export default function MainAppBar() {
                     )} 
                     {!cookies?.userDisplayName && (
                         <NavbarItem>
-                            <Button onPress={() => signIn()}>
+                            <Button onPress={() => {
+                                const agreement = localStorage.getItem("playlistKnapsackAgreement");
+                                if (agreement === "true") {
+                                    signIn();
+                                } else {
+                                    router.push('/agreement?from=signin');
+                                }
+                            }}>
                                 Sign in
                             </Button>
                         </NavbarItem>

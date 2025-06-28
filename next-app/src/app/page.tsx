@@ -42,7 +42,14 @@ export default function Home() {
             </Card>
           )}
           {!cookies?.userDisplayName && (
-            <Card isPressable onPress={() => signIn()} className="bg-gray-500">  
+            <Card isPressable onPress={() => {
+              const agreement = localStorage.getItem("playlistKnapsackAgreement");
+              if (agreement === "true") {
+                signIn();
+              } else {
+                router.push('/agreement?from=signin');
+              }
+            }} className="bg-gray-500">  
               <CardHeader className="p-4 gap-2">
                 <Image
                   alt="spotify logo"
