@@ -17,12 +17,12 @@ export default function TermsOfService() {
           <CardBody className="space-y-6 text-gray-200 leading-relaxed">
             <section>
               <h3 className="text-lg font-semibold mb-3 text-white">1. Acceptance of Terms</h3>
-              <p>By accessing and using Playlist Knapsack ("the Service"), you accept and agree to be bound by the terms and provision of this agreement.</p>
+              <p>By accessing and using Playlist Knapsack (&quot;the Service&quot;), you accept and agree to be bound by the terms and provision of this agreement.</p>
             </section>
 
             <section>
               <h3 className="text-lg font-semibold mb-3 text-white">2. Description of Service</h3>
-              <p>Playlist Knapsack is a web application that uses mathematical algorithms to create playlists of specific durations from your Spotify playlists. The service integrates with Spotify's API to access your music library and create new playlists.</p>
+              <p>Playlist Knapsack is a web application that uses mathematical algorithms to create playlists of specific durations from your Spotify playlists. The service integrates with Spotify&apos;s API to access your music library and create new playlists.</p>
             </section>
 
             <section>
@@ -37,7 +37,7 @@ export default function TermsOfService() {
 
             <section>
               <h3 className="text-lg font-semibold mb-3 text-white">4. Spotify Integration</h3>
-              <p>This service integrates with Spotify's API. By using this service, you authorize us to access your Spotify account data, including playlists and music library, for the purpose of creating new playlists. You can revoke this access at any time through your Spotify account settings.</p>
+              <p>This service integrates with Spotify&apos;s API. By using this service, you authorize us to access your Spotify account data, including playlists and music library, for the purpose of creating new playlists. You can revoke this access at any time through your Spotify account settings.</p>
             </section>
 
             <section>
@@ -47,12 +47,12 @@ export default function TermsOfService() {
 
             <section>
               <h3 className="text-lg font-semibold mb-3 text-white">6. Intellectual Property</h3>
-              <p>The algorithm and software used in this service are the intellectual property of the developer. Spotify's content and API are the property of Spotify AB. You retain rights to playlists you create through this service.</p>
+              <p>The algorithm and software used in this service are the intellectual property of the developer. Spotify&apos;s content and API are the property of Spotify AB. You retain rights to playlists you create through this service.</p>
             </section>
 
             <section>
               <h3 className="text-lg font-semibold mb-3 text-white">7. Limitation of Liability</h3>
-              <p>The service is provided "as is" without warranties of any kind. We are not liable for any damages arising from the use of this service, including but not limited to data loss, service interruptions, or issues with Spotify integration.</p>
+              <p>The service is provided &quot;as is&quot; without warranties of any kind. We are not liable for any damages arising from the use of this service, including but not limited to data loss, service interruptions, or issues with Spotify integration.</p>
             </section>
 
             <section>

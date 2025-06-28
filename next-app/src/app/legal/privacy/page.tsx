@@ -19,7 +19,7 @@ export default function PrivacyPolicy() {
               <h3 className="text-lg font-semibold mb-3 text-white">1. Information We Collect</h3>
               <p>Playlist Knapsack collects the following types of information:</p>
               <ul className="list-disc pl-6 space-y-2 mt-2 text-gray-200">
-                <li><strong className="text-white">Spotify Account Data:</strong> When you connect your Spotify account, we access your playlists, music library, and profile information through Spotify's API</li>
+                <li><strong className="text-white">Spotify Account Data:</strong> When you connect your Spotify account, we access your playlists, music library, and profile information through Spotify&apos;s API</li>
                 <li><strong className="text-white">Usage Data:</strong> We collect information about how you use our service, including which playlists you process and the duration targets you set</li>
                 <li><strong className="text-white">Technical Data:</strong> We may collect technical information such as IP addresses, browser type, and device information for service optimization</li>
               </ul>
@@ -83,7 +83,7 @@ export default function PrivacyPolicy() {
 
             <section>
               <h3 className="text-lg font-semibold mb-3 text-white">7. Third-Party Services</h3>
-              <p>Our service integrates with Spotify's API. Please review Spotify's privacy policy to understand how they handle your data. We are not responsible for Spotify's data practices.</p>
+              <p>Our service integrates with Spotify&apos;s API. Please review Spotify&apos;s privacy policy to understand how they handle your data. We are not responsible for Spotify&apos;s data practices.</p>
             </section>
 
             <section>
@@ -92,13 +92,13 @@ export default function PrivacyPolicy() {
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3 text-white">9. Children's Privacy</h3>
+              <h3 className="text-lg font-semibold mb-3 text-white">9. Children&apos;s Privacy</h3>
               <p>Our service is not intended for children under 13. We do not knowingly collect personal information from children under 13. If you believe we have collected such information, please contact us immediately.</p>
             </section>
 
             <section>
               <h3 className="text-lg font-semibold mb-3 text-white">10. Changes to This Policy</h3>
-              <p>We may update this privacy policy from time to time. We will notify you of any material changes by posting the new policy on this page and updating the "Last Updated" date.</p>
+              <p>We may update this privacy policy from time to time. We will notify you of any material changes by posting the new policy on this page and updating the &quot;Last Updated&quot; date.</p>
             </section>
           </CardBody>
         </Card>

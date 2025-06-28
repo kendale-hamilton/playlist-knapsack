@@ -1,12 +1,10 @@
 "use client"
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardBody, Button, Checkbox } from "@heroui/react";
-import { signIn } from "../components/main-app-bar";
 
-export default function AgreementPage() {
+function AgreementContent() {
   const [agreed, setAgreed] = useState(false);
-  const [alreadyAgreed, setAlreadyAgreed] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -14,7 +12,6 @@ export default function AgreementPage() {
     if (typeof window !== "undefined") {
       const agreement = localStorage.getItem("playlistKnapsackAgreement");
       if (agreement === "true") {
-        setAlreadyAgreed(true);
         router.replace("/");
       }
     }
@@ -95,5 +92,21 @@ export default function AgreementPage() {
         </CardBody>
       </Card>
     </div>
+  );
+}
+
+export default function AgreementPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
+        <Card className="bg-gray-800 max-w-2xl w-full border border-gray-600">
+          <CardBody className="space-y-6 p-8">
+            <h1 className="text-3xl font-bold text-center text-white mb-4">Loading...</h1>
+          </CardBody>
+        </Card>
+      </div>
+    }>
+      <AgreementContent />
+    </Suspense>
   );
 } 
