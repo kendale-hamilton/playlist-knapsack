@@ -110,7 +110,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
-        <div className="text-xl">Loading...</div>
+        <div className="text-xl font-medium">Loading...</div>
       </div>
     );
   }
@@ -119,7 +119,7 @@ export default function Dashboard() {
     <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full">
       <div className="max-w-4xl mx-auto w-full">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Dashboard</h1>
+          <h1 className="text-3xl font-bold text-white">Dashboard</h1>
           <Button color="danger" onPress={handleSignOut}>
             Sign Out
           </Button>
@@ -127,32 +127,34 @@ export default function Dashboard() {
 
         <div className="grid gap-6 md:grid-cols-2">
           {/* User Profile Card */}
-          <Card className="bg-gray-800 border border-gray-600">
+          <Card className="bg-gray-800 border-2 border-gray-600 shadow-lg">
             <CardBody className="space-y-4">
-              <h2 className="text-xl font-semibold">Profile</h2>
+              <h2 className="text-xl font-semibold text-white">Profile</h2>
               <div className="flex items-center gap-4">
                 <Avatar
                   name={user?.email?.charAt(0).toUpperCase()}
                   className="w-16 h-16"
                 />
                 <div>
-                  <p className="font-medium">{user?.email}</p>
-                  <p className="text-gray-400 text-sm">User ID: {user?.id}</p>
+                  <p className="font-medium text-white">{user?.email}</p>
+                  <p className="text-gray-300 text-sm">User ID: {user?.id}</p>
                 </div>
               </div>
             </CardBody>
           </Card>
 
           {/* Spotify Connection Card */}
-          <Card className="bg-gray-800 border border-gray-600">
+          <Card className="bg-gray-800 border-2 border-gray-600 shadow-lg">
             <CardBody className="space-y-4">
-              <h2 className="text-xl font-semibold">Spotify Connection</h2>
+              <h2 className="text-xl font-semibold text-white">
+                Spotify Connection
+              </h2>
 
               {spotifyConnected ? (
                 <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-green-400">
-                    <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                    <span>Connected to Spotify</span>
+                  <div className="flex items-center gap-2 text-green-300">
+                    <div className="w-3 h-3 bg-green-400 rounded-full shadow-sm"></div>
+                    <span className="font-medium">Connected to Spotify</span>
                   </div>
                   <div className="flex gap-2">
                     <Button
@@ -174,9 +176,11 @@ export default function Dashboard() {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-gray-400">
-                    <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
-                    <span>Not connected to Spotify</span>
+                  <div className="flex items-center gap-2 text-gray-300">
+                    <div className="w-3 h-3 bg-gray-500 rounded-full shadow-sm"></div>
+                    <span className="font-medium">
+                      Not connected to Spotify
+                    </span>
                   </div>
                   <Button
                     color="primary"
