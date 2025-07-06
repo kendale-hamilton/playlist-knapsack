@@ -112,7 +112,6 @@ export default function CustomPlaylist() {
 
       runPostSpotifyPlaylist();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playlist, userId]);
 
   if (loading) {
