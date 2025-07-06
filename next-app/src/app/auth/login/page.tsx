@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardBody, Button, Input } from "@heroui/react";
@@ -45,11 +45,13 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full min-h-screen items-center justify-center">
+    <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
       <Card className="bg-gray-800 max-w-md w-full border border-gray-600">
         <CardBody className="space-y-6 p-8">
-          <h1 className="text-2xl font-bold text-center text-white mb-4">Sign In</h1>
-          
+          <h1 className="text-2xl font-bold text-center text-white mb-4">
+            Sign In
+          </h1>
+
           {message && (
             <div className="bg-green-500 text-white p-3 rounded-lg text-sm">
               {message}
@@ -72,10 +74,10 @@ export default function Login() {
               className="text-white"
               classNames={{
                 input: "text-white",
-                label: "text-gray-300"
+                label: "text-gray-300",
               }}
             />
-            
+
             <Input
               type="password"
               label="Password"
@@ -85,13 +87,13 @@ export default function Login() {
               className="text-white"
               classNames={{
                 input: "text-white",
-                label: "text-gray-300"
+                label: "text-gray-300",
               }}
             />
 
-            <Button 
+            <Button
               type="submit"
-              color="primary" 
+              color="primary"
               isLoading={loading}
               className="w-full text-white font-semibold py-3"
             >
@@ -102,7 +104,7 @@ export default function Login() {
           <div className="text-center">
             <p className="text-gray-300">
               Don't have an account?{" "}
-              <button 
+              <button
                 onClick={() => router.push("/auth/signup")}
                 className="text-blue-400 hover:text-blue-300 underline"
               >
@@ -114,4 +116,4 @@ export default function Login() {
       </Card>
     </div>
   );
-} 
+}

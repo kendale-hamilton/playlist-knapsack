@@ -131,7 +131,7 @@ export default function Playlist() {
 
   if (loading) {
     return (
-      <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full min-h-screen items-center justify-center">
+      <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
         <div className="text-xl">Loading playlist...</div>
       </div>
     );
@@ -139,7 +139,7 @@ export default function Playlist() {
 
   if (error) {
     return (
-      <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full min-h-screen items-center justify-center">
+      <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
         <div className="text-xl text-red-400">{error}</div>
         <button
           onClick={() => router.push("/dashboard")}
@@ -153,7 +153,7 @@ export default function Playlist() {
 
   if (!playlist) {
     return (
-      <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full min-h-screen items-center justify-center">
+      <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
         <div className="text-xl">Loading...</div>
       </div>
     );

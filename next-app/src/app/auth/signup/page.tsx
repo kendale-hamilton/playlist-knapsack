@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardBody, Button, Input } from "@heroui/react";
@@ -26,7 +26,9 @@ export default function SignUp() {
         setError(error.message);
       } else {
         // Redirect to login or dashboard
-        router.push("/auth/login?message=Check your email to confirm your account");
+        router.push(
+          "/auth/login?message=Check your email to confirm your account"
+        );
       }
     } catch (error) {
       setError("An unexpected error occurred");
@@ -36,11 +38,13 @@ export default function SignUp() {
   };
 
   return (
-    <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full min-h-screen items-center justify-center">
+    <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
       <Card className="bg-gray-800 max-w-md w-full border border-gray-600">
         <CardBody className="space-y-6 p-8">
-          <h1 className="text-2xl font-bold text-center text-white mb-4">Sign Up</h1>
-          
+          <h1 className="text-2xl font-bold text-center text-white mb-4">
+            Sign Up
+          </h1>
+
           {error && (
             <div className="bg-red-500 text-white p-3 rounded-lg text-sm">
               {error}
@@ -57,10 +61,10 @@ export default function SignUp() {
               className="text-white"
               classNames={{
                 input: "text-white",
-                label: "text-gray-300"
+                label: "text-gray-300",
               }}
             />
-            
+
             <Input
               type="password"
               label="Password"
@@ -71,13 +75,13 @@ export default function SignUp() {
               className="text-white"
               classNames={{
                 input: "text-white",
-                label: "text-gray-300"
+                label: "text-gray-300",
               }}
             />
 
-            <Button 
+            <Button
               type="submit"
-              color="primary" 
+              color="primary"
               isLoading={loading}
               className="w-full text-white font-semibold py-3"
             >
@@ -88,7 +92,7 @@ export default function SignUp() {
           <div className="text-center">
             <p className="text-gray-300">
               Already have an account?{" "}
-              <button 
+              <button
                 onClick={() => router.push("/auth/login")}
                 className="text-blue-400 hover:text-blue-300 underline"
               >
@@ -100,4 +104,4 @@ export default function SignUp() {
       </Card>
     </div>
   );
-} 
+}
