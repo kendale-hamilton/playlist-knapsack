@@ -1,6 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardBody, Button, Input } from "@heroui/react";
 import { supabase } from "@/lib/supabase";
 
@@ -9,16 +9,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
   const router = useRouter();
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    const messageParam = searchParams.get("message");
-    if (messageParam) {
-      setMessage(messageParam);
-    }
-  }, [searchParams]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,18 +17,19 @@ export default function Login() {
     setError("");
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { error: authError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) {
-        setError(error.message);
+      if (authError) {
+        setError(authError.message);
       } else {
         // Redirect to dashboard or Spotify connection
         router.push("/dashboard");
       }
     } catch (error) {
+      console.error("Error during login:", error);
       setError("An unexpected error occurred");
     } finally {
       setLoading(false);
@@ -51,12 +43,6 @@ export default function Login() {
           <h1 className="text-2xl font-bold text-center text-white mb-4">
             Sign In
           </h1>
-
-          {message && (
-            <div className="bg-green-500 text-white p-3 rounded-lg text-sm">
-              {message}
-            </div>
-          )}
 
           {error && (
             <div className="bg-red-500 text-white p-3 rounded-lg text-sm">
@@ -103,7 +89,7 @@ export default function Login() {
 
           <div className="text-center">
             <p className="text-gray-300">
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <button
                 onClick={() => router.push("/auth/signup")}
                 className="text-blue-400 hover:text-blue-300 underline"

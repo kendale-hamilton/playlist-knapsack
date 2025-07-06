@@ -1,32 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Card, CardBody, Button, Avatar } from "@heroui/react";
 import { supabase } from "@/lib/supabase";
+import { User } from "@supabase/supabase-js";
 
 export default function Dashboard() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [spotifyConnected, setSpotifyConnected] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
   const router = useRouter();
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    checkUser();
-
-    // Check for URL parameters
-    const messageParam = searchParams.get("message");
-    const errorParam = searchParams.get("error");
-
-    if (messageParam) {
-      setMessage(messageParam);
-    }
-    if (errorParam) {
-      setError(errorParam);
-    }
-  }, [searchParams]);
 
   const checkUser = async () => {
     try {
@@ -58,12 +41,17 @@ export default function Dashboard() {
     }
   };
 
+  useEffect(() => {
+    checkUser();
+  }, []);
+
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     router.push("/");
   };
 
   const connectSpotify = () => {
+    if (!user) return;
     const state = JSON.stringify({
       returnUrl: window.location.href,
       userId: user.id,
@@ -97,18 +85,6 @@ export default function Dashboard() {
             Sign Out
           </Button>
         </div>
-
-        {message && (
-          <div className="bg-green-500 text-white p-4 rounded-lg mb-6">
-            {message}
-          </div>
-        )}
-
-        {error && (
-          <div className="bg-red-500 text-white p-4 rounded-lg mb-6">
-            {error}
-          </div>
-        )}
 
         <div className="grid gap-6 md:grid-cols-2">
           {/* User Profile Card */}

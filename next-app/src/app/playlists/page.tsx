@@ -10,8 +10,7 @@ import {
   Image,
   Link,
 } from "@heroui/react";
-import { fetchWithRetry } from "../helpers/retry-fetch";
-import { getCurrentUserData } from "../helpers/supabase-functions";
+import { getCurrentUserId } from "../helpers/supabase-functions";
 import { supabase } from "@/lib/supabase";
 
 export default function Builder() {
@@ -31,32 +30,26 @@ export default function Builder() {
         throw new Error("User not authenticated");
       }
 
-      // Get user data with Spotify tokens
-      const userData = await getCurrentUserData();
-      console.log("User data:", userData);
+      // Get current user ID
+      const userId = await getCurrentUserId();
+      console.log("User ID:", userId);
 
-      if (!userData) {
-        setError("User data not found");
+      if (!userId) {
+        setError("User not authenticated");
         setLoading(false);
-        throw new Error("User data not found");
+        throw new Error("User not authenticated");
       }
 
-      if (!userData.userId) {
-        setError("User ID not found");
-        setLoading(false);
-        throw new Error("User ID not found");
-      }
-
-      console.log("Making API call with user ID:", userData.userId);
+      console.log("Making API call with user ID:", userId);
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/spotify/users/${userData.userId}/playlists`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/spotify/users/${userId}/playlists`
       );
       return res;
     };
 
     const runFetchPlaylists = async () => {
       try {
-        const response = await fetchWithRetry(fetchPlaylists);
+        const response = await fetchPlaylists();
         const playlists = await response.json();
         setPlaylists(playlists);
       } catch (error) {

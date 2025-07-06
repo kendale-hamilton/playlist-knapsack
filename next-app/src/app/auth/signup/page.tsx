@@ -17,13 +17,13 @@ export default function SignUp() {
     setError("");
 
     try {
-      const { data, error } = await supabase.auth.signUp({
+      const { error: authError } = await supabase.auth.signUp({
         email,
         password,
       });
 
-      if (error) {
-        setError(error.message);
+      if (authError) {
+        setError(authError.message);
       } else {
         // Redirect to login or dashboard
         router.push(
@@ -31,7 +31,7 @@ export default function SignUp() {
         );
       }
     } catch (error) {
-      setError("An unexpected error occurred");
+      setError(`An unexpected error occurred: ${error}`);
     } finally {
       setLoading(false);
     }

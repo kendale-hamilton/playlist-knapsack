@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const { userId, returnUrl } = stateData;
+    const { userId } = stateData;
 
     if (!userId) {
       return NextResponse.redirect(

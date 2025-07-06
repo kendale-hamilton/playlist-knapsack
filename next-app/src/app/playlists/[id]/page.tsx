@@ -8,10 +8,10 @@ import BuilderConfiguration, {
 } from "./components/BuilderConfiguration";
 import { Track } from "@/types/Track";
 import TrackList from "../components/TrackList";
-import { fetchWithRetry } from "@/app/helpers/retry-fetch";
+
 import { playlistDuration } from "@/app/helpers/time-functions";
 import { useParams } from "next/navigation";
-import { getCurrentUserData } from "@/app/helpers/supabase-functions";
+import { getCurrentUserId } from "@/app/helpers/supabase-functions";
 import { supabase } from "@/lib/supabase";
 
 export type SubmissionProps = {
@@ -25,7 +25,7 @@ export default function Playlist() {
   const router = useRouter();
   const params = useParams();
   const { id } = params;
-  const [userData, setUserData] = useState<any>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [submission, setSubmission] = useState<SubmissionProps | null>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -41,15 +41,15 @@ export default function Playlist() {
         return;
       }
 
-      // Get user data with Spotify tokens
-      const data = await getCurrentUserData();
-      if (!data || !data.accessToken) {
-        setError("Please connect your Spotify account first");
+      // Get current user ID
+      const currentUserId = await getCurrentUserId();
+      if (!currentUserId) {
+        setError("User not authenticated");
         setLoading(false);
         return;
       }
 
-      setUserData(data);
+      setUserId(currentUserId);
       setLoading(false);
     };
     checkAuth();
@@ -57,23 +57,18 @@ export default function Playlist() {
 
   const [playlist, setPlaylist] = useState<FullPlaylist>();
   useEffect(() => {
-    if (!userData) return;
+    if (!userId) return;
 
     const fetchPlaylist = async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/spotify/users/${userData.userId}/playlists/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${userData.accessToken}`,
-          },
-        }
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/spotify/users/${userId}/playlists/${id}`
       );
       return res;
     };
 
     const runFetchPlaylists = async () => {
       try {
-        const response = await fetchWithRetry(fetchPlaylist);
+        const response = await fetchPlaylist();
         const playlist = await response.json();
         setPlaylist(playlist);
       } catch (error) {
@@ -83,10 +78,10 @@ export default function Playlist() {
     };
 
     runFetchPlaylists();
-  }, [id, userData]);
+  }, [id, userId]);
 
   useEffect(() => {
-    if (submission && userData) {
+    if (submission && userId) {
       const postPlaylist = async (tracks?: Track[]) => {
         const body = {
           tracks: tracks,
@@ -97,7 +92,7 @@ export default function Playlist() {
           },
         };
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/knapsack/users/${userData.userId}/playlists`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/knapsack/users/${userId}/playlists`,
           {
             method: "POST",
             headers: {
@@ -127,7 +122,7 @@ export default function Playlist() {
 
       postPlaylist(weightedTracks);
     }
-  }, [submission, userData, playlist, router]);
+  }, [submission, userId, playlist, router]);
 
   if (loading) {
     return (

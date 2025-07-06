@@ -14,8 +14,8 @@ import {
   ModalHeader,
 } from "@heroui/react";
 import { useSearchParams, useRouter, useParams } from "next/navigation";
-import { fetchWithRetry } from "@/app/helpers/retry-fetch";
-import { getCurrentUserData } from "@/app/helpers/supabase-functions";
+
+import { getCurrentUserId } from "@/app/helpers/supabase-functions";
 import { supabase } from "@/lib/supabase";
 
 export default function CustomPlaylist() {
@@ -30,7 +30,7 @@ export default function CustomPlaylist() {
   const [playlist, setPlaylist] = useState<FullPlaylist>();
   const [url, setUrl] = useState<string | null>();
   const [open, setOpen] = useState(false);
-  const [userData, setUserData] = useState<any>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -45,26 +45,26 @@ export default function CustomPlaylist() {
         return;
       }
 
-      // Get user data with Spotify tokens
-      const data = await getCurrentUserData();
-      if (!data || !data.accessToken) {
-        setError("Please connect your Spotify account first");
+      // Get current user ID
+      const currentUserId = await getCurrentUserId();
+      if (!currentUserId) {
+        setError("User not authenticated");
         setLoading(false);
         return;
       }
 
-      setUserData(data);
+      setUserId(currentUserId);
       setLoading(false);
     };
     checkAuth();
   }, [router]);
 
   useEffect(() => {
-    if (!tracks && userData) {
+    if (!tracks && userId) {
       const fetchCustomPlaylist = async () => {
         try {
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/knapsack/users/${userData.userId}/playlists/${id}`
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/knapsack/users/${userId}/playlists/${id}`
           );
           const customPlaylist = await response.json();
           setTracks(customPlaylist);
@@ -75,21 +75,21 @@ export default function CustomPlaylist() {
       };
       fetchCustomPlaylist();
     }
-  }, [id, userData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, userId]);
 
   useEffect(() => {
-    if (playlist && userData) {
+    if (playlist && userId) {
       const postSpotifyPlaylist = async () => {
         const body = {
           playlist: playlist,
           // image: btoa(image || "")
         };
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/spotify/users/${userData.userId}/playlists`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/spotify/users/${userId}/playlists`,
           {
             method: "POST",
             headers: {
-              Authorization: `Bearer ${userData.accessToken}`,
               "Content-Type": "application/json",
             },
             body: JSON.stringify(body),
@@ -100,7 +100,7 @@ export default function CustomPlaylist() {
 
       const runPostSpotifyPlaylist = async () => {
         try {
-          const response = await fetchWithRetry(postSpotifyPlaylist);
+          const response = await postSpotifyPlaylist();
           const url = await response.text();
           setUrl(url);
           setOpen(true);
@@ -112,7 +112,8 @@ export default function CustomPlaylist() {
 
       runPostSpotifyPlaylist();
     }
-  }, [playlist, userData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playlist, userId]);
 
   if (loading) {
     return (

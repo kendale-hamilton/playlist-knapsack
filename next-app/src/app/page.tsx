@@ -2,11 +2,13 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Card, CardHeader, Divider, Image, Link } from "@heroui/react";
+import { HomeIcon } from "@heroicons/react/24/outline";
 import { supabase } from "@/lib/supabase";
+import { User } from "@supabase/supabase-js";
 
 export default function Home() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -46,22 +48,34 @@ export default function Home() {
         {!loading && (
           <>
             {user && (
-              <Card
-                isPressable
-                onPress={() => router.push("/dashboard")}
-                className="bg-gray-500"
-              >
-                <CardHeader className="p-4 gap-2">
-                  <Image
-                    alt="spotify logo"
-                    height={40}
-                    radius="sm"
-                    src="./spotify-svgrepo-com.svg"
-                    width={40}
-                  />
-                  <p className="font-bold">Go to Dashboard</p>
-                </CardHeader>
-              </Card>
+              <div className="flex gap-4">
+                <Card
+                  isPressable
+                  onPress={() => router.push("/playlists")}
+                  className="bg-gray-500"
+                >
+                  <CardHeader className="p-4 gap-2">
+                    <Image
+                      alt="spotify logo"
+                      height={40}
+                      radius="sm"
+                      src="./spotify-svgrepo-com.svg"
+                      width={40}
+                    />
+                    <p className="font-bold">View Playlists</p>
+                  </CardHeader>
+                </Card>
+                <Card
+                  isPressable
+                  onPress={() => router.push("/dashboard")}
+                  className="bg-gray-500"
+                >
+                  <CardHeader className="p-4 gap-2 items-center">
+                    <HomeIcon className="w-8 h-8 " />
+                    <p className="font-bold">Go to Dashboard</p>
+                  </CardHeader>
+                </Card>
+              </div>
             )}
             {!user && (
               <div className="flex gap-4">
