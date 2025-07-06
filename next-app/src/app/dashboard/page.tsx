@@ -9,6 +9,7 @@ export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [spotifyConnected, setSpotifyConnected] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [disconnecting, setDisconnecting] = useState(false);
   const router = useRouter();
 
   const checkUser = async () => {
@@ -69,6 +70,43 @@ export default function Dashboard() {
     window.location.href = `https://accounts.spotify.com/authorize?${params.toString()}`;
   };
 
+  const disconnectSpotify = async () => {
+    if (!user) {
+      return;
+    }
+
+    if (!user.id) {
+      return;
+    }
+
+    setDisconnecting(true);
+    try {
+      // Call the backend API to disconnect Spotify
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/spotify/users/${user.id}/disconnect`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || "Failed to disconnect from Spotify"
+        );
+      }
+
+      setSpotifyConnected(false);
+    } catch (error) {
+      console.error("Error disconnecting Spotify:", error);
+    } finally {
+      setDisconnecting(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
@@ -116,13 +154,23 @@ export default function Dashboard() {
                     <div className="w-3 h-3 bg-green-400 rounded-full"></div>
                     <span>Connected to Spotify</span>
                   </div>
-                  <Button
-                    color="primary"
-                    onPress={() => router.push("/playlists")}
-                    className="w-full"
-                  >
-                    Go to Playlists
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      color="primary"
+                      onPress={() => router.push("/playlists")}
+                      className="flex-1"
+                    >
+                      Go to Playlists
+                    </Button>
+                    <Button
+                      color="danger"
+                      onPress={disconnectSpotify}
+                      isLoading={disconnecting}
+                      className="flex-1"
+                    >
+                      Disconnect
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <div className="space-y-3">
