@@ -6,19 +6,23 @@ using Models.Knapsack;
 using Models.ServiceResponse;
 using Models.Spotify;
 using Services.HttpService;
+using Services.SupabaseService;
 
 namespace Services.SpotifyService
 {
     public class SpotifyService : ISpotifyService
     {
         private readonly IHttpService _httpService;
-        public SpotifyService(IHttpService httpService)
+        private readonly ISupabaseService _supabaseService;
+        
+        public SpotifyService(IHttpService httpService, ISupabaseService supabaseService)
         {
             _httpService = httpService;
+            _supabaseService = supabaseService;
         }
         public async Task<ServiceResponse<List<PlaylistDetails>>> GetUserPlaylists(string userId, string token)
         {
-            var response = await _httpService.MakeGetRequest($"https://api.spotify.com/v1/users/{userId}/playlists", token);
+            var response = await _httpService.MakeGetRequest($"https://api.spotify.com/v1/users/{userId}/playlists", token, "Bearer");
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 return new ServiceResponse<List<PlaylistDetails>>
@@ -57,7 +61,7 @@ namespace Services.SpotifyService
 
         public async Task<ServiceResponse<PlaylistDetails>> GetPlaylistDetails(string playlistId, string token)
         {
-            var response = await _httpService.MakeGetRequest($"https://api.spotify.com/v1/playlists/{playlistId}", token);
+            var response = await _httpService.MakeGetRequest($"https://api.spotify.com/v1/playlists/{playlistId}", token, "Bearer");
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 return new ServiceResponse<PlaylistDetails>
@@ -88,7 +92,7 @@ namespace Services.SpotifyService
         
         public async Task<ServiceResponse<List<Track>>> GetPlaylistTracks(string playlistId, string token)
         {
-            var response = await _httpService.MakeGetRequest($"https://api.spotify.com/v1/playlists/{playlistId}/tracks", token);
+            var response = await _httpService.MakeGetRequest($"https://api.spotify.com/v1/playlists/{playlistId}/tracks", token, "Bearer");
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 return new ServiceResponse<List<Track>>
@@ -221,6 +225,83 @@ namespace Services.SpotifyService
             var tokenJson = JsonObject.Parse(tokenContent);
             string accessToken = tokenJson["access_token"]?.ToString();
             return accessToken;
+        }
+        
+        public async Task<ServiceResponse<string>> GetValidAccessToken(string supabaseUserId)
+        {
+            try
+            {
+                // First, try to get the current access token
+                var accessTokenResponse = await _supabaseService.GetSpotifyAccessToken(supabaseUserId);
+                if (accessTokenResponse.Status != HttpStatusCode.OK)
+                {
+                    return new ServiceResponse<string>
+                    {
+                        Status = HttpStatusCode.NotFound,
+                        ErrorMessage = "User not found or Spotify access token not available"
+                    };
+                }
+
+                // Test the current token with a simple Spotify API call
+                var testResponse = await _httpService.MakeGetRequest("https://api.spotify.com/v1/me", accessTokenResponse.Data, "Bearer");
+                
+                if (testResponse.StatusCode == HttpStatusCode.OK)
+                {
+                    // Token is still valid
+                    return new ServiceResponse<string>
+                    {
+                        Status = HttpStatusCode.OK,
+                        Data = accessTokenResponse.Data
+                    };
+                }
+                else if (testResponse.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    // Token is expired, refresh it
+                    var refreshTokenResponse = await _supabaseService.GetSpotifyRefreshToken(supabaseUserId);
+                    if (refreshTokenResponse.Status != HttpStatusCode.OK)
+                    {
+                        return new ServiceResponse<string>
+                        {
+                            Status = HttpStatusCode.NotFound,
+                            ErrorMessage = "Refresh token not available"
+                        };
+                    }
+
+                    string newAccessToken = await RefreshAccessToken(refreshTokenResponse.Data);
+                    if (string.IsNullOrEmpty(newAccessToken))
+                    {
+                        return new ServiceResponse<string>
+                        {
+                            Status = HttpStatusCode.BadRequest,
+                            ErrorMessage = "Failed to refresh access token"
+                        };
+                    }
+
+                    // TODO: Update the access token in Supabase database
+                    // For now, we'll just return the new token
+                    return new ServiceResponse<string>
+                    {
+                        Status = HttpStatusCode.OK,
+                        Data = newAccessToken
+                    };
+                }
+                else
+                {
+                    return new ServiceResponse<string>
+                    {
+                        Status = testResponse.StatusCode,
+                        ErrorMessage = "Unexpected error testing access token"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<string>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = $"Error getting valid access token: {ex.Message}"
+                };
+            }
         }
     }
 }

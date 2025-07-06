@@ -1,103 +1,122 @@
-"use client"
-import { Cookies } from "@/types/cookies";
-import { Avatar, Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Link, Navbar, NavbarBrand, NavbarItem, Tooltip } from "@heroui/react";
-import { redirect, useRouter } from "next/navigation";
-import querystring from 'querystring';
-import { useEffect, useState } from "react";
-import getCookies, { clearCookies } from "../helpers/cookie-functions";
+"use client";
+import {
+  Avatar,
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Link,
+  Navbar,
+  NavbarBrand,
+  NavbarItem,
+  Tooltip,
+} from "@heroui/react";
+import { useRouter } from "next/navigation";
 import { BugAntIcon } from "@heroicons/react/16/solid";
-
-export const signIn = async () => {
-    const state = window.location.href;
-    redirect('https://accounts.spotify.com/authorize?' +
-        querystring.stringify({
-            response_type: 'code',
-            client_id: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID,
-            scope: 'playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private user-read-email ugc-image-upload',
-            redirect_uri: process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI,
-            state: state,
-            show_dialog: true
-        })
-    );
-}
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+import { User } from "@supabase/supabase-js";
 
 export default function MainAppBar() {
-    const router = useRouter();
-    const [cookies, setCookies] = useState<Cookies | null>();
-    const [loading, setLoading] = useState<boolean>(true);
+  const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-    useEffect(() => {
-        const setCookieState = async () => {
-            const cookieStore = getCookies();
-            setCookies(cookieStore);
-        }
-        setCookieState()
-        setLoading(false);
-    }, [])
+  useEffect(() => {
+    checkUser();
 
-    const signOut = async () => {
-        const emptyStore = await clearCookies();
-        setCookies(emptyStore);
-        if (window.location.pathname === "/") {
-            window.location.reload();
-        } else {
-            router.push("/");
-        }
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const checkUser = async () => {
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setUser(user);
+    } catch (error) {
+      console.error("Error checking user:", error);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    return (
-        <Navbar 
-            className="text-white bg-black"
-            maxWidth="full"    
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    if (window.location.pathname === "/") {
+      window.location.reload();
+    } else {
+      router.push("/");
+    }
+  };
+
+  const handleSignIn = () => {
+    router.push("/auth/login");
+  };
+
+  return (
+    <Navbar className="text-white bg-black" maxWidth="full">
+      <NavbarBrand>
+        <Button
+          onPress={() => router.push("/")}
+          className="text-white"
+          variant="bordered"
         >
-            <NavbarBrand>
-                <Button 
-                    onPress={() => router.push("/")}
-                    className="text-white"
-                    variant="bordered"
-                >
-                    Playlist Knapsack
-                </Button>
-            </NavbarBrand>
+          Playlist Knapsack
+        </Button>
+      </NavbarBrand>
+      <NavbarItem>
+        <Link
+          href="https://github.com/kendale-hamilton/playlist-knapsack/issues"
+          isExternal
+        >
+          <Tooltip content="Report a bug" className="text-white">
+            <BugAntIcon className="w-4 h-4" />
+          </Tooltip>
+        </Link>
+      </NavbarItem>
+      {!loading && (
+        <>
+          {user && (
             <NavbarItem>
-                <Link href="https://github.com/kendale-hamilton/playlist-knapsack/issues" isExternal>
-                    <Tooltip content="Report a bug" className="text-white">
-                        <BugAntIcon className="w-4 h-4" />
-                    </Tooltip>
-                </Link>
+              <Dropdown>
+                <DropdownTrigger>
+                  <Avatar
+                    name={user?.email?.charAt(0).toUpperCase()}
+                    src={user?.user_metadata?.avatar_url}
+                  />
+                </DropdownTrigger>
+                <DropdownMenu>
+                  <DropdownItem
+                    key="dashboard"
+                    onPress={() => router.push("/dashboard")}
+                  >
+                    <p className="text-white">Dashboard</p>
+                  </DropdownItem>
+                  <DropdownItem key="Sign Out" onPress={() => handleSignOut()}>
+                    <p className="text-white">Sign out</p>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </NavbarItem>
-            {!loading && (
-                <>
-                    {cookies?.userDisplayName && (
-                        <NavbarItem>
-                            <Dropdown>
-                                <DropdownTrigger>
-                                    <Avatar src={cookies?.userAvatar} />
-                                </DropdownTrigger>
-                                <DropdownMenu>
-                                    <DropdownItem key="Sign Out" onPress={() => signOut()}>
-                                        <p className="text-white">Sign out</p>
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
-                        </NavbarItem>
-                    )} 
-                    {!cookies?.userDisplayName && (
-                        <NavbarItem>
-                            <Button onPress={() => {
-                                const agreement = localStorage.getItem("playlistKnapsackAgreement");
-                                if (agreement === "true") {
-                                    signIn();
-                                } else {
-                                    router.push('/agreement?from=signin');
-                                }
-                            }}>
-                                Sign in
-                            </Button>
-                        </NavbarItem>
-                    )}
-                </>
-            )}  
-        </Navbar>
-    )
+          )}
+          {!user && (
+            <NavbarItem>
+              <Button onPress={handleSignIn}>Sign in</Button>
+            </NavbarItem>
+          )}
+        </>
+      )}
+    </Navbar>
+  );
 }

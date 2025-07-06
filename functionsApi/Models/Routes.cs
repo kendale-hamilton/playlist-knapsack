@@ -5,13 +5,12 @@ namespace Models.Routes
     {
         #region Spotify
         public const string SpotifyCallback = "spotify/callback";
-        public const string SpotifyRefreshToken = "spotify/refresh/{refreshToken}";
         public const string SpotifyUserPlaylists = "spotify/users/{userId}/playlists";
-        public const string SpotifyPlaylist = "spotify/playlists/{playlistId}";
+        public const string SpotifyPlaylist = "spotify/users/{userId}/playlists/{playlistId}";
         #endregion
         #region Knapsack
-        public const string CustomPlaylists = "knapsack/users/{spotifyUserId}/playlists";
-        public const string CustomPlaylist = "knapsack/users/{spotifyUserId}/playlists/{customId}";
+        public const string CustomPlaylists = "knapsack/users/{userId}/playlists";
+        public const string CustomPlaylist = "knapsack/users/{userId}/playlists/{customId}";
         #endregion
     }
 }
