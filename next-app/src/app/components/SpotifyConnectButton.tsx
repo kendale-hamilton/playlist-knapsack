@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@heroui/react";
-import { supabase } from "@/lib/supabase";
 import { getCurrentUserId } from "../helpers/supabase-functions";
 
 interface SpotifyConnectButtonProps {
