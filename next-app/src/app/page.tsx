@@ -60,7 +60,7 @@ export default function Home() {
                       height={40}
                       radius="sm"
                       src="./spotify-svgrepo-com.svg"
-                      width={40}
+                      className="w-8 h-8"
                     />
                     <p className="font-bold">View Playlists</p>
                   </CardHeader>
@@ -68,7 +68,7 @@ export default function Home() {
                 <Card
                   isPressable
                   onPress={() => router.push("/dashboard")}
-                  className="bg-gray-500"
+                  className="bg-gray-500 flex flex-row gap-2"
                 >
                   <CardHeader className="p-4 gap-2 items-center">
                     <HomeIcon className="w-8 h-8 " />
