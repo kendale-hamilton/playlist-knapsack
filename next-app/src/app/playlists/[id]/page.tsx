@@ -8,11 +8,16 @@ import BuilderConfiguration, {
 } from "./components/BuilderConfiguration";
 import { Track } from "@/types/Track";
 import TrackList from "../components/TrackList";
+import { Button } from "@heroui/react";
 
 import { playlistDuration } from "@/app/helpers/time-functions";
 import { useParams } from "next/navigation";
-import { getCurrentUserId } from "@/app/helpers/supabase-functions";
+import {
+  getCurrentUserId,
+  isSpotifyConnected,
+} from "@/app/helpers/supabase-functions";
 import { supabase } from "@/lib/supabase";
+import SpotifyConnectButton from "../../components/SpotifyConnectButton";
 
 export type SubmissionProps = {
   desiredLength: number;
@@ -29,6 +34,7 @@ export default function Playlist() {
   const [submission, setSubmission] = useState<SubmissionProps | null>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [spotifyConnected, setSpotifyConnected] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -49,6 +55,10 @@ export default function Playlist() {
         return;
       }
 
+      // Check if Spotify is connected
+      const connected = await isSpotifyConnected();
+      setSpotifyConnected(connected);
+
       setUserId(currentUserId);
       setLoading(false);
     };
@@ -57,7 +67,7 @@ export default function Playlist() {
 
   const [playlist, setPlaylist] = useState<FullPlaylist>();
   useEffect(() => {
-    if (!userId) return;
+    if (!userId || !spotifyConnected) return;
 
     const fetchPlaylist = async () => {
       const res = await fetch(
@@ -78,7 +88,7 @@ export default function Playlist() {
     };
 
     runFetchPlaylists();
-  }, [id, userId]);
+  }, [id, userId, spotifyConnected]);
 
   useEffect(() => {
     if (submission && userId) {
@@ -142,6 +152,26 @@ export default function Playlist() {
         >
           Go to Dashboard
         </button>
+      </div>
+    );
+  }
+
+  if (!spotifyConnected) {
+    return (
+      <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
+        <div className="text-xl text-center mb-4">
+          Connect to Spotify to view playlist details
+        </div>
+        <div className="flex flex-col gap-4 items-center">
+          <SpotifyConnectButton size="lg" />
+          <Button
+            color="secondary"
+            onPress={() => router.push("/playlists")}
+            size="md"
+          >
+            Back to Playlists
+          </Button>
+        </div>
       </div>
     );
   }

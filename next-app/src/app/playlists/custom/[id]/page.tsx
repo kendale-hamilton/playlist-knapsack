@@ -15,8 +15,12 @@ import {
 } from "@heroui/react";
 import { useSearchParams, useRouter, useParams } from "next/navigation";
 
-import { getCurrentUserId } from "@/app/helpers/supabase-functions";
+import {
+  getCurrentUserId,
+  isSpotifyConnected,
+} from "@/app/helpers/supabase-functions";
 import { supabase } from "@/lib/supabase";
+import SpotifyConnectButton from "../../../components/SpotifyConnectButton";
 
 export default function CustomPlaylist() {
   const params = useParams();
@@ -33,6 +37,7 @@ export default function CustomPlaylist() {
   const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [spotifyConnected, setSpotifyConnected] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -53,6 +58,10 @@ export default function CustomPlaylist() {
         return;
       }
 
+      // Check if Spotify is connected
+      const connected = await isSpotifyConnected();
+      setSpotifyConnected(connected);
+
       setUserId(currentUserId);
       setLoading(false);
     };
@@ -60,7 +69,7 @@ export default function CustomPlaylist() {
   }, [router]);
 
   useEffect(() => {
-    if (!tracks && userId) {
+    if (!tracks && userId && spotifyConnected) {
       const fetchCustomPlaylist = async () => {
         try {
           const response = await fetch(
@@ -79,7 +88,7 @@ export default function CustomPlaylist() {
   }, [id, userId]);
 
   useEffect(() => {
-    if (playlist && userId) {
+    if (playlist && userId && spotifyConnected) {
       const postSpotifyPlaylist = async () => {
         const body = {
           playlist: playlist,
@@ -112,7 +121,7 @@ export default function CustomPlaylist() {
 
       runPostSpotifyPlaylist();
     }
-  }, [playlist, userId]);
+  }, [playlist, userId, spotifyConnected]);
 
   if (loading) {
     return (
@@ -132,6 +141,26 @@ export default function CustomPlaylist() {
         >
           Go to Dashboard
         </button>
+      </div>
+    );
+  }
+
+  if (!spotifyConnected) {
+    return (
+      <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
+        <div className="text-xl text-center mb-4">
+          Connect to Spotify to create and upload playlists
+        </div>
+        <div className="flex flex-col gap-4 items-center">
+          <SpotifyConnectButton size="lg" />
+          <Button
+            color="secondary"
+            onPress={() => router.push("/playlists")}
+            size="md"
+          >
+            Back to Playlists
+          </Button>
+        </div>
       </div>
     );
   }
