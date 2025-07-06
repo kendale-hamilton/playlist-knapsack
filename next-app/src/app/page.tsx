@@ -60,7 +60,7 @@ export default function Home() {
                       height={40}
                       radius="sm"
                       src="./spotify-svgrepo-com.svg"
-                      width={40}
+                      className="w-8 h-8"
                     />
                     <p className="font-bold">View Playlists</p>
                   </CardHeader>
@@ -68,7 +68,7 @@ export default function Home() {
                 <Card
                   isPressable
                   onPress={() => router.push("/dashboard")}
-                  className="bg-gray-500"
+                  className="bg-gray-500 flex flex-row gap-2"
                 >
                   <CardHeader className="p-4 gap-2 items-center">
                     <HomeIcon className="w-8 h-8 " />
@@ -310,7 +310,7 @@ export default function Home() {
         <div className="flex flex-col gap-2 p-4">
           <p>
             Playlist Knapsack was built using NextJS and Azure Functions in C#
-            and is deployed in an Azure Static Web App.
+            and is deployed using Vercel and Azure.
           </p>
           <div className="flex flex-col gap-4 items-center md:flex-row md:items-start">
             <div className="flex flex-col gap-2">
