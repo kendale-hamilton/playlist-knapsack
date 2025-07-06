@@ -9,15 +9,21 @@ import {
   Divider,
   Image,
   Link,
+  Button,
 } from "@heroui/react";
-import { getCurrentUserId } from "../helpers/supabase-functions";
+import {
+  getCurrentUserId,
+  isSpotifyConnected,
+} from "../helpers/supabase-functions";
 import { supabase } from "@/lib/supabase";
+import SpotifyConnectButton from "../components/SpotifyConnectButton";
 
 export default function Builder() {
   const router = useRouter();
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [spotifyConnected, setSpotifyConnected] = useState(false);
 
   useEffect(() => {
     const fetchPlaylists = async () => {
@@ -28,6 +34,15 @@ export default function Builder() {
       if (!user) {
         router.push("/auth/login");
         throw new Error("User not authenticated");
+      }
+
+      // Check if Spotify is connected
+      const connected = await isSpotifyConnected();
+      setSpotifyConnected(connected);
+
+      if (!connected) {
+        setLoading(false);
+        return;
       }
 
       // Get current user ID
@@ -50,8 +65,10 @@ export default function Builder() {
     const runFetchPlaylists = async () => {
       try {
         const response = await fetchPlaylists();
-        const playlists = await response.json();
-        setPlaylists(playlists);
+        if (response) {
+          const playlists = await response.json();
+          setPlaylists(playlists);
+        }
       } catch (error) {
         console.error("Error fetching playlists:", error);
         setError("Failed to load playlists");
@@ -81,6 +98,26 @@ export default function Builder() {
         >
           Go to Dashboard
         </button>
+      </div>
+    );
+  }
+
+  if (!spotifyConnected) {
+    return (
+      <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
+        <div className="text-xl text-center mb-4">
+          Connect to Spotify to view your playlists
+        </div>
+        <div className="flex flex-col gap-4 items-center">
+          <SpotifyConnectButton size="lg" />
+          <Button
+            color="secondary"
+            onPress={() => router.push("/dashboard")}
+            size="md"
+          >
+            Back to Dashboard
+          </Button>
+        </div>
       </div>
     );
   }

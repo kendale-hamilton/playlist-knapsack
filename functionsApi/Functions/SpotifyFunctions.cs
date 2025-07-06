@@ -1,4 +1,3 @@
-
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -121,6 +120,20 @@ namespace Controllers.SpotifyController
                 return BadRequest();
             }
             return urlResponse.ToActionResult();
+        }
+
+        [Function("SpotifyDisconnect")]
+        public async Task<IActionResult> DisconnectSpotify([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = RouteConstants.SpotifyDisconnect)] HttpRequestData req, string userId)
+        {
+            Console.WriteLine("Disconnecting Spotify for Supabase user: " + userId);
+            
+            var disconnectResponse = await _supabaseService.DisconnectSpotify(userId);
+            if (disconnectResponse.Status != HttpStatusCode.OK)
+            {
+                return NotFound($"Failed to disconnect Spotify: {disconnectResponse.ErrorMessage}");
+            }
+            
+            return Ok(new { message = "Spotify disconnected successfully" });
         }
     }
 }

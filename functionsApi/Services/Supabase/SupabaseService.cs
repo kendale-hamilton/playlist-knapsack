@@ -210,6 +210,69 @@ namespace Services.SupabaseService
                 };
             }
         }
+
+        public async Task<ServiceResponse<bool>> DisconnectSpotify(string supabaseUserId)
+        {
+            try
+            {
+                Console.WriteLine($"Disconnecting Spotify for Supabase user: {supabaseUserId}");
+                
+                // Validate input
+                if (string.IsNullOrEmpty(supabaseUserId))
+                {
+                    Console.WriteLine("ERROR: supabaseUserId is null or empty");
+                    return new ServiceResponse<bool>
+                    {
+                        Status = HttpStatusCode.BadRequest,
+                        ErrorMessage = "User ID is required"
+                    };
+                }
+                
+                // First check if user exists
+                var checkResponse = await _supabaseClient.From<UserRecord>()
+                    .Select("id")
+                    .Filter("id", Constants.Operator.Equals, supabaseUserId)
+                    .Get();
+
+                if (checkResponse.Models == null || checkResponse.Models.Count == 0)
+                {
+                    return new ServiceResponse<bool>
+                    {
+                        Status = HttpStatusCode.NotFound,
+                        ErrorMessage = "User not found in database"
+                    };
+                }
+
+                var updateResponse = await _supabaseClient.From<UserRecord>()
+                    .Filter("id", Constants.Operator.Equals, supabaseUserId)
+                    .Update(new UserRecord
+                    {
+                        Id = supabaseUserId,
+                        SpotifyUserId = null,
+                        SpotifyAccessToken = null,
+                        SpotifyRefreshToken = null
+                    });
+
+                Console.WriteLine($"Update response: {updateResponse.Content}");
+
+                Console.WriteLine($"Successfully disconnected Spotify tokens for user: {supabaseUserId}");
+
+                return new ServiceResponse<bool>
+                {
+                    Status = HttpStatusCode.OK,
+                    Data = true
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in DisconnectSpotify: {ex.Message}");
+                return new ServiceResponse<bool>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = $"Error disconnecting Spotify: {ex.Message}"
+                };
+            }
+        }
     }
 
     [Table("users")]
