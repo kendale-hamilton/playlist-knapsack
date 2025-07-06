@@ -5,6 +5,7 @@ using Services.BlobService;
 using Services.HttpService;
 using Services.KnapsackService;
 using Services.SpotifyService;
+using Services.SupabaseService;
 
 var builder = FunctionsApplication.CreateBuilder(args);
 
@@ -15,6 +16,7 @@ builder.Services.AddSingleton<IHttpService, HttpService>();
 builder.Services.AddSingleton<IBlobService, BlobService>();
 builder.Services.AddScoped<IKnapsackService, KnapsackService>();
 builder.Services.AddScoped<ISpotifyService, SpotifyService>();
+builder.Services.AddSingleton<ISupabaseService, SupabaseService>();
 
 builder.Services.AddCors(options =>
 {

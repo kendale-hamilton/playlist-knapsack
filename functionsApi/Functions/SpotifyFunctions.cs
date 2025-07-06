@@ -12,39 +12,57 @@ using Models.Requests.Spotify;
 using Models.Routes;
 using Models.ServiceResponse;
 using Services.SpotifyService;
+using Services.SupabaseService;
 
 namespace Controllers.SpotifyController
 {
     public class SpotifyController : ControllerBase
     {
         private readonly ISpotifyService _spotifyService;
-        public SpotifyController(ISpotifyService spotifyService)
+        private readonly ISupabaseService _supabaseService;
+        
+        public SpotifyController(ISpotifyService spotifyService, ISupabaseService supabaseService)
         {
             _spotifyService = spotifyService;
+            _supabaseService = supabaseService;
         }
-        [Function("SpotifyRefreshToken")]
-        public async Task<IActionResult> RefreshToken([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.SpotifyRefreshToken)] HttpRequestData req, string refreshToken)
-        {
-            Console.WriteLine("Refreshing Token..." + refreshToken);
-            string accessToken = await _spotifyService.RefreshAccessToken(refreshToken);
-            Console.WriteLine("Access Token: " + accessToken);
-            return Ok(new { accessToken });
-        }
+
         [Function("SpotifyGetUserPlaylists")]
         public async Task<IActionResult> GetUserPlaylists([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.SpotifyUserPlaylists)] HttpRequestData req, string userId)
         {
-            Console.WriteLine("Getting User Playlists...");
-            var accessToken = req.Headers.GetValues("Authorization").FirstOrDefault().Replace("Bearer ", "");
-            ServiceResponse<List<PlaylistDetails>> userPlaylistsResponse = await _spotifyService.GetUserPlaylists(userId, accessToken);
+            Console.WriteLine("Getting User Playlists for Supabase user: " + userId);
+            
+            // Test Supabase connection first
+            Console.WriteLine("Testing Supabase connection...");
+            var res = await _supabaseService.GetSpotifyUserId(userId);
+            if (res.Status != HttpStatusCode.OK)
+            {
+                return NotFound($"Supabase connection failed: {res.ErrorMessage}");
+            }
+            
+            var accessTokenResponse = await _spotifyService.GetValidAccessToken(userId);
+            if (accessTokenResponse.Status != HttpStatusCode.OK)
+            {
+                return Unauthorized(accessTokenResponse.ErrorMessage);
+            }
+            
+            ServiceResponse<List<PlaylistDetails>> userPlaylistsResponse = await _spotifyService.GetUserPlaylists(res.Data, accessTokenResponse.Data);
             return userPlaylistsResponse.ToActionResult();
         }
+        
         [Function("SpotifyGetPlaylist")]
-        public async Task<ActionResult> GetPlaylist([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.SpotifyPlaylist)] HttpRequestData req, string playlistId)
+        public async Task<ActionResult> GetPlaylist([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.SpotifyPlaylist)] HttpRequestData req, string userId, string playlistId)
         {
-            Console.WriteLine("Getting Playlist Tracks...");
-            var accessToken = req.Headers.GetValues("Authorization").FirstOrDefault().Replace("Bearer ", "");
-            ServiceResponse<PlaylistDetails> detailsResponse = await _spotifyService.GetPlaylistDetails(playlistId, accessToken);
-            ServiceResponse<List<Track>> playlistTracksResponse = await _spotifyService.GetPlaylistTracks(playlistId, accessToken);
+            Console.WriteLine("Getting Playlist Tracks for Supabase user: " + userId);
+            
+            var accessTokenResponse = await _spotifyService.GetValidAccessToken(userId);
+            if (accessTokenResponse.Status != HttpStatusCode.OK)
+            {
+                return Unauthorized(accessTokenResponse.ErrorMessage);
+            }
+            
+            ServiceResponse<PlaylistDetails> detailsResponse = await _spotifyService.GetPlaylistDetails(playlistId, accessTokenResponse.Data);
+            ServiceResponse<List<Track>> playlistTracksResponse = await _spotifyService.GetPlaylistTracks(playlistId, accessTokenResponse.Data);
             if (detailsResponse.Status == HttpStatusCode.Unauthorized || playlistTracksResponse.Status == HttpStatusCode.Unauthorized)
             {
                 return Unauthorized();
@@ -68,17 +86,32 @@ namespace Controllers.SpotifyController
             };
             return Ok(playlistInfo);
         }
+
+
         [Function("SpotifyPostPlaylist")]
         public async Task<IActionResult> PostPlaylist([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = RouteConstants.SpotifyUserPlaylists)] HttpRequestData req, string userId)
         {
-            Console.WriteLine("Creating Playlist...");
-            var accessToken = req.Headers.GetValues("Authorization").FirstOrDefault().Replace("Bearer ", "");
+            Console.WriteLine("Creating Playlist for Supabase user: " + userId);
+            
+            // Get Spotify user ID from Supabase
+            var spotifyUserIdResponse = await _supabaseService.GetSpotifyUserId(userId);
+            if (spotifyUserIdResponse.Status != HttpStatusCode.OK)
+            {
+                return NotFound("User not found or Spotify not connected");
+            }
+            
+            // Get valid access token (automatically refreshes if needed)
+            var accessTokenResponse = await _spotifyService.GetValidAccessToken(userId);
+            if (accessTokenResponse.Status != HttpStatusCode.OK)
+            {
+                return Unauthorized(accessTokenResponse.ErrorMessage);
+            }
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             SpotifyPostPlaylistRequest? body = JsonSerializer.Deserialize<SpotifyPostPlaylistRequest>(requestBody);
             Playlist playlist = body.Playlist;
             // string image = body.Image;
-            ServiceResponse<string> urlResponse = await _spotifyService.UploadPlaylist(userId, playlist, accessToken);
+            ServiceResponse<string> urlResponse = await _spotifyService.UploadPlaylist(spotifyUserIdResponse.Data, playlist, accessTokenResponse.Data);
             if (urlResponse.Status == HttpStatusCode.Unauthorized)
             {
                 return Unauthorized();

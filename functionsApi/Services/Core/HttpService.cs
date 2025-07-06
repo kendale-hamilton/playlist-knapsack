@@ -6,14 +6,35 @@ namespace Services.HttpService
     public class HttpService : IHttpService
     {
         private readonly HttpClient _client = new HttpClient();
-        public async Task<HttpResponseMessage> MakeGetRequest(string url, string token)
+        public async Task<HttpResponseMessage> MakeGetRequest(string url, string token, string tokenType = "Bearer")
         {
+            Console.WriteLine($"HttpService: Making GET request to {url}");
+            Console.WriteLine($"HttpService: Using {tokenType} authorization");
+            
             var request = new HttpRequestMessage(HttpMethod.Get, url);
-            request.Headers.Add("Authorization", $"Bearer {token}");
+            
+            // Add required headers for Supabase
+            if (url.Contains("supabase.co"))
+            {
+                request.Headers.Add("apikey", token);
+                request.Headers.Add("Authorization", $"Bearer {token}");
+            }
+            else
+            {
+                request.Headers.Add("Authorization", $"{tokenType} {token}");
+            }
 
-            var response = await _client.SendAsync(request);
-
-            return response;
+            try
+            {
+                var response = await _client.SendAsync(request);
+                Console.WriteLine($"HttpService: Response status: {response.StatusCode}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"HttpService: Exception occurred: {ex.Message}");
+                throw;
+            }
         }
         public async Task<HttpResponseMessage> MakePostRequest(string url, string token, HttpContent content, string tokenType = "Bearer")
         {
