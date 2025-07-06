@@ -310,7 +310,7 @@ export default function Home() {
         <div className="flex flex-col gap-2 p-4">
           <p>
             Playlist Knapsack was built using NextJS and Azure Functions in C#
-            and is deployed in an Azure Static Web App.
+            and is deployed using Vercel and Azure.
           </p>
           <div className="flex flex-col gap-4 items-center md:flex-row md:items-start">
             <div className="flex flex-col gap-2">
