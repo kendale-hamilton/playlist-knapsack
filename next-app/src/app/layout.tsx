@@ -3,6 +3,7 @@ import "./globals.css";
 import MainAppBar from "./components/main-app-bar";
 import Providers from "./provider";
 import { Analytics } from "@vercel/analytics/react";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 export const metadata: Metadata = {
   title: "Playlist Knapsack",
@@ -18,11 +19,13 @@ export default async function RootLayout({
     <html lang="en" className="dark">
       <body className="bg-neutral-900">
         <Providers>
-          <div className="flex flex-col min-h-screen w-full">
-            <Analytics />
-            <MainAppBar />
-            <div className="flex-grow">{children}</div>
-          </div>
+          <AuthProvider>
+            <div className="flex flex-col min-h-screen w-full">
+              <Analytics />
+              <MainAppBar />
+              <div className="flex-grow">{children}</div>
+            </div>
+          </AuthProvider>
         </Providers>
       </body>
     </html>

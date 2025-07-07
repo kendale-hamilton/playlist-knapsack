@@ -1,13 +1,31 @@
-import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+"use client";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  ReactNode,
+} from "react";
 import { supabase } from "@/lib/supabase";
 import {
   getCurrentUserId,
   isSpotifyConnected,
 } from "../app/helpers/supabase-functions";
 
-export function useAuth() {
-  const router = useRouter();
+interface AuthContextType {
+  user: any;
+  userId: string | null;
+  spotifyConnected: boolean;
+  loading: boolean;
+  error: string;
+  isAuthenticated: boolean;
+  refetch: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<any>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [spotifyConnected, setSpotifyConnected] = useState(false);
@@ -54,9 +72,19 @@ export function useAuth() {
 
   useEffect(() => {
     checkAuth();
+
+    // Listen for auth state changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state changed:", event, session?.user?.email);
+      checkAuth();
+    });
+
+    return () => subscription.unsubscribe();
   }, [checkAuth]);
 
-  return {
+  const value = {
     user,
     userId,
     spotifyConnected,
@@ -65,4 +93,14 @@ export function useAuth() {
     isAuthenticated: !!user,
     refetch: checkAuth,
   };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within AuthProvider");
+  }
+  return context;
 }

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardBody, Button, Avatar } from "@heroui/react";
 import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Dashboard() {
   const [disconnecting, setDisconnecting] = useState(false);

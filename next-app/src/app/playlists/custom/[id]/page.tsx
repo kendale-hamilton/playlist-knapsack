@@ -15,7 +15,7 @@ import {
 } from "@heroui/react";
 import { useSearchParams, useRouter, useParams } from "next/navigation";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 import SpotifyConnectButton from "../../../components/SpotifyConnectButton";
 
 export default function CustomPlaylist() {

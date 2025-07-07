@@ -11,7 +11,7 @@ import {
   Link,
   Button,
 } from "@heroui/react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 import SpotifyConnectButton from "../components/SpotifyConnectButton";
 
 export default function Builder() {

@@ -12,7 +12,7 @@ import { Button } from "@heroui/react";
 
 import { playlistDuration } from "@/app/helpers/time-functions";
 import { useParams } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 import SpotifyConnectButton from "../../components/SpotifyConnectButton";
 
 export type SubmissionProps = {

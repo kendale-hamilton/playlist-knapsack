@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@heroui/react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface SpotifyConnectButtonProps {
   className?: string;

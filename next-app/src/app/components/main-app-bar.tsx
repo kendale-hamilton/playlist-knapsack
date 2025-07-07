@@ -14,7 +14,7 @@ import {
 } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { BugAntIcon } from "@heroicons/react/16/solid";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 
 export default function MainAppBar() {
