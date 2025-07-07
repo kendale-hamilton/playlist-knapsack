@@ -17,6 +17,11 @@ interface AuthContextType {
   user: any;
   userId: string | null;
   spotifyConnected: boolean;
+  spotifyUser: {
+    display_name: string | null;
+    avatar_url: string | null;
+    spotify_user_id: string | null;
+  } | null;
   loading: boolean;
   error: string;
   isAuthenticated: boolean;
@@ -29,6 +34,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<any>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [spotifyConnected, setSpotifyConnected] = useState(false);
+  const [spotifyUser, setSpotifyUser] = useState<{
+    display_name: string | null;
+    avatar_url: string | null;
+    spotify_user_id: string | null;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -46,14 +56,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(null);
         setUserId(null);
         setSpotifyConnected(false);
+        setSpotifyUser(null);
         return;
       }
 
       setUser(user);
-
-      // Check if Spotify is connected
-      const connected = await isSpotifyConnected();
-      setSpotifyConnected(connected);
 
       // Get current user ID
       const currentUserId = await getCurrentUserId();
@@ -61,6 +68,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (!currentUserId) {
         setError("User not authenticated");
+        return;
+      }
+
+      // Check if Spotify is connected and get user data
+      const connected = await isSpotifyConnected();
+      setSpotifyConnected(connected);
+
+      if (connected) {
+        // Fetch Spotify user data from database
+        const { data: userProfile } = await supabase
+          .from("users")
+          .select("display_name, avatar_url, spotify_user_id")
+          .eq("id", currentUserId)
+          .single();
+
+        if (userProfile) {
+          setSpotifyUser({
+            display_name: userProfile.display_name,
+            avatar_url: userProfile.avatar_url,
+            spotify_user_id: userProfile.spotify_user_id,
+          });
+        }
+      } else {
+        setSpotifyUser(null);
       }
     } catch (error) {
       console.error("Auth error:", error);
@@ -88,6 +119,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user,
     userId,
     spotifyConnected,
+    spotifyUser,
     loading,
     error,
     isAuthenticated: !!user,

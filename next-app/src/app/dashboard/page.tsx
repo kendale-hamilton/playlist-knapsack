@@ -8,7 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 export default function Dashboard() {
   const [disconnecting, setDisconnecting] = useState(false);
   const router = useRouter();
-  const { user, spotifyConnected, loading, refetch } = useAuth();
+  const { user, spotifyConnected, spotifyUser, loading, refetch } = useAuth();
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -122,6 +122,25 @@ export default function Dashboard() {
                     <div className="w-3 h-3 bg-green-400 rounded-full shadow-sm"></div>
                     <span className="font-medium">Connected to Spotify</span>
                   </div>
+
+                  {spotifyUser && (
+                    <div className="flex items-center gap-4 p-3 bg-gray-700 rounded-lg">
+                      <Avatar
+                        src={spotifyUser.avatar_url || undefined}
+                        name={spotifyUser.display_name || "Spotify User"}
+                        className="w-12 h-12"
+                      />
+                      <div>
+                        <p className="font-medium text-white">
+                          {spotifyUser.display_name || "Spotify User"}
+                        </p>
+                        <p className="text-gray-300 text-sm">
+                          Spotify ID: {spotifyUser.spotify_user_id}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="flex gap-2">
                     <Button
                       color="primary"
