@@ -1,6 +1,7 @@
 {
   "scripts": {
     "app": "cd next-app && npm run dev",
-    "api": "cd functionsApi && dotnet watch run"
+    "api": "cd functionsApi && dotnet watch run",
+    "build": "cd next-app && npm run build"
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@heroui/react";
-import { getCurrentUserId } from "../helpers/supabase-functions";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface SpotifyConnectButtonProps {
   className?: string;
@@ -13,8 +13,9 @@ export default function SpotifyConnectButton({
   variant = "primary",
   size = "md",
 }: SpotifyConnectButtonProps) {
-  const connectSpotify = async () => {
-    const userId = await getCurrentUserId();
+  const { userId } = useAuth();
+
+  const connectSpotify = () => {
     if (!userId) return;
 
     const state = JSON.stringify({

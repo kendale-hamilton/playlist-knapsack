@@ -14,50 +14,17 @@ import {
 } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { BugAntIcon } from "@heroicons/react/16/solid";
-import { useEffect, useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
-import { User } from "@supabase/supabase-js";
 
 export default function MainAppBar() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    checkUser();
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const checkUser = async () => {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-    } catch (error) {
-      console.error("Error checking user:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { user, loading, refetch } = useAuth();
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    setUser(null);
-    if (window.location.pathname === "/") {
-      window.location.reload();
-    } else {
-      router.push("/");
-    }
+    // Refetch auth state to update the UI immediately
+    await refetch();
   };
 
   const handleSignIn = () => {

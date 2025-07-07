@@ -15,11 +15,7 @@ import {
 } from "@heroui/react";
 import { useSearchParams, useRouter, useParams } from "next/navigation";
 
-import {
-  getCurrentUserId,
-  isSpotifyConnected,
-} from "@/app/helpers/supabase-functions";
-import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/contexts/AuthContext";
 import SpotifyConnectButton from "../../../components/SpotifyConnectButton";
 
 export default function CustomPlaylist() {
@@ -34,43 +30,14 @@ export default function CustomPlaylist() {
   const [playlist, setPlaylist] = useState<FullPlaylist>();
   const [url, setUrl] = useState<string | null>();
   const [open, setOpen] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [spotifyConnected, setSpotifyConnected] = useState(false);
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      // Check if user is authenticated
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
-        router.push("/auth/login");
-        return;
-      }
-
-      // Get current user ID
-      const currentUserId = await getCurrentUserId();
-      if (!currentUserId) {
-        setError("User not authenticated");
-        setLoading(false);
-        return;
-      }
-
-      // Check if Spotify is connected
-      const connected = await isSpotifyConnected();
-      setSpotifyConnected(connected);
-
-      setUserId(currentUserId);
-      setLoading(false);
-    };
-    checkAuth();
-  }, [router]);
+  const [playlistLoading, setPlaylistLoading] = useState(false);
+  const [playlistError, setPlaylistError] = useState("");
+  const { userId, spotifyConnected, loading, error } = useAuth();
 
   useEffect(() => {
     if (!tracks && userId && spotifyConnected) {
       const fetchCustomPlaylist = async () => {
+        setPlaylistLoading(true);
         try {
           const response = await fetch(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/knapsack/users/${userId}/playlists/${id}`
@@ -79,7 +46,9 @@ export default function CustomPlaylist() {
           setTracks(customPlaylist);
         } catch (error) {
           console.error("Error fetching custom playlist:", error);
-          setError("Failed to load custom playlist");
+          setPlaylistError("Failed to load custom playlist");
+        } finally {
+          setPlaylistLoading(false);
         }
       };
       fetchCustomPlaylist();
@@ -115,7 +84,7 @@ export default function CustomPlaylist() {
           setOpen(true);
         } catch (error) {
           console.error("Error creating Spotify playlist:", error);
-          setError("Failed to create Spotify playlist");
+          setPlaylistError("Failed to create Spotify playlist");
         }
       };
 
@@ -165,10 +134,32 @@ export default function CustomPlaylist() {
     );
   }
 
+  if (playlistLoading) {
+    return (
+      <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
+        <div className="text-xl">Loading custom playlist...</div>
+      </div>
+    );
+  }
+
+  if (playlistError) {
+    return (
+      <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
+        <div className="text-xl text-red-400">{playlistError}</div>
+        <button
+          onClick={() => router.push("/playlists")}
+          className="px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700"
+        >
+          Back to Playlists
+        </button>
+      </div>
+    );
+  }
+
   if (!tracks) {
     return (
       <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
-        <div className="text-xl">Loading...</div>
+        <div className="text-xl">No tracks found</div>
       </div>
     );
   }

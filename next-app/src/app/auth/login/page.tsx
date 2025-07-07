@@ -3,8 +3,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardBody, Button, Input } from "@heroui/react";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Login() {
+  const { refetch } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -25,6 +28,7 @@ export default function Login() {
       if (authError) {
         setError(authError.message);
       } else {
+        await refetch();
         // Redirect to dashboard or Spotify connection
         router.push("/dashboard");
       }
