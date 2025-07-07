@@ -1,51 +1,14 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardBody, Button, Avatar } from "@heroui/react";
 import { supabase } from "@/lib/supabase";
-import { User } from "@supabase/supabase-js";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Dashboard() {
-  const [user, setUser] = useState<User | null>(null);
-  const [spotifyConnected, setSpotifyConnected] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [disconnecting, setDisconnecting] = useState(false);
   const router = useRouter();
-
-  const checkUser = async () => {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        router.push("/auth/login");
-        return;
-      }
-
-      setUser(user);
-
-      // Check if user has Spotify connected
-      const { data: userProfile } = await supabase
-        .from("users")
-        .select("spotify_user_id, spotify_access_token")
-        .eq("id", user.id)
-        .single();
-
-      if (userProfile?.spotify_user_id && userProfile?.spotify_access_token) {
-        setSpotifyConnected(true);
-      }
-    } catch (error) {
-      console.error("Error checking user:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    checkUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { user, spotifyConnected, loading, error } = useAuth();
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -99,7 +62,8 @@ export default function Dashboard() {
         );
       }
 
-      setSpotifyConnected(false);
+      // The hook will automatically update the Spotify connection status
+      // when the component re-renders after the disconnect
     } catch (error) {
       console.error("Error disconnecting Spotify:", error);
     } finally {

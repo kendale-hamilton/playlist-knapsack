@@ -11,74 +11,38 @@ import {
   Link,
   Button,
 } from "@heroui/react";
-import {
-  getCurrentUserId,
-  isSpotifyConnected,
-} from "../helpers/supabase-functions";
-import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/hooks/useAuth";
 import SpotifyConnectButton from "../components/SpotifyConnectButton";
 
 export default function Builder() {
   const router = useRouter();
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [spotifyConnected, setSpotifyConnected] = useState(false);
+  const [playlistsLoading, setPlaylistsLoading] = useState(false);
+  const [playlistsError, setPlaylistsError] = useState("");
+  const { userId, spotifyConnected, loading, error } = useAuth();
 
   useEffect(() => {
     const fetchPlaylists = async () => {
-      // Check if user is authenticated
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
-        router.push("/auth/login");
-        throw new Error("User not authenticated");
-      }
+      if (!userId || !spotifyConnected) return;
 
-      // Check if Spotify is connected
-      const connected = await isSpotifyConnected();
-      setSpotifyConnected(connected);
-
-      if (!connected) {
-        setLoading(false);
-        return;
-      }
-
-      // Get current user ID
-      const userId = await getCurrentUserId();
-      console.log("User ID:", userId);
-
-      if (!userId) {
-        setError("User not authenticated");
-        setLoading(false);
-        throw new Error("User not authenticated");
-      }
-
-      console.log("Making API call with user ID:", userId);
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/spotify/users/${userId}/playlists`
-      );
-      return res;
-    };
-
-    const runFetchPlaylists = async () => {
+      setPlaylistsLoading(true);
       try {
-        const response = await fetchPlaylists();
-        if (response) {
-          const playlists = await response.json();
-          setPlaylists(playlists);
-        }
+        console.log("Making API call with user ID:", userId);
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/spotify/users/${userId}/playlists`
+        );
+        const playlists = await res.json();
+        setPlaylists(playlists);
       } catch (error) {
         console.error("Error fetching playlists:", error);
-        setError("Failed to load playlists");
+        setPlaylistsError("Failed to load playlists");
       } finally {
-        setLoading(false);
+        setPlaylistsLoading(false);
       }
     };
 
-    runFetchPlaylists();
-  }, [router]);
+    fetchPlaylists();
+  }, [userId, spotifyConnected]);
 
   if (loading) {
     return (
@@ -92,6 +56,28 @@ export default function Builder() {
     return (
       <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
         <div className="text-xl text-red-400">{error}</div>
+        <button
+          onClick={() => router.push("/dashboard")}
+          className="px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700"
+        >
+          Go to Dashboard
+        </button>
+      </div>
+    );
+  }
+
+  if (playlistsLoading) {
+    return (
+      <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
+        <div className="text-xl">Loading playlists...</div>
+      </div>
+    );
+  }
+
+  if (playlistsError) {
+    return (
+      <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
+        <div className="text-xl text-red-400">{playlistsError}</div>
         <button
           onClick={() => router.push("/dashboard")}
           className="px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700"
