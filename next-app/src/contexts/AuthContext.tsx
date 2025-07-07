@@ -8,13 +8,14 @@ import {
   ReactNode,
 } from "react";
 import { supabase } from "@/lib/supabase";
+import { User } from "@supabase/supabase-js";
 import {
   getCurrentUserId,
   isSpotifyConnected,
 } from "../app/helpers/supabase-functions";
 
 interface AuthContextType {
-  user: any;
+  user: User | null;
   userId: string | null;
   spotifyConnected: boolean;
   spotifyUser: {
@@ -31,7 +32,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [spotifyConnected, setSpotifyConnected] = useState(false);
   const [spotifyUser, setSpotifyUser] = useState<{
