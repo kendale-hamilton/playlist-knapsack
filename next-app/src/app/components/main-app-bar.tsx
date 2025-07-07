@@ -19,15 +19,12 @@ import { supabase } from "@/lib/supabase";
 
 export default function MainAppBar() {
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { user, loading, refetch } = useAuth();
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    if (window.location.pathname === "/") {
-      window.location.reload();
-    } else {
-      router.push("/");
-    }
+    // Refetch auth state to update the UI immediately
+    await refetch();
   };
 
   const handleSignIn = () => {

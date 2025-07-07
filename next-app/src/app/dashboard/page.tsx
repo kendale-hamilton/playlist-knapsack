@@ -8,10 +8,12 @@ import { useAuth } from "@/hooks/useAuth";
 export default function Dashboard() {
   const [disconnecting, setDisconnecting] = useState(false);
   const router = useRouter();
-  const { user, spotifyConnected, loading, error } = useAuth();
+  const { user, spotifyConnected, loading, refetch } = useAuth();
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
+    // Refetch auth state to update the UI immediately
+    await refetch();
     router.push("/");
   };
 

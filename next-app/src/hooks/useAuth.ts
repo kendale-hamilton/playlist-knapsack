@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import {
@@ -14,40 +14,47 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        // Check if user is authenticated
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (!user) {
-          router.push("/auth/login");
-          return;
-        }
-        setUser(user);
+  const checkAuth = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError("");
 
-        // Check if Spotify is connected
-        const connected = await isSpotifyConnected();
-        setSpotifyConnected(connected);
+      // Check if user is authenticated
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-        // Get current user ID
-        const currentUserId = await getCurrentUserId();
-        setUserId(currentUserId);
-
-        if (!currentUserId) {
-          setError("User not authenticated");
-        }
-      } catch (error) {
-        console.error("Auth error:", error);
-        setError("Authentication failed");
-      } finally {
-        setLoading(false);
+      if (!user) {
+        setUser(null);
+        setUserId(null);
+        setSpotifyConnected(false);
+        return;
       }
-    };
 
+      setUser(user);
+
+      // Check if Spotify is connected
+      const connected = await isSpotifyConnected();
+      setSpotifyConnected(connected);
+
+      // Get current user ID
+      const currentUserId = await getCurrentUserId();
+      setUserId(currentUserId);
+
+      if (!currentUserId) {
+        setError("User not authenticated");
+      }
+    } catch (error) {
+      console.error("Auth error:", error);
+      setError("Authentication failed");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
     checkAuth();
-  }, [router]);
+  }, [checkAuth]);
 
   return {
     user,
@@ -56,5 +63,6 @@ export function useAuth() {
     loading,
     error,
     isAuthenticated: !!user,
+    refetch: checkAuth,
   };
 }
