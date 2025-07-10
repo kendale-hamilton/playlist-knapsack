@@ -47,6 +47,8 @@ namespace Models.Knapsack
         public required string SpotifyUrl { get; set; }
         [JsonPropertyName("uri")]
         public required string Uri { get; set; }
+        [JsonPropertyName("spotify_id")]
+        public required string SpotifyId { get; set; }
     }
     #endregion
 

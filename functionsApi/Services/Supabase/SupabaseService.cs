@@ -1,8 +1,7 @@
 using System.Net;
 using Models.ServiceResponse;
 using Supabase.Postgrest;
-using Supabase.Postgrest.Attributes;
-using Supabase.Postgrest.Models;
+using Models.Supabase;
 
 namespace Services.SupabaseService
 {
@@ -273,18 +272,5 @@ namespace Services.SupabaseService
                 };
             }
         }
-    }
-
-    [Table("users")]
-    public class UserRecord : BaseModel
-    {
-        [PrimaryKey("id")]
-        public string? Id { get; set; }
-        [Column("spotify_user_id")]
-        public string? SpotifyUserId { get; set; }
-        [Column("spotify_access_token")]
-        public string? SpotifyAccessToken { get; set; }
-        [Column("spotify_refresh_token")]
-        public string? SpotifyRefreshToken { get; set; }
     }
 } 

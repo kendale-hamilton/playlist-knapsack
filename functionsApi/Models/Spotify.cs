@@ -212,9 +212,9 @@ namespace Models.Spotify
         [JsonPropertyName("href")]
         public string? Href { get; set; }
         [JsonPropertyName("id")]
-        public string? Id { get; set; }
+        public required string Id { get; set; }
         [JsonPropertyName("name")]
-        public string? Name { get; set; }
+        public required string Name { get; set; }
         [JsonPropertyName("popularity")]
         public int? Popularity { get; set; }
         [JsonPropertyName("uri")]
@@ -231,7 +231,8 @@ namespace Models.Spotify
                 Name = Name,
                 Popularity = Popularity,
                 SpotifyUrl = ExternalUrls.Spotify,
-                Uri = Uri
+                Uri = Uri,
+                SpotifyId = Id
             };
         }
     }
