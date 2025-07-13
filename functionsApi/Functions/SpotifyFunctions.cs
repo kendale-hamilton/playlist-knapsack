@@ -46,7 +46,7 @@ namespace Controllers.SpotifyController
             }
             
             ServiceResponse<List<PlaylistDetails>> userPlaylistsResponse = await _spotifyService.GetUserPlaylists(res.Data, accessTokenResponse.Data);
-            return userPlaylistsResponse.ToActionResult();
+            return ServiceResponse.ToIActionResult(userPlaylistsResponse);
         }
         
         [Function("SpotifyGetPlaylist")]
@@ -119,7 +119,7 @@ namespace Controllers.SpotifyController
             {
                 return BadRequest();
             }
-            return urlResponse.ToActionResult();
+            return ServiceResponse.ToIActionResult(urlResponse);
         }
 
         [Function("SpotifyDisconnect")]

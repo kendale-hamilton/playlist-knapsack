@@ -21,9 +21,9 @@ namespace Models.Supabase
     public class CustomPlaylistRecord : BaseModel
     {
         [PrimaryKey("id")]
-        public required string Id { get; set; }
+        public string? Id { get; set; }
         [Column("user_id")]
-        public required string UserId { get; set; }
+        public string? UserId { get; set; }
         
     }
 
@@ -31,33 +31,31 @@ namespace Models.Supabase
     public class PlaylistTrackRecord : BaseModel
     {
         [PrimaryKey("id")]
-        public required string Id { get; set; }
+        public string? Id { get; set; }
         [Column("playlist_id")]
-        public required string PlaylistId { get; set; }
+        public string? PlaylistId { get; set; }
         [Column("track_id")]
-        public required string TrackId { get; set; }
-        [Column("position")]
-        public required int Position { get; set; }
+        public string? TrackId { get; set; }
     }
 
     [Table("tracks")]
     public class TrackRecord : BaseModel
     {
         [PrimaryKey("id")]
-        public required string Id { get; set; }
+        public string? Id { get; set; }
         [Column("spotify_id")]
-        public required string SpotifyId { get; set; }
+        public string? SpotifyId { get; set; }
         [Column("seconds")]
-        public required int Seconds { get; set; }
+        public int Seconds { get; set; }
         [Column("name")]
-        public required string Name { get; set; }
+        public string? Name { get; set; }
         [Column("spotify_url")]
-        public required string SpotifyUrl { get; set; }
+        public string? SpotifyUrl { get; set; }
         [Column("uri")]
-        public required string Uri { get; set; }
+        public string? Uri { get; set; }
         [Column("artists_id")]
-        public required string ArtistsId { get; set; }
+        public string? ArtistsId { get; set; }
         [Column("album_id")]
-        public required string AlbumId { get; set; }
+        public string? AlbumId { get; set; }
     }
 }

@@ -3,43 +3,52 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Models.ServiceResponse
 {
-    public class ServiceResponse<T>
+    public class ServiceResponse
     {
-        public required HttpStatusCode Status { get; set; }
-        public T? Data { get; set; }
+        public HttpStatusCode Status { get; set; }
         public string? ErrorMessage { get; set; }
-        public IActionResult ToActionResult()
+        public static ServiceResponse Error(HttpStatusCode status, string errorMessage)
         {
-            if (Status == HttpStatusCode.OK)
+            return new ServiceResponse
             {
-                return new OkObjectResult(Data);
-            }
-            else if (Status == HttpStatusCode.BadRequest)
+                Status = status,
+                ErrorMessage = errorMessage
+            };
+        }
+        public static IActionResult ToIActionResult<T>(ServiceResponse<T> response)
+        {
+            if (response.Status == HttpStatusCode.OK)
             {
-                return new BadRequestObjectResult(ErrorMessage);
-            }
-            else if (Status == HttpStatusCode.Unauthorized)
-            {
-                return new UnauthorizedResult();
-            }
-            else if (Status == HttpStatusCode.NotFound)
-            {
-                return new NotFoundObjectResult(ErrorMessage);
-            }
-            else if (Status == HttpStatusCode.InternalServerError)
-            {
-                return new ObjectResult(ErrorMessage)
-                {
-                    StatusCode = (int)HttpStatusCode.InternalServerError
-                };
+                return new OkObjectResult(response.Data);
             }
             else
             {
-                return new ObjectResult(ErrorMessage)
+                return new ObjectResult(response.ErrorMessage)
                 {
-                    StatusCode = (int)HttpStatusCode.InternalServerError
+                    StatusCode = (int)response.Status
                 };
             }
+        }
+    }
+    public class ServiceResponse<T> : ServiceResponse
+    {
+        public T? Data { get; set; }
+        public ServiceResponse<T> Success(T data)
+        {
+            return new ServiceResponse<T>
+            {
+                Status = HttpStatusCode.OK,
+                Data = data
+            };
+        }
+
+        public new static ServiceResponse<T> Error(HttpStatusCode status, string errorMessage)
+        {
+            return new ServiceResponse<T>
+            {
+                Status = status,
+                ErrorMessage = errorMessage
+            };
         }
     }
 }

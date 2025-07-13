@@ -1,29 +1,64 @@
+using System.Net;
 using System.Numerics;
 using System.Text;
 using System.Text.Json;
+using Grpc.Core;
 using Models.Knapsack;
 using Models.Requests.Knapsack;
-using Services.BlobService;
+using Models.ServiceResponse;
+using Models.Supabase;
+using Services.SupabaseService;
 
 namespace Services.KnapsackService
 {
     public class KnapsackService : IKnapsackService
     {
-        private readonly IBlobService _blobService;
-        public KnapsackService(IBlobService blobService)
+        private readonly ISupabaseService _supabaseService;
+        public KnapsackService(ISupabaseService supabaseService)
         {
-            _blobService = blobService;
+            _supabaseService = supabaseService;
         }
-        public async Task<List<Track>> GetSolvedPlaylist(string userId, string customId)
+        public async Task<ServiceResponse<List<Track>>> GetCustomPlaylist(string customId)
         {
-            string blob = $"{userId}/{customId}.json";
-            List<Track> tracks = await _blobService.DownloadFile<List<Track>>(blob);
-            //TODO: Think about better way to delete after
-            await _blobService.DeleteFile(blob);
-            return tracks;
+            var playlistRes = await _supabaseService.GetEntities<PlaylistTrackRecord>([customId], "playlist_id");
+            if (playlistRes.Status != HttpStatusCode.OK)
+            {
+                return new ServiceResponse<List<Track>>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = playlistRes.ErrorMessage
+                };
+            }
+            var trackIds = playlistRes.Data.Select(p => p.TrackId).Where(t => t != null).ToList();
+
+            var tracksRes = await _supabaseService.GetEntities<TrackRecord>(trackIds);
+            if (tracksRes.Status != HttpStatusCode.OK)
+            {
+                return new ServiceResponse<List<Track>>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = tracksRes.ErrorMessage
+                };
+            }
+            var trackRecords = tracksRes.Data;
+
+            var tracks = trackRecords.Select(t => new Track
+            {
+                Seconds = t.Seconds,
+                Name = t.Name,
+                SpotifyUrl = t.SpotifyUrl,
+                Uri = t.Uri,
+                SpotifyId = t.SpotifyId,
+            }).ToList();
+
+            return new ServiceResponse<List<Track>>
+            {
+                Status = HttpStatusCode.OK,
+                Data = tracks
+            };
         }
 
-        public async Task<string> SolveKnapsack(DesiredLengths desiredLengths, List<Track> tracks, string userId)
+        public async Task<ServiceResponse<string>> SolveKnapsack(DesiredLengths desiredLengths, List<Track> tracks, string userId)
         {
             SubsetNode[] nodes = new SubsetNode[tracks.Count];
             for (int i = 0; i < tracks.Count; i++)
@@ -54,7 +89,7 @@ namespace Services.KnapsackService
                 level = nextLevel;
             }   
             SubsetNode top = level[0];
-            top.Vector.Print("Top Vector: ");
+            // top.Vector.Print("Top Vector: ");
 
             int length = desiredLengths.Length;
             int max = desiredLengths.Max ?? 0;
@@ -93,15 +128,16 @@ namespace Services.KnapsackService
             Vec total = new Vec(foundTotal, 1);
             List<Track> selections = BackwardsPass(total, top);
 
-            string json = JsonSerializer.Serialize(selections);
-            var stream = new MemoryStream(Encoding.UTF8.GetBytes(json));
-
-            Guid guid = Guid.NewGuid();
-
-            string filename = $"{userId}/{guid}.json";
-            await _blobService.UploadFile(filename, stream);
-
-            return guid.ToString();
+            var playlistRes = await _supabaseService.UploadCustomPlaylist(selections, userId);
+            if (playlistRes.Status != HttpStatusCode.OK)
+            {
+                return new ServiceResponse<string>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = playlistRes.ErrorMessage
+                };
+            }
+            return playlistRes;
         }
 
         private static void FFT(Vec vector)

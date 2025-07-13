@@ -76,7 +76,7 @@ export default function Playlist() {
           }
         );
         const json = await res.json();
-        const customId = json.id;
+        const customId = json.customId;
         router.push(
           `/playlists/custom/${customId}?desired-length=${submission.desiredLength}`
         );
