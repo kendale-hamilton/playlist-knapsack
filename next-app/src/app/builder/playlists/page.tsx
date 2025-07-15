@@ -28,7 +28,9 @@ export default function Builder() {
       setPlaylistsLoading(true);
       try {
         console.log("Making API call with user ID:", userId);
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/`);
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/spotify/users/${userId}/playlists`
+        );
         const playlists = await res.json();
         setPlaylists(playlists);
       } catch (error) {
@@ -109,18 +111,16 @@ export default function Builder() {
   if (!playlists.length) {
     return (
       <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
-        <button
-          onClick={() => router.push("/builder/playlists")}
-          className="px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700"
-        >
-          Start building a playlist
-        </button>
+        <div className="text-xl">No playlists found</div>
       </div>
     );
   }
 
   return (
     <div className="m-4 text-center bg-neutral-900 overflow-x-hidden">
+      <p className="text-purple-300 my-4 font-bold">
+        Select one of your playlists to begin
+      </p>
       <div className="flex justify-center">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {playlists.map((playlist) => (

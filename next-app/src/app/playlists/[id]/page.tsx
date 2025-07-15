@@ -1,72 +1,70 @@
 "use client";
-import { FullPlaylist } from "@/types/Playlist";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import PlaylistDetails from "./components/PlaylistDetails";
-import BuilderConfiguration, {
-  WeightingFunction,
-} from "./components/BuilderConfiguration";
 import { Track } from "@/types/Track";
-import TrackList from "../components/TrackList";
-import { Button } from "@heroui/react";
+import { useEffect, useState } from "react";
+import PlaylistDetailSelector from "./components/PlaylistDetailSelector";
+import { FullPlaylist } from "@/types/Playlist";
+import {
+  Button,
+  Link,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from "@heroui/react";
+import { useSearchParams, useRouter, useParams } from "next/navigation";
 
-import { playlistDuration } from "@/app/helpers/time-functions";
-import { useParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import SpotifyConnectButton from "../../components/SpotifyConnectButton";
+import SpotifyConnectButton from "@/app/components/SpotifyConnectButton";
+import TrackList from "@/app/components/TrackList";
 
-export type SubmissionProps = {
-  desiredLength: number;
-  max?: number;
-  min?: number;
-  weightingFunction: WeightingFunction;
-};
-
-export default function Playlist() {
-  const router = useRouter();
+export default function CustomPlaylist() {
   const params = useParams();
-  const { id } = params;
-  const [submission, setSubmission] = useState<SubmissionProps | null>();
+  const { id } = params as { id: string };
+  const searchParams = useSearchParams();
+  const desiredLength = searchParams.get("desired-length");
+
+  const router = useRouter();
+
+  const [tracks, setTracks] = useState<Track[]>();
   const [playlist, setPlaylist] = useState<FullPlaylist>();
+  const [url, setUrl] = useState<string | null>();
+  const [open, setOpen] = useState(false);
   const [playlistLoading, setPlaylistLoading] = useState(false);
   const [playlistError, setPlaylistError] = useState("");
   const { userId, spotifyConnected, loading, error } = useAuth();
 
   useEffect(() => {
-    if (!userId || !spotifyConnected) return;
-
-    const fetchPlaylist = async () => {
-      setPlaylistLoading(true);
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/spotify/users/${userId}/playlists/${id}`
-        );
-        const playlist = await res.json();
-        setPlaylist(playlist);
-      } catch (error) {
-        console.error("Error fetching playlist:", error);
-        setPlaylistError("Failed to load playlist");
-      } finally {
-        setPlaylistLoading(false);
-      }
-    };
-
-    fetchPlaylist();
-  }, [id, userId, spotifyConnected]);
+    if (!tracks && userId && spotifyConnected) {
+      const fetchCustomPlaylist = async () => {
+        setPlaylistLoading(true);
+        try {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/knapsack/users/${userId}/playlists/${id}`
+          );
+          const customPlaylist = await response.json();
+          setTracks(customPlaylist);
+        } catch (error) {
+          console.error("Error fetching custom playlist:", error);
+          setPlaylistError("Failed to load custom playlist");
+        } finally {
+          setPlaylistLoading(false);
+        }
+      };
+      fetchCustomPlaylist();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, userId]);
 
   useEffect(() => {
-    if (submission && userId) {
-      const postPlaylist = async (tracks?: Track[]) => {
+    if (playlist && userId && spotifyConnected) {
+      const postSpotifyPlaylist = async () => {
         const body = {
-          tracks: tracks,
-          desiredLengths: {
-            length: submission.desiredLength,
-            max: submission.max,
-            min: submission.min,
-          },
+          playlist: playlist,
+          // image: btoa(image || "")
         };
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/knapsack/users/${userId}/playlists`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/spotify/users/${userId}/playlists`,
           {
             method: "POST",
             headers: {
@@ -75,33 +73,29 @@ export default function Playlist() {
             body: JSON.stringify(body),
           }
         );
-        const json = await res.json();
-        const customId = json.customId;
-        router.push(
-          `/playlists/custom/${customId}?desired-length=${submission.desiredLength}`
-        );
+        return res;
       };
 
-      const weightedTracks: Track[] = playlist
-        ? playlist.tracks.map((track, index) => {
-            return {
-              ...track,
-              weight: submission.weightingFunction(
-                index,
-                playlist.tracks.length
-              ),
-            };
-          })
-        : [];
+      const runPostSpotifyPlaylist = async () => {
+        try {
+          const response = await postSpotifyPlaylist();
+          const url = await response.text();
+          setUrl(url);
+          setOpen(true);
+        } catch (error) {
+          console.error("Error creating Spotify playlist:", error);
+          setPlaylistError("Failed to create Spotify playlist");
+        }
+      };
 
-      postPlaylist(weightedTracks);
+      runPostSpotifyPlaylist();
     }
-  }, [submission, userId, playlist, router]);
+  }, [playlist, userId, spotifyConnected]);
 
   if (loading) {
     return (
       <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
-        <div className="text-xl">Loading playlist...</div>
+        <div className="text-xl">Loading custom playlist...</div>
       </div>
     );
   }
@@ -120,10 +114,30 @@ export default function Playlist() {
     );
   }
 
+  if (!spotifyConnected) {
+    return (
+      <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
+        <div className="text-xl text-center mb-4">
+          Connect to Spotify to create and upload playlists
+        </div>
+        <div className="flex flex-col gap-4 items-center">
+          <SpotifyConnectButton size="lg" />
+          <Button
+            color="secondary"
+            onPress={() => router.push("/playlists")}
+            size="md"
+          >
+            Back to Playlists
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   if (playlistLoading) {
     return (
       <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
-        <div className="text-xl">Loading playlist...</div>
+        <div className="text-xl">Loading custom playlist...</div>
       </div>
     );
   }
@@ -142,86 +156,60 @@ export default function Playlist() {
     );
   }
 
-  if (!spotifyConnected) {
+  if (!tracks) {
     return (
       <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
-        <div className="text-xl text-center mb-4">
-          Connect to Spotify to view playlist details
-        </div>
-        <div className="flex flex-col gap-4 items-center">
-          <SpotifyConnectButton size="lg" />
-          <Button
-            color="secondary"
-            onPress={() => router.push("/playlists")}
-            size="md"
-          >
-            Back to Playlists
-          </Button>
-        </div>
+        <div className="text-xl">No tracks found</div>
       </div>
     );
   }
-
-  if (!playlist) {
-    return (
-      <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
-        <div className="text-xl">Loading...</div>
-      </div>
-    );
-  }
-
-  const onSubmit = (props: SubmissionProps) => {
-    const { desiredLength, max, min, weightingFunction } = props;
-    setSubmission({
-      desiredLength: desiredLength,
-      max: max ?? 0,
-      min: min ?? 0,
-      weightingFunction: weightingFunction,
-    });
-  };
 
   return (
-    <div className="bg-neutral-900 text-white h-fit">
+    <div className="flex flex-row text-white bg-neutral-900">
       <div className="hidden md:flex flex-row w-full justify-center">
-        <PlaylistDetails
-          onSwitch={() => router.push("/playlists")}
-          width="w-1/4"
-          playlist={playlist}
-        />
-        <TrackList
-          title="Tracks"
-          tracks={playlist.tracks}
-          setPlaylist={(tracks: Track[]) =>
-            setPlaylist({ ...playlist, tracks: tracks })
-          }
+        <PlaylistDetailSelector
           width="w-1/2"
+          id={id}
+          tracks={tracks}
+          desiredLength={Number(desiredLength)}
+          setPlaylist={setPlaylist}
         />
-        <BuilderConfiguration
-          width="w-1/4"
-          length={playlistDuration(playlist.tracks)}
-          onSubmit={onSubmit}
-        />
+        <TrackList title="Selected Tracks" tracks={tracks} width="w-1/2" />
       </div>
       <div className="flex flex-col md:hidden w-full">
-        <PlaylistDetails
-          onSwitch={() => router.push("/playlists")}
+        <PlaylistDetailSelector
           width="w-full"
-          playlist={playlist}
+          id={id}
+          tracks={tracks}
+          desiredLength={Number(desiredLength)}
+          setPlaylist={setPlaylist}
         />
-        <BuilderConfiguration
-          width="w-full"
-          length={playlistDuration(playlist.tracks)}
-          onSubmit={onSubmit}
-        />
-        <TrackList
-          title="Tracks"
-          tracks={playlist.tracks}
-          setPlaylist={(tracks: Track[]) =>
-            setPlaylist({ ...playlist, tracks: tracks })
-          }
-          width="w-full"
-        />
+        <TrackList title="Selected Tracks" tracks={tracks} width="w-full" />
       </div>
+      <Modal isOpen={open} onClose={() => setOpen(false)}>
+        <ModalContent>
+          <div className="text-white">
+            <ModalHeader>
+              Your playlist has been uploaded to spotify!
+            </ModalHeader>
+            <ModalBody>
+              <Link href={url ?? "/"} isExternal>
+                Click here to view your playlist on spotify
+              </Link>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                color="primary"
+                onPress={() => {
+                  router.push("/");
+                }}
+              >
+                Home
+              </Button>
+            </ModalFooter>
+          </div>
+        </ModalContent>
+      </Modal>
     </div>
   );
 }

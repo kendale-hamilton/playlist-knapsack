@@ -51,7 +51,7 @@ export default function Home() {
               <div className="flex gap-4">
                 <Card
                   isPressable
-                  onPress={() => router.push("/playlists")}
+                  onPress={() => router.push("/builder/playlists")}
                   className="bg-gray-500"
                 >
                   <CardHeader className="p-4 gap-2">
