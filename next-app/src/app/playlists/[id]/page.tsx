@@ -36,6 +36,8 @@ export default function CustomPlaylist() {
   const { userId, spotifyConnected, loading, error } = useAuth();
 
   useEffect(() => {
+    console.log("useEffect called");
+    console.log({ customPlaylist, userId, spotifyConnected });
     if (!customPlaylist && userId && spotifyConnected) {
       const fetchCustomPlaylist = async () => {
         setPlaylistLoading(true);
@@ -56,7 +58,7 @@ export default function CustomPlaylist() {
       fetchCustomPlaylist();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, userId]);
+  }, [id, userId, spotifyConnected]);
 
   useEffect(() => {
     if (spotifyPlaylist && userId && spotifyConnected) {
