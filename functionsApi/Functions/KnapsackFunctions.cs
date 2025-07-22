@@ -33,7 +33,8 @@ namespace Controllers.KnapsackController
                 List<Track> tracks = body.Tracks;
                 var solveRes = await _knapsackService.SolveKnapsack(lengths, tracks, userId);
                 var customId = solveRes.Data;
-                return new OkObjectResult(new { customId });
+                Console.WriteLine("Custom ID: " + customId);
+                return ServiceResponse.ToIActionResult(solveRes);
             } catch (Exception ex) {
                 Console.WriteLine("Error Solving Playlist: " + ex.Message);
                 var res = new ServiceResponse<List<Track>>
@@ -44,12 +45,21 @@ namespace Controllers.KnapsackController
                 return ServiceResponse.ToIActionResult(res);
             }
         }
-        [Function("KnapsackGetSolvedPlaylist")]
+        [Function("KnapsackGetCustomPlaylist")]
         public async Task<IActionResult> GetSolvedPlaylist([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.CustomPlaylist)] HttpRequestData req, string userId, string customId)
         {
             Console.WriteLine("Getting Solved Playlist for Supabase user: " + userId);
             
             var res = await _knapsackService.GetCustomPlaylist(customId);
+            return ServiceResponse.ToIActionResult(res);
+        }
+
+        [Function("GetCustomPlaylists")]
+        public async Task<IActionResult> GetCustomPlaylists([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.CustomPlaylists)] HttpRequestData req, string userId)
+        {
+            Console.WriteLine("Getting Custom Playlists for Supabase user: " + userId);
+
+            var res = await _knapsackService.GetCustomPlaylists(userId);
             return ServiceResponse.ToIActionResult(res);
         }
     }

@@ -1,51 +1,51 @@
 "use client";
-import { Playlist } from "@/types/Playlist";
+import { CustomPlaylist } from "@/types/Playlist";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  Divider,
-  Image,
-  Link,
-  Button,
-} from "@heroui/react";
+import { Card, CardBody, Image } from "@heroui/react";
 import { useAuth } from "@/contexts/AuthContext";
 import SpotifyConnectButton from "@/app/components/SpotifyConnectButton";
 
-export default function Builder() {
+export default function CustomPlaylists() {
   const router = useRouter();
-  const [playlists, setPlaylists] = useState<Playlist[]>([]);
-  const [playlistsLoading, setPlaylistsLoading] = useState(false);
-  const [playlistsError, setPlaylistsError] = useState("");
-  const { userId, spotifyConnected, loading, error } = useAuth();
+  const [playlists, setPlaylists] = useState<CustomPlaylist[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const { userId, spotifyConnected, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    const fetchPlaylists = async () => {
+    const fetchCustomPlaylists = async () => {
       if (!userId || !spotifyConnected) return;
 
-      setPlaylistsLoading(true);
+      setLoading(true);
+      setError("");
+
       try {
-        console.log("Making API call with user ID:", userId);
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/`);
-        const playlists = await res.json();
-        setPlaylists(playlists);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/knapsack/users/${userId}/playlists`
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setPlaylists(data);
       } catch (error) {
-        console.error("Error fetching playlists:", error);
-        setPlaylistsError("Failed to load playlists");
+        console.error("Error fetching custom playlists:", error);
+        setError("Failed to load custom playlists");
       } finally {
-        setPlaylistsLoading(false);
+        setLoading(false);
       }
     };
 
-    fetchPlaylists();
+    fetchCustomPlaylists();
   }, [userId, spotifyConnected]);
 
-  if (loading) {
+  if (authLoading) {
     return (
       <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
-        <div className="text-xl">Loading playlists...</div>
+        <div className="text-xl">Loading...</div>
       </div>
     );
   }
@@ -64,7 +64,26 @@ export default function Builder() {
     );
   }
 
-  if (playlistsLoading) {
+  if (!spotifyConnected) {
+    return (
+      <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
+        <div className="text-xl text-center mb-4">
+          Connect to Spotify to view your custom playlists
+        </div>
+        <div className="flex flex-col gap-4 items-center">
+          <SpotifyConnectButton size="lg" />
+          <button
+            onClick={() => router.push("/dashboard")}
+            className="px-4 py-2 bg-gray-600 rounded-lg hover:bg-gray-700"
+          >
+            Back to Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (loading) {
     return (
       <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
         <div className="text-xl">Loading playlists...</div>
@@ -72,61 +91,23 @@ export default function Builder() {
     );
   }
 
-  if (playlistsError) {
-    return (
-      <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
-        <div className="text-xl text-red-400">{playlistsError}</div>
-        <button
-          onClick={() => router.push("/dashboard")}
-          className="px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700"
-        >
-          Go to Dashboard
-        </button>
-      </div>
-    );
-  }
-
-  if (!spotifyConnected) {
-    return (
-      <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
-        <div className="text-xl text-center mb-4">
-          Connect to Spotify to view your playlists
-        </div>
-        <div className="flex flex-col gap-4 items-center">
-          <SpotifyConnectButton size="lg" />
-          <Button
-            color="secondary"
-            onPress={() => router.push("/dashboard")}
-            size="md"
-          >
-            Back to Dashboard
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
   if (!playlists.length) {
     return (
       <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
-        <button
-          onClick={() => router.push("/builder/playlists")}
-          className="px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700"
-        >
-          Start building a playlist
-        </button>
+        <div className="text-xl">No custom playlists found</div>
       </div>
     );
   }
 
   return (
     <div className="m-4 text-center bg-neutral-900 overflow-x-hidden">
+      <p className="text-purple-300 my-4 font-bold">Your Custom Playlists</p>
       <div className="flex justify-center">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {playlists.map((playlist) => (
             <Card
               isPressable
-              onPress={() => router.push(`playlists/${playlist.id}`)}
+              onPress={() => router.push(`/playlists/${playlist.id}`)}
               className="bg-gray-500 w-56"
               key={playlist.id}
             >
@@ -136,26 +117,9 @@ export default function Builder() {
                   alt="playlist image"
                   height={120}
                   radius="sm"
-                  src={playlist.images[0].url}
+                  src={playlist.image_url || "/next.svg"}
                 />
               </CardBody>
-              <Divider />
-              <CardFooter className="flex flex-row gap-2">
-                <Link
-                  isExternal
-                  href={playlist.spotify_url}
-                  className="text-purple-300 gap-2 font-bold"
-                >
-                  <Image
-                    alt="spotify logo"
-                    height={40}
-                    radius="sm"
-                    src="./spotify-svgrepo-com.svg"
-                    width={40}
-                  />
-                  <p>View on Spotify</p>
-                </Link>
-              </CardFooter>
             </Card>
           ))}
         </div>

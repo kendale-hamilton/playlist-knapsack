@@ -19,6 +19,10 @@ namespace Models.ServiceResponse
         {
             if (response.Status == HttpStatusCode.OK)
             {
+                if (response.Data is string)
+                {
+                    return new OkObjectResult(new { data = response.Data });
+                }
                 return new OkObjectResult(response.Data);
             }
             else

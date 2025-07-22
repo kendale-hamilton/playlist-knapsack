@@ -127,7 +127,7 @@ namespace Services.SpotifyService
             };
         }
 
-        public async Task<ServiceResponse<string>> UploadPlaylist(string userId, Playlist playlist, string token)
+        public async Task<ServiceResponse<string>> UploadPlaylist(string supabaseUserId, string spotifyUserId, Playlist playlist, string token)
         {
             SpotifyCreatePlaylistBody body = new SpotifyCreatePlaylistBody
             {
@@ -136,7 +136,7 @@ namespace Services.SpotifyService
             };
             string bodyJson = JsonSerializer.Serialize(body);
             HttpContent content = new StringContent(bodyJson, Encoding.UTF8, "application/json");
-            var createResponse = await _httpService.MakePostRequest($"https://api.spotify.com/v1/users/{userId}/playlists", token, content);
+            var createResponse = await _httpService.MakePostRequest($"https://api.spotify.com/v1/users/{spotifyUserId}/playlists", token, content);
             if (createResponse.StatusCode == HttpStatusCode.Unauthorized)
             {
                 return new ServiceResponse<string>
@@ -195,6 +195,19 @@ namespace Services.SpotifyService
             //     HttpContent imageContent = new ByteArrayContent(imageBytes);
             //     var imageResponse = await _httpService.MakePutRequest($"https://api.spotify.com/v1/playlists/{id}/images", token, imageContent, "image/jpeg");
             // }
+
+            playlist.Details.SpotifyUrl = url;
+
+            // Needs to take supabase user id
+            var updatedResponse = await _supabaseService.UpdateCustomPlaylist(supabaseUserId, playlist);
+            if (updatedResponse.Status != HttpStatusCode.OK)
+            {
+                return new ServiceResponse<string>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = "Failed to update playlist in Supabase"
+                };
+            }
 
             return new ServiceResponse<string>
             {

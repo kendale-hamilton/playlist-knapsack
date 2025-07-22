@@ -8,6 +8,7 @@ namespace Services.KnapsackService
     public interface IKnapsackService
     {
         Task<ServiceResponse<string>> SolveKnapsack(DesiredLengths desiredLengths, List<Track> tracks, string userId);
-        Task<ServiceResponse<List<Track>>> GetCustomPlaylist(string customId);
+        Task<ServiceResponse<CustomPlaylist>> GetCustomPlaylist(string customId);
+        Task<ServiceResponse<List<CustomPlaylistDetails>>> GetCustomPlaylists(string userId);
     }
 }

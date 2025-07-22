@@ -3,14 +3,17 @@ import { Track } from "@/types/Track";
 import { Card, Tooltip } from "@heroui/react";
 
 type TrackListProps = {
-  title: string;
   width: string;
   tracks: Track[];
   setPlaylist?: (playlist: Track[]) => void;
 };
 
 export default function TrackList(props: TrackListProps) {
-  const { title, width, tracks } = props;
+  const { width, tracks } = props;
+
+  console.log("TrackList received tracks:", tracks);
+  console.log("Tracks length:", tracks?.length);
+  console.log("Tracks is array:", Array.isArray(tracks));
 
   // const swapTracks = (index_1: number, index_2: number) => {
   //     const newTracks: Track[] = [...tracks];
@@ -20,7 +23,6 @@ export default function TrackList(props: TrackListProps) {
 
   return (
     <div className={`flex flex-col p-8 space-y-4 items-center ${width}`}>
-      <p className="font-bold underline">{title}</p>
       <div className="flex flex-col p-2 space-y-2 w-full">
         {tracks.map((track, index) => (
           <div className="flex flex-row" key={index}>

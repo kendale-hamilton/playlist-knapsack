@@ -75,8 +75,10 @@ export default function Playlist() {
             body: JSON.stringify(body),
           }
         );
+        console.log("res", res);
         const json = await res.json();
-        const customId = json.customId;
+        console.log("json", json);
+        const customId = json.data;
         router.push(
           `/playlists/${customId}?desired-length=${submission.desiredLength}`
         );
@@ -188,14 +190,16 @@ export default function Playlist() {
           width="w-1/4"
           playlist={playlist}
         />
-        <TrackList
-          title="Tracks"
-          tracks={playlist.tracks}
-          setPlaylist={(tracks: Track[]) =>
-            setPlaylist({ ...playlist, tracks: tracks })
-          }
-          width="w-1/2"
-        />
+        <div className="flex flex-col p-8 space-y-4 items-center w-1/2">
+          <p className="font-bold underline">Tracks</p>
+          <TrackList
+            tracks={playlist.tracks}
+            setPlaylist={(tracks: Track[]) =>
+              setPlaylist({ ...playlist, tracks: tracks })
+            }
+            width="w-full"
+          />
+        </div>
         <BuilderConfiguration
           width="w-1/4"
           length={playlistDuration(playlist.tracks)}
@@ -213,14 +217,16 @@ export default function Playlist() {
           length={playlistDuration(playlist.tracks)}
           onSubmit={onSubmit}
         />
-        <TrackList
-          title="Tracks"
-          tracks={playlist.tracks}
-          setPlaylist={(tracks: Track[]) =>
-            setPlaylist({ ...playlist, tracks: tracks })
-          }
-          width="w-full"
-        />
+        <div className="flex flex-col p-8 space-y-4 items-center w-full">
+          <p className="font-bold underline">Tracks</p>
+          <TrackList
+            tracks={playlist.tracks}
+            setPlaylist={(tracks: Track[]) =>
+              setPlaylist({ ...playlist, tracks: tracks })
+            }
+            width="w-full"
+          />
+        </div>
       </div>
     </div>
   );

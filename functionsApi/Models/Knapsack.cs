@@ -6,6 +6,25 @@ using Models.Spotify;
 namespace Models.Knapsack
 {
     #region Playlist
+    public class CustomPlaylistDetails
+    {
+        [JsonPropertyName("id")]
+        public required string Id { get; set; }
+        [JsonPropertyName("image_url")]
+        public string? ImageUrl { get; set; }
+        [JsonPropertyName("name")]
+        public required string Name { get; set; } 
+        [JsonPropertyName("spotify_url")]
+        public required string SpotifyUrl { get; set; }
+    }
+
+    public class CustomPlaylist
+    {
+        [JsonPropertyName("details")]
+        public required CustomPlaylistDetails Details { get; set; }
+        [JsonPropertyName("tracks")]
+        public required List<Track> Tracks { get; set; }
+    }
     public class Playlist
     {
         [JsonPropertyName("details")]

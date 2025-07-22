@@ -5,6 +5,7 @@ using Models.Supabase;
 using Models.Knapsack;
 using Supabase.Postgrest.Models;
 using static Supabase.Postgrest.QueryOptions;
+using System.Text.Json;
 
 namespace Services.SupabaseService
 {
@@ -299,7 +300,8 @@ namespace Services.SupabaseService
 
                 var playlistRes = await _supabaseClient.From<CustomPlaylistRecord>().Insert(new CustomPlaylistRecord
                 {
-                    UserId = userId
+                    UserId = userId,
+                    Name = "Custom Playlist"
                 });
 
                 var playlistId = playlistRes.Model.Id;
@@ -330,6 +332,41 @@ namespace Services.SupabaseService
                 };
             }
         }  
+
+        public async Task<ServiceResponse<string>> UpdateCustomPlaylist(string userId, Playlist playlist)
+        {
+            try
+            {
+                Console.WriteLine("Updating custom playlist in Supabase");
+                Console.WriteLine($"User ID: {userId}");
+                Console.WriteLine($"Playlist: {JsonSerializer.Serialize(playlist)}");
+
+                var updateResponse = await _supabaseClient.From<CustomPlaylistRecord>()
+                    .Filter("id", Constants.Operator.Equals, playlist.Details.Id)
+                    .Update(new CustomPlaylistRecord
+                    {
+                        Id = playlist.Details.Id,
+                        UserId = userId,
+                        Name = playlist.Details.Name,
+                        SpotifyUrl = playlist.Details.SpotifyUrl
+                    });
+                
+                return new ServiceResponse<string>
+                {
+                    Status = HttpStatusCode.OK,
+                    Data = updateResponse.Model.Id
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating custom playlist: {ex.Message}");
+                return new ServiceResponse<string>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = $"Error updating custom playlist: {ex.Message}"
+                };
+            }
+        }
 
         public async Task<ServiceResponse<List<T>>> GetEntities<T>(List<string>? ids = null, string? columnName = null) where T : BaseModel, new()
         {

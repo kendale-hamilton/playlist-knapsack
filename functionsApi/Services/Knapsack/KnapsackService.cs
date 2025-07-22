@@ -1,12 +1,11 @@
 using System.Net;
 using System.Numerics;
-using System.Text;
 using System.Text.Json;
-using Grpc.Core;
 using Models.Knapsack;
 using Models.Requests.Knapsack;
 using Models.ServiceResponse;
 using Models.Supabase;
+using Services.SpotifyService;
 using Services.SupabaseService;
 
 namespace Services.KnapsackService
@@ -14,16 +13,18 @@ namespace Services.KnapsackService
     public class KnapsackService : IKnapsackService
     {
         private readonly ISupabaseService _supabaseService;
-        public KnapsackService(ISupabaseService supabaseService)
+        private readonly ISpotifyService _spotifyService;
+        public KnapsackService(ISupabaseService supabaseService, ISpotifyService spotifyService)
         {
             _supabaseService = supabaseService;
+            _spotifyService = spotifyService;
         }
-        public async Task<ServiceResponse<List<Track>>> GetCustomPlaylist(string customId)
+        public async Task<ServiceResponse<CustomPlaylist>> GetCustomPlaylist(string customId)
         {
             var playlistRes = await _supabaseService.GetEntities<PlaylistTrackRecord>([customId], "playlist_id");
             if (playlistRes.Status != HttpStatusCode.OK)
             {
-                return new ServiceResponse<List<Track>>
+                return new ServiceResponse<CustomPlaylist>
                 {
                     Status = HttpStatusCode.InternalServerError,
                     ErrorMessage = playlistRes.ErrorMessage
@@ -34,7 +35,7 @@ namespace Services.KnapsackService
             var tracksRes = await _supabaseService.GetEntities<TrackRecord>(trackIds);
             if (tracksRes.Status != HttpStatusCode.OK)
             {
-                return new ServiceResponse<List<Track>>
+                return new ServiceResponse<CustomPlaylist>
                 {
                     Status = HttpStatusCode.InternalServerError,
                     ErrorMessage = tracksRes.ErrorMessage
@@ -51,10 +52,65 @@ namespace Services.KnapsackService
                 SpotifyId = t.SpotifyId,
             }).ToList();
 
-            return new ServiceResponse<List<Track>>
+            var detailsRecord = await _supabaseService.GetEntities<CustomPlaylistRecord>([customId], "id");
+            if (detailsRecord.Status != HttpStatusCode.OK)
+            {
+                return new ServiceResponse<CustomPlaylist>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = detailsRecord.ErrorMessage
+                };
+            }
+            var details = detailsRecord.Data.First();
+
+            
+            var res =  new ServiceResponse<CustomPlaylist>
             {
                 Status = HttpStatusCode.OK,
-                Data = tracks
+                Data = new CustomPlaylist
+                {
+                    Tracks = tracks,
+                    Details = new CustomPlaylistDetails
+                    {
+                        Id = customId,
+                        ImageUrl = details.ImageUrl,
+                        Name = details.Name,
+                        SpotifyUrl = details.SpotifyUrl,
+                    }
+                }
+            };
+
+            Console.WriteLine($"Custom Playlist: {JsonSerializer.Serialize(res)}");
+
+            return res;
+        }
+
+        public async Task<ServiceResponse<List<CustomPlaylistDetails>>> GetCustomPlaylists(string userId)
+        {
+            var tokenRes = await _spotifyService.GetValidAccessToken(userId);
+
+            var playlistsRes = await _supabaseService.GetEntities<CustomPlaylistRecord>([userId], "user_id");
+            if (playlistsRes.Status != HttpStatusCode.OK)
+            {
+                return new ServiceResponse<List<CustomPlaylistDetails>>
+                {   
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = playlistsRes.ErrorMessage
+                };
+            }
+            var playlistRecords = playlistsRes.Data;
+            var playlists = playlistRecords.Select(p => new CustomPlaylistDetails
+            {
+                Id = p.Id,
+                Name = p.Name,
+                ImageUrl = p.ImageUrl,
+                SpotifyUrl = p.SpotifyUrl,
+            }).ToList();
+
+            return new ServiceResponse<List<CustomPlaylistDetails>>
+            {
+                Status = HttpStatusCode.OK,
+                Data = playlists
             };
         }
 
@@ -129,6 +185,7 @@ namespace Services.KnapsackService
             List<Track> selections = BackwardsPass(total, top);
 
             var playlistRes = await _supabaseService.UploadCustomPlaylist(selections, userId);
+            Console.WriteLine("Playlist Res: " + playlistRes.Data);
             if (playlistRes.Status != HttpStatusCode.OK)
             {
                 return new ServiceResponse<string>

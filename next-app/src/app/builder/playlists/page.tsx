@@ -150,7 +150,7 @@ export default function Builder() {
                     alt="spotify logo"
                     height={40}
                     radius="sm"
-                    src="./spotify-svgrepo-com.svg"
+                    src="/spotify-svgrepo-com.svg"
                     width={40}
                   />
                   <p>View on Spotify</p>

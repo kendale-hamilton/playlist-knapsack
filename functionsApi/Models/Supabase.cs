@@ -24,7 +24,13 @@ namespace Models.Supabase
         public string? Id { get; set; }
         [Column("user_id")]
         public string? UserId { get; set; }
-        
+        [Column("spotify_url")]
+        public string? SpotifyUrl { get; set; }
+        [Column("image_url")]
+        public string? ImageUrl { get; set; }
+        [Column("name")]
+        public string? Name { get; set; }
+
     }
 
     [Table("playlist_tracks")]

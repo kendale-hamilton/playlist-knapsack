@@ -26,16 +26,17 @@ export default function CustomPlaylist() {
 
   const router = useRouter();
 
-  const [tracks, setTracks] = useState<Track[]>();
-  const [playlist, setPlaylist] = useState<FullPlaylist>();
+  const [customPlaylist, setCustomPlaylist] = useState<FullPlaylist>();
+  const [spotifyPlaylist, setSpotifyPlaylist] = useState<FullPlaylist>();
   const [url, setUrl] = useState<string | null>();
   const [open, setOpen] = useState(false);
   const [playlistLoading, setPlaylistLoading] = useState(false);
   const [playlistError, setPlaylistError] = useState("");
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
   const { userId, spotifyConnected, loading, error } = useAuth();
 
   useEffect(() => {
-    if (!tracks && userId && spotifyConnected) {
+    if (!customPlaylist && userId && spotifyConnected) {
       const fetchCustomPlaylist = async () => {
         setPlaylistLoading(true);
         try {
@@ -43,7 +44,8 @@ export default function CustomPlaylist() {
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/knapsack/users/${userId}/playlists/${id}`
           );
           const customPlaylist = await response.json();
-          setTracks(customPlaylist);
+          console.log(customPlaylist);
+          setCustomPlaylist(customPlaylist);
         } catch (error) {
           console.error("Error fetching custom playlist:", error);
           setPlaylistError("Failed to load custom playlist");
@@ -57,10 +59,10 @@ export default function CustomPlaylist() {
   }, [id, userId]);
 
   useEffect(() => {
-    if (playlist && userId && spotifyConnected) {
+    if (spotifyPlaylist && userId && spotifyConnected) {
       const postSpotifyPlaylist = async () => {
         const body = {
-          playlist: playlist,
+          playlist: spotifyPlaylist,
           // image: btoa(image || "")
         };
         const res = await fetch(
@@ -79,8 +81,8 @@ export default function CustomPlaylist() {
       const runPostSpotifyPlaylist = async () => {
         try {
           const response = await postSpotifyPlaylist();
-          const url = await response.text();
-          setUrl(url);
+          const res = await response.json();
+          setUrl(res.data);
           setOpen(true);
         } catch (error) {
           console.error("Error creating Spotify playlist:", error);
@@ -90,7 +92,7 @@ export default function CustomPlaylist() {
 
       runPostSpotifyPlaylist();
     }
-  }, [playlist, userId, spotifyConnected]);
+  }, [spotifyPlaylist, userId, spotifyConnected]);
 
   if (loading) {
     return (
@@ -156,36 +158,38 @@ export default function CustomPlaylist() {
     );
   }
 
-  if (!tracks) {
-    return (
-      <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
-        <div className="text-xl">No tracks found</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex flex-row text-white bg-neutral-900">
-      <div className="hidden md:flex flex-row w-full justify-center">
-        <PlaylistDetailSelector
-          width="w-1/2"
-          id={id}
-          tracks={tracks}
-          desiredLength={Number(desiredLength)}
-          setPlaylist={setPlaylist}
-        />
-        <TrackList title="Selected Tracks" tracks={tracks} width="w-1/2" />
+    <div className="flex flex-col text-white bg-neutral-900">
+      <div className="flex flex-row items-center justify-between p-4 border-b border-gray-700">
+        <div className="flex flex-row items-center space-x-4">
+          <h1 className="text-xl font-bold">Playlist Details</h1>
+        </div>
+        {!customPlaylist?.details.spotify_url && (
+          <Button color="primary" onPress={() => setDetailModalOpen(true)}>
+            Save to Spotify
+          </Button>
+        )}
+        {customPlaylist?.details.spotify_url && (
+          <Button
+            color="primary"
+            onPress={() => router.push(customPlaylist?.details.spotify_url)}
+          >
+            View in Spotify
+          </Button>
+        )}
       </div>
-      <div className="flex flex-col md:hidden w-full">
-        <PlaylistDetailSelector
-          width="w-full"
-          id={id}
-          tracks={tracks}
-          desiredLength={Number(desiredLength)}
-          setPlaylist={setPlaylist}
-        />
-        <TrackList title="Selected Tracks" tracks={tracks} width="w-full" />
-      </div>
+
+      <PlaylistDetailSelector
+        isOpen={detailModalOpen}
+        onClose={() => setDetailModalOpen(false)}
+        id={id}
+        tracks={customPlaylist?.tracks ?? []}
+        desiredLength={Number(desiredLength)}
+        setPlaylist={setSpotifyPlaylist}
+      />
+
+      <TrackList tracks={customPlaylist?.tracks ?? []} width="w-full" />
+
       <Modal isOpen={open} onClose={() => setOpen(false)}>
         <ModalContent>
           <div className="text-white">

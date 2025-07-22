@@ -110,7 +110,7 @@ namespace Controllers.SpotifyController
             SpotifyPostPlaylistRequest? body = JsonSerializer.Deserialize<SpotifyPostPlaylistRequest>(requestBody);
             Playlist playlist = body.Playlist;
             // string image = body.Image;
-            ServiceResponse<string> urlResponse = await _spotifyService.UploadPlaylist(spotifyUserIdResponse.Data, playlist, accessTokenResponse.Data);
+            ServiceResponse<string> urlResponse = await _spotifyService.UploadPlaylist(userId, spotifyUserIdResponse.Data, playlist, accessTokenResponse.Data);
             if (urlResponse.Status == HttpStatusCode.Unauthorized)
             {
                 return Unauthorized();
