@@ -91,7 +91,16 @@ namespace Services.KnapsackService
             var tokenRes = await _spotifyService.GetValidAccessToken(userId);
 
             var playlistsRes = await _supabaseService.GetEntities<CustomPlaylistRecord>([userId], "user_id");
-            if (playlistsRes.Status != HttpStatusCode.OK)
+            if (playlistsRes.Status == HttpStatusCode.NotFound)
+            {
+                // No custom playlists found - return empty list
+                return new ServiceResponse<List<CustomPlaylistDetails>>
+                {   
+                    Status = HttpStatusCode.OK,
+                    Data = new List<CustomPlaylistDetails>()
+                };
+            }
+            else if (playlistsRes.Status != HttpStatusCode.OK)
             {
                 return new ServiceResponse<List<CustomPlaylistDetails>>
                 {   

@@ -94,7 +94,19 @@ export default function CustomPlaylists() {
   if (!playlists.length) {
     return (
       <div className="flex flex-col bg-neutral-900 gap-6 p-8 text-white w-full items-center justify-center">
-        <div className="text-xl">No custom playlists found</div>
+        <div className="text-xl mb-4">No custom playlists found</div>
+        <div className="text-center mb-6">
+          <p className="text-gray-300 mb-4">
+            Create your first custom playlist by selecting tracks from your
+            Spotify playlists
+          </p>
+          <button
+            onClick={() => router.push("/builder/playlists")}
+            className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold transition-colors"
+          >
+            Create Your First Playlist
+          </button>
+        </div>
       </div>
     );
   }
