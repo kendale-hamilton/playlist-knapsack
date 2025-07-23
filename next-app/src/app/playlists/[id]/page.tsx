@@ -39,8 +39,6 @@ export default function CustomPlaylist() {
   const [deleteError, setDeleteError] = useState("");
 
   useEffect(() => {
-    console.log("useEffect called");
-    console.log({ customPlaylist, userId, spotifyConnected });
     if (!customPlaylist && userId && spotifyConnected) {
       const fetchCustomPlaylist = async () => {
         setPlaylistLoading(true);
@@ -49,7 +47,6 @@ export default function CustomPlaylist() {
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/knapsack/users/${userId}/playlists/${id}`
           );
           const customPlaylist = await response.json();
-          console.log(customPlaylist);
           setCustomPlaylist(customPlaylist);
         } catch (error) {
           console.error("Error fetching custom playlist:", error);

@@ -27,7 +27,6 @@ export default function Builder() {
 
       setPlaylistsLoading(true);
       try {
-        console.log("Making API call with user ID:", userId);
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/spotify/users/${userId}/playlists`
         );
