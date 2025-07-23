@@ -17,6 +17,7 @@ import { useSearchParams, useRouter, useParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import SpotifyConnectButton from "@/app/components/SpotifyConnectButton";
 import TrackList from "@/app/components/TrackList";
+import { toTimeStringSeconds } from "@/app/helpers/time-functions";
 
 export default function CustomPlaylist() {
   const params = useParams();
@@ -189,11 +190,29 @@ export default function CustomPlaylist() {
     }
   };
 
+  const totalLength =
+    customPlaylist?.tracks?.reduce((sum, t) => sum + (t.seconds || 0), 0) || 0;
+  const desiredLengthNum = desiredLength
+    ? parseInt(desiredLength, 10)
+    : undefined;
+
   return (
     <div className="flex flex-col text-white bg-neutral-900">
       <div className="flex flex-row items-center justify-between p-4 border-b border-gray-700">
-        <div className="flex flex-row items-center space-x-4">
-          <h1 className="text-xl font-bold">Playlist Details</h1>
+        <div className="flex flex-col space-y-2">
+          <h1 className="text-xl font-bold">
+            {customPlaylist?.details?.name || "Playlist Details"}
+          </h1>
+          <div className="text-sm text-gray-300">
+            <span>Total Length:</span> {toTimeStringSeconds(totalLength)}
+          </div>
+          {desiredLengthNum !== undefined &&
+            totalLength !== desiredLengthNum && (
+              <div className="text-xs text-yellow-400">
+                A playlist of exact length{" "}
+                {toTimeStringSeconds(desiredLengthNum)} could not be created.
+              </div>
+            )}
         </div>
         <div className="flex flex-row gap-2 items-center">
           {!customPlaylist?.details.spotify_url && (
