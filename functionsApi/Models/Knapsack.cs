@@ -14,8 +14,10 @@ namespace Models.Knapsack
         public string? ImageUrl { get; set; }
         [JsonPropertyName("name")]
         public required string Name { get; set; } 
+        [JsonPropertyName("spotify_id")]
+        public string? SpotifyId { get; set; }
         [JsonPropertyName("spotify_url")]
-        public required string SpotifyUrl { get; set; }
+        public string? SpotifyUrl { get; set; }
     }
 
     public class CustomPlaylist

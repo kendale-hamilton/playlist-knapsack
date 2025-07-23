@@ -24,6 +24,8 @@ namespace Models.Supabase
         public string? Id { get; set; }
         [Column("user_id")]
         public string? UserId { get; set; }
+        [Column("spotify_id")]
+        public string? SpotifyId { get; set; }
         [Column("spotify_url")]
         public string? SpotifyUrl { get; set; }
         [Column("image_url")]

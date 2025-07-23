@@ -199,7 +199,13 @@ namespace Services.SpotifyService
             playlist.Details.SpotifyUrl = url;
 
             // Needs to take supabase user id
-            var updatedResponse = await _supabaseService.UpdateCustomPlaylist(supabaseUserId, playlist);
+            var updatedResponse = await _supabaseService.UpdateCustomPlaylist(supabaseUserId, new CustomPlaylistDetails
+                {
+                    Id = playlist.Details.Id,
+                    Name = playlist.Details.Name,
+                    SpotifyId = id,
+                    SpotifyUrl = url
+                });
             if (updatedResponse.Status != HttpStatusCode.OK)
             {
                 return new ServiceResponse<string>
@@ -215,6 +221,31 @@ namespace Services.SpotifyService
                 Data = url
             };
         }
+
+        public async Task<ServiceResponse<string>> GetPlaylistImage(string playlistId, string token)
+        {
+            Console.WriteLine("Getting playlist image");
+            Console.WriteLine($"Playlist ID: {playlistId}");
+            Console.WriteLine($"Token: {token}");
+            var response = await _httpService.MakeGetRequest($"https://api.spotify.com/v1/playlists/{playlistId}/images", token, "Bearer");
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return new ServiceResponse<string>
+                {
+                    Status = HttpStatusCode.Unauthorized,
+                    ErrorMessage = "Unauthorized"
+                };
+            }
+            string content = await response.Content.ReadAsStringAsync();
+            var image = JsonSerializer.Deserialize<List<SpotifyImage>>(content);
+
+            return new ServiceResponse<string>
+            {
+                Status = HttpStatusCode.OK,
+                Data = image.FirstOrDefault()?.Url ?? ""
+            };
+        }
+
         public async Task<string> RefreshAccessToken(string refreshToken)
         {
             var clientId = Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_ID");

@@ -333,22 +333,24 @@ namespace Services.SupabaseService
             }
         }  
 
-        public async Task<ServiceResponse<string>> UpdateCustomPlaylist(string userId, Playlist playlist)
+        public async Task<ServiceResponse<string>> UpdateCustomPlaylist(string userId, CustomPlaylistDetails details)
         {
             try
             {
                 Console.WriteLine("Updating custom playlist in Supabase");
                 Console.WriteLine($"User ID: {userId}");
-                Console.WriteLine($"Playlist: {JsonSerializer.Serialize(playlist)}");
+                Console.WriteLine($"Playlist: {JsonSerializer.Serialize(details)}");
 
                 var updateResponse = await _supabaseClient.From<CustomPlaylistRecord>()
-                    .Filter("id", Constants.Operator.Equals, playlist.Details.Id)
+                    .Filter("id", Constants.Operator.Equals, details.Id)
                     .Update(new CustomPlaylistRecord
                     {
-                        Id = playlist.Details.Id,
+                        Id = details.Id,
                         UserId = userId,
-                        Name = playlist.Details.Name,
-                        SpotifyUrl = playlist.Details.SpotifyUrl
+                        Name = details.Name,
+                        SpotifyId = details.SpotifyId,
+                        SpotifyUrl = details.SpotifyUrl,
+                        ImageUrl = details.ImageUrl
                     });
                 
                 return new ServiceResponse<string>

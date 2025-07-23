@@ -75,6 +75,7 @@ namespace Services.KnapsackService
                         Id = customId,
                         ImageUrl = details.ImageUrl,
                         Name = details.Name,
+                        SpotifyId = details.SpotifyId,
                         SpotifyUrl = details.SpotifyUrl,
                     }
                 }
@@ -104,8 +105,22 @@ namespace Services.KnapsackService
                 Id = p.Id,
                 Name = p.Name,
                 ImageUrl = p.ImageUrl,
-                SpotifyUrl = p.SpotifyUrl,
+                SpotifyId = p.SpotifyId,
             }).ToList();
+
+            // Update playlist images in parallel
+            await Task.WhenAll(playlists.Select(async p => 
+            {
+                if (p.SpotifyId != null && p.ImageUrl == null)
+                {
+                    var res = await _spotifyService.GetPlaylistImage(p.SpotifyId, tokenRes.Data);
+                    if (res.Status == HttpStatusCode.OK)
+                    {
+                        p.ImageUrl = res.Data;
+                        await _supabaseService.UpdateCustomPlaylist(userId, p);
+                    }
+                }
+            }));
 
             return new ServiceResponse<List<CustomPlaylistDetails>>
             {
