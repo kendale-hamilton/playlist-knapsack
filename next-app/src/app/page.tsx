@@ -2,7 +2,11 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Card, CardHeader, Divider, Image, Link } from "@heroui/react";
-import { HomeIcon } from "@heroicons/react/24/outline";
+import {
+  HomeIcon,
+  WrenchScrewdriverIcon,
+  QueueListIcon,
+} from "@heroicons/react/24/outline";
 import { supabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 
@@ -48,31 +52,25 @@ export default function Home() {
         {!loading && (
           <>
             {user && (
-              <div className="flex gap-4">
+              <div className="flex w-full justify-center gap-6 my-6">
                 <Card
                   isPressable
                   onPress={() => router.push("/builder/playlists")}
-                  className="bg-gray-500"
+                  className="bg-gray-500 w-52 h-16 hover:bg-gray-600 transition flex items-center justify-center"
                 >
-                  <CardHeader className="p-4 gap-2">
-                    <Image
-                      alt="spotify logo"
-                      height={40}
-                      radius="sm"
-                      src="./spotify-svgrepo-com.svg"
-                      className="w-8 h-8"
-                    />
-                    <p className="font-bold">View Playlists</p>
+                  <CardHeader className="p-0 flex items-center justify-center gap-2 w-full h-full">
+                    <WrenchScrewdriverIcon className="w-6 h-6" />
+                    <p className="font-bold text-lg">Playlist Builder</p>
                   </CardHeader>
                 </Card>
                 <Card
                   isPressable
-                  onPress={() => router.push("/dashboard")}
-                  className="bg-gray-500 flex flex-row gap-2"
+                  onPress={() => router.push("/playlists")}
+                  className="bg-gray-500 w-52 h-16 hover:bg-gray-600 transition flex items-center justify-center"
                 >
-                  <CardHeader className="p-4 gap-2 items-center">
-                    <HomeIcon className="w-8 h-8 " />
-                    <p className="font-bold">Go to Dashboard</p>
+                  <CardHeader className="p-0 flex items-center justify-center gap-2 w-full h-full">
+                    <QueueListIcon className="w-6 h-6" />
+                    <p className="font-bold text-lg">Custom Playlists</p>
                   </CardHeader>
                 </Card>
               </div>

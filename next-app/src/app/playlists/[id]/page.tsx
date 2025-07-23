@@ -12,6 +12,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@heroui/react";
+import { LinkIcon } from "@heroicons/react/24/outline";
 import { useSearchParams, useRouter, useParams } from "next/navigation";
 
 import { useAuth } from "@/contexts/AuthContext";
@@ -167,7 +168,12 @@ export default function CustomPlaylist() {
           <h1 className="text-xl font-bold">Playlist Details</h1>
         </div>
         {!customPlaylist?.details.spotify_url && (
-          <Button color="primary" onPress={() => setDetailModalOpen(true)}>
+          <Button
+            color="primary"
+            onPress={() => setDetailModalOpen(true)}
+            className="flex items-center gap-2"
+          >
+            <LinkIcon className="w-5 h-5" />
             Save to Spotify
           </Button>
         )}
