@@ -3,7 +3,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Card, CardHeader, Divider, Image, Link } from "@heroui/react";
 import {
-  HomeIcon,
   WrenchScrewdriverIcon,
   QueueListIcon,
 } from "@heroicons/react/24/outline";

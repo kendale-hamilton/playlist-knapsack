@@ -1,5 +1,4 @@
 "use client";
-import { Track } from "@/types/Track";
 import { useEffect, useState } from "react";
 import PlaylistDetailSelector from "./components/PlaylistDetailSelector";
 import { FullPlaylist } from "@/types/Playlist";
@@ -184,7 +183,7 @@ export default function CustomPlaylist() {
         router.push("/playlists");
       }
     } catch (e) {
-      setDeleteError("Failed to delete playlist");
+      setDeleteError("Failed to delete playlist: " + e);
     } finally {
       setDeleteLoading(false);
     }
