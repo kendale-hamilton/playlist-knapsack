@@ -6,5 +6,6 @@ namespace Services.HttpService
         Task<HttpResponseMessage> MakeGetRequest(string url, string token, string tokenType = "Bearer");
         Task<HttpResponseMessage> MakePostRequest(string url, string token, HttpContent content, string tokenType = "Bearer");
         Task<HttpResponseMessage> MakePutRequest(string url, string token, HttpContent content, string contentType);
+        Task<HttpResponseMessage> MakeDeleteRequest(string url, string token, string tokenType = "Bearer");
     }
 }

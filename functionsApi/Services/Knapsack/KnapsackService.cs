@@ -115,6 +115,7 @@ namespace Services.KnapsackService
                 Name = p.Name,
                 ImageUrl = p.ImageUrl,
                 SpotifyId = p.SpotifyId,
+                SpotifyUrl = p.SpotifyUrl,
             }).ToList();
 
             // Update playlist images in parallel
@@ -219,6 +220,36 @@ namespace Services.KnapsackService
                 };
             }
             return playlistRes;
+        }
+
+        public async Task<ServiceResponse<bool>> DeleteCustomPlaylist(string playlistId)
+        {
+            // Fetch the custom playlist record
+            var detailsRecord = await _supabaseService.GetEntities<CustomPlaylistRecord>(new List<string> { playlistId }, "id");
+            if (detailsRecord.Status != System.Net.HttpStatusCode.OK || detailsRecord.Data.Count == 0)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Status = HttpStatusCode.NotFound,
+                    ErrorMessage = "Custom playlist not found"
+                };
+            }
+            var details = detailsRecord.Data.First();
+
+            // If it has a SpotifyId, delete from Spotify
+            if (!string.IsNullOrEmpty(details.SpotifyId))
+            {
+                // Get the userId from the playlist record
+                var userId = details.UserId;
+                var tokenRes = await _spotifyService.GetValidAccessToken(userId);
+                if (tokenRes.Status == System.Net.HttpStatusCode.OK)
+                {
+                    await _spotifyService.DeleteSpotifyPlaylist(details.SpotifyId, tokenRes.Data);
+                }
+            }
+
+            // Delete from Supabase
+            return await _supabaseService.DeleteCustomPlaylist(playlistId);
         }
 
         private static void FFT(Vec vector)

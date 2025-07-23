@@ -196,9 +196,6 @@ namespace Services.SpotifyService
             //     var imageResponse = await _httpService.MakePutRequest($"https://api.spotify.com/v1/playlists/{id}/images", token, imageContent, "image/jpeg");
             // }
 
-            playlist.Details.SpotifyUrl = url;
-
-            // Needs to take supabase user id
             var updatedResponse = await _supabaseService.UpdateCustomPlaylist(supabaseUserId, new CustomPlaylistDetails
                 {
                     Id = playlist.Details.Id,
@@ -346,6 +343,20 @@ namespace Services.SpotifyService
                     ErrorMessage = $"Error getting valid access token: {ex.Message}"
                 };
             }
+        }
+
+        public async Task<ServiceResponse<bool>> DeleteSpotifyPlaylist(string playlistId, string token)
+        {
+            var response = await _httpService.MakeDeleteRequest($"https://api.spotify.com/v1/playlists/{playlistId}/followers", token, "Bearer");
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return new ServiceResponse<bool> { Status = System.Net.HttpStatusCode.OK, Data = true };
+            }
+            return new ServiceResponse<bool>
+            {
+                Status = response.StatusCode,
+                ErrorMessage = "Failed to delete playlist from Spotify"
+            };
         }
     }
 }

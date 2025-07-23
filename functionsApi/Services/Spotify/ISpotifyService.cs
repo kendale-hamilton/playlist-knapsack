@@ -10,6 +10,7 @@ namespace Services.SpotifyService
         Task<ServiceResponse<List<Track>>> GetPlaylistTracks(string playlistId, string token);
         Task<ServiceResponse<string>> UploadPlaylist(string supabaseUserId, string spotifyUserId, Playlist playlist, string token);
         Task<ServiceResponse<string>> GetPlaylistImage(string playlistId, string token);
+        Task<ServiceResponse<bool>> DeleteSpotifyPlaylist(string playlistId, string token);
         Task<string> RefreshAccessToken(string refreshToken);
         Task<ServiceResponse<string>> GetValidAccessToken(string supabaseUserId);
     }

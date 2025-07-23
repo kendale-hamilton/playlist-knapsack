@@ -62,5 +62,15 @@ namespace Controllers.KnapsackController
             var res = await _knapsackService.GetCustomPlaylists(userId);
             return ServiceResponse.ToIActionResult(res);
         }
+
+        [Function("KnapsackDeleteCustomPlaylist")]
+        public async Task<IActionResult> DeleteCustomPlaylist([
+            HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = RouteConstants.CustomPlaylist)
+        ] HttpRequestData req, string userId, string customId)
+        {
+            Console.WriteLine($"Deleting Custom Playlist {customId} for Supabase user: {userId}");
+            var res = await _knapsackService.DeleteCustomPlaylist(customId);
+            return ServiceResponse.ToIActionResult(res);
+        }
     }
 }

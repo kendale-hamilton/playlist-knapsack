@@ -35,6 +35,8 @@ export default function CustomPlaylist() {
   const [playlistError, setPlaylistError] = useState("");
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const { userId, spotifyConnected, loading, error } = useAuth();
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
 
   useEffect(() => {
     console.log("useEffect called");
@@ -161,31 +163,73 @@ export default function CustomPlaylist() {
     );
   }
 
+  const handleDelete = async () => {
+    if (
+      !window.confirm(
+        "Are you sure you want to delete this playlist? This action cannot be undone."
+      )
+    )
+      return;
+    setDeleteLoading(true);
+    setDeleteError("");
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/knapsack/users/${userId}/playlists/${id}`,
+        { method: "DELETE" }
+      );
+      if (!res.ok) {
+        const err = await res.text();
+        setDeleteError(err || "Failed to delete playlist");
+      } else {
+        router.push("/playlists");
+      }
+    } catch (e) {
+      setDeleteError("Failed to delete playlist");
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col text-white bg-neutral-900">
       <div className="flex flex-row items-center justify-between p-4 border-b border-gray-700">
         <div className="flex flex-row items-center space-x-4">
           <h1 className="text-xl font-bold">Playlist Details</h1>
         </div>
-        {!customPlaylist?.details.spotify_url && (
+        <div className="flex flex-row gap-2 items-center">
+          {!customPlaylist?.details.spotify_url && (
+            <Button
+              color="primary"
+              onPress={() => setDetailModalOpen(true)}
+              className="flex items-center gap-2"
+            >
+              <LinkIcon className="w-5 h-5" />
+              Save to Spotify
+            </Button>
+          )}
+          {customPlaylist?.details.spotify_url && (
+            <Button
+              color="primary"
+              onPress={() => router.push(customPlaylist?.details.spotify_url)}
+            >
+              View in Spotify
+            </Button>
+          )}
           <Button
-            color="primary"
-            onPress={() => setDetailModalOpen(true)}
-            className="flex items-center gap-2"
+            color="danger"
+            onPress={handleDelete}
+            isLoading={deleteLoading}
+            className="ml-2"
           >
-            <LinkIcon className="w-5 h-5" />
-            Save to Spotify
+            Delete Playlist
           </Button>
-        )}
-        {customPlaylist?.details.spotify_url && (
-          <Button
-            color="primary"
-            onPress={() => router.push(customPlaylist?.details.spotify_url)}
-          >
-            View in Spotify
-          </Button>
-        )}
+        </div>
       </div>
+      {deleteError && (
+        <div className="bg-red-500 text-white p-2 text-center">
+          {deleteError}
+        </div>
+      )}
 
       <PlaylistDetailSelector
         isOpen={detailModalOpen}

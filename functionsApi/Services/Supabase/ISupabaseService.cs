@@ -13,5 +13,6 @@ namespace Services.SupabaseService
         Task<ServiceResponse<string>> UploadCustomPlaylist(List<Track> tracks, string userId);
         Task<ServiceResponse<string>> UpdateCustomPlaylist(string userId, CustomPlaylistDetails details);
         Task<ServiceResponse<List<T>>> GetEntities<T>(List<string>? ids = null, string? columnName = null) where T : BaseModel, new();
+        Task<ServiceResponse<bool>> DeleteCustomPlaylist(string playlistId);
     }
 } 

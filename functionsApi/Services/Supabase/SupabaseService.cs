@@ -370,6 +370,30 @@ namespace Services.SupabaseService
             }
         }
 
+        public async Task<ServiceResponse<bool>> DeleteCustomPlaylist(string playlistId)
+        {
+            try
+            {
+                await _supabaseClient.From<CustomPlaylistRecord>()
+                    .Filter("id", Constants.Operator.Equals, playlistId)
+                    .Delete();
+
+                return new ServiceResponse<bool>
+                {
+                    Status = HttpStatusCode.OK,
+                    Data = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = $"Error deleting custom playlist: {ex.Message}"
+                };
+            }
+        }
+
         public async Task<ServiceResponse<List<T>>> GetEntities<T>(List<string>? ids = null, string? columnName = null) where T : BaseModel, new()
         {
             try
