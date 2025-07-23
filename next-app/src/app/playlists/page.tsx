@@ -3,6 +3,7 @@ import { CustomPlaylist } from "@/types/Playlist";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardBody, Image } from "@heroui/react";
+import { QueueListIcon } from "@heroicons/react/24/outline";
 import { useAuth } from "@/contexts/AuthContext";
 import SpotifyConnectButton from "@/app/components/SpotifyConnectButton";
 
@@ -125,12 +126,18 @@ export default function CustomPlaylists() {
             >
               <CardBody className="flex flex-col gap-4 items-center">
                 <p>{playlist.name}</p>
-                <Image
-                  alt="playlist image"
-                  height={120}
-                  radius="sm"
-                  src={playlist.image_url || "/next.svg"}
-                />
+                <div className="flex items-center justify-center h-full">
+                  {playlist.image_url ? (
+                    <Image
+                      alt="playlist image"
+                      height={120}
+                      radius="sm"
+                      src={playlist.image_url}
+                    />
+                  ) : (
+                    <QueueListIcon className="w-32 h-32 text-gray-400" />
+                  )}
+                </div>
               </CardBody>
             </Card>
           ))}
