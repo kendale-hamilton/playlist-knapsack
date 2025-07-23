@@ -11,10 +11,6 @@ type TrackListProps = {
 export default function TrackList(props: TrackListProps) {
   const { width, tracks } = props;
 
-  console.log("TrackList received tracks:", tracks);
-  console.log("Tracks length:", tracks?.length);
-  console.log("Tracks is array:", Array.isArray(tracks));
-
   // const swapTracks = (index_1: number, index_2: number) => {
   //     const newTracks: Track[] = [...tracks];
   //     [newTracks[index_1], newTracks[index_2]] = [newTracks[index_2], newTracks[index_1]];

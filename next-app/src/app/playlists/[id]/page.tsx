@@ -89,6 +89,15 @@ export default function CustomPlaylist() {
           const res = await response.json();
           setUrl(res.data);
           setOpen(true);
+          const newCustomPlaylist: FullPlaylist = {
+            ...customPlaylist!,
+            details: {
+              ...customPlaylist!.details,
+              spotify_url: res.data,
+              name: spotifyPlaylist.details.name,
+            },
+          };
+          setCustomPlaylist(newCustomPlaylist);
         } catch (error) {
           console.error("Error creating Spotify playlist:", error);
           setPlaylistError("Failed to create Spotify playlist");

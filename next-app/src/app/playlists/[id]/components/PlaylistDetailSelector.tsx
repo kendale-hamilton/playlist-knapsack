@@ -78,7 +78,7 @@ export default function PlaylistDetailSelector(
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalContent>
-        <ModalHeader className="flex flex-col gap-1">
+        <ModalHeader className="flex flex-col gap-1 text-white">
           Enter Your Playlist Details
         </ModalHeader>
         <ModalBody>
@@ -101,16 +101,6 @@ export default function PlaylistDetailSelector(
             />
             {/*Figure out how to have the user upload an image */}
             {/* <Input type="file" label="Playlist Image" placeholder="Upload a custom image file" onChange={handleFileChange} /> */}
-            <p>Length: {toTimeStringSeconds(length)}</p>
-            {desiredLength && length != desiredLength && (
-              <div className="flex flex-col items-center">
-                <p className="text-red-500">Warning:</p>
-                <p>
-                  A playlist of exactly length{" "}
-                  {toTimeStringSeconds(desiredLength)} could not be built.
-                </p>
-              </div>
-            )}
           </div>
         </ModalBody>
         <ModalFooter>
