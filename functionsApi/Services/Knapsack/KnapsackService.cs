@@ -1,29 +1,145 @@
+using System.Net;
 using System.Numerics;
-using System.Text;
 using System.Text.Json;
 using Models.Knapsack;
 using Models.Requests.Knapsack;
-using Services.BlobService;
+using Models.ServiceResponse;
+using Models.Supabase;
+using Services.SpotifyService;
+using Services.SupabaseService;
 
 namespace Services.KnapsackService
 {
     public class KnapsackService : IKnapsackService
     {
-        private readonly IBlobService _blobService;
-        public KnapsackService(IBlobService blobService)
+        private readonly ISupabaseService _supabaseService;
+        private readonly ISpotifyService _spotifyService;
+        public KnapsackService(ISupabaseService supabaseService, ISpotifyService spotifyService)
         {
-            _blobService = blobService;
+            _supabaseService = supabaseService;
+            _spotifyService = spotifyService;
         }
-        public async Task<List<Track>> GetSolvedPlaylist(string userId, string customId)
+        public async Task<ServiceResponse<CustomPlaylist>> GetCustomPlaylist(string customId)
         {
-            string blob = $"{userId}/{customId}.json";
-            List<Track> tracks = await _blobService.DownloadFile<List<Track>>(blob);
-            //TODO: Think about better way to delete after
-            await _blobService.DeleteFile(blob);
-            return tracks;
+            var playlistRes = await _supabaseService.GetEntities<PlaylistTrackRecord>([customId], "playlist_id");
+            if (playlistRes.Status != HttpStatusCode.OK)
+            {
+                return new ServiceResponse<CustomPlaylist>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = playlistRes.ErrorMessage
+                };
+            }
+            var trackIds = playlistRes.Data.Select(p => p.TrackId).Where(t => t != null).ToList();
+
+            var tracksRes = await _supabaseService.GetEntities<TrackRecord>(trackIds);
+            if (tracksRes.Status != HttpStatusCode.OK)
+            {
+                return new ServiceResponse<CustomPlaylist>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = tracksRes.ErrorMessage
+                };
+            }
+            var trackRecords = tracksRes.Data;
+
+            var tracks = trackRecords.Select(t => new Track
+            {
+                Seconds = t.Seconds,
+                Name = t.Name,
+                SpotifyUrl = t.SpotifyUrl,
+                Uri = t.Uri,
+                SpotifyId = t.SpotifyId,
+            }).ToList();
+
+            var detailsRecord = await _supabaseService.GetEntities<CustomPlaylistRecord>([customId], "id");
+            if (detailsRecord.Status != HttpStatusCode.OK)
+            {
+                return new ServiceResponse<CustomPlaylist>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = detailsRecord.ErrorMessage
+                };
+            }
+            var details = detailsRecord.Data.First();
+
+            
+            var res =  new ServiceResponse<CustomPlaylist>
+            {
+                Status = HttpStatusCode.OK,
+                Data = new CustomPlaylist
+                {
+                    Tracks = tracks,
+                    Details = new CustomPlaylistDetails
+                    {
+                        Id = customId,
+                        ImageUrl = details.ImageUrl,
+                        Name = details.Name,
+                        SpotifyId = details.SpotifyId,
+                        SpotifyUrl = details.SpotifyUrl,
+                    }
+                }
+            };
+
+            Console.WriteLine($"Custom Playlist: {JsonSerializer.Serialize(res)}");
+
+            return res;
         }
 
-        public async Task<string> SolveKnapsack(DesiredLengths desiredLengths, List<Track> tracks, string userId)
+        public async Task<ServiceResponse<List<CustomPlaylistDetails>>> GetCustomPlaylists(string userId)
+        {
+            var tokenRes = await _spotifyService.GetValidAccessToken(userId);
+
+            var playlistsRes = await _supabaseService.GetEntities<CustomPlaylistRecord>([userId], "user_id");
+            if (playlistsRes.Status == HttpStatusCode.NotFound)
+            {
+                // No custom playlists found - return empty list
+                return new ServiceResponse<List<CustomPlaylistDetails>>
+                {   
+                    Status = HttpStatusCode.OK,
+                    Data = new List<CustomPlaylistDetails>()
+                };
+            }
+            else if (playlistsRes.Status != HttpStatusCode.OK)
+            {
+                return new ServiceResponse<List<CustomPlaylistDetails>>
+                {   
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = playlistsRes.ErrorMessage
+                };
+            }
+            var playlistRecords = playlistsRes.Data;
+            var playlists = playlistRecords.Select(p => new CustomPlaylistDetails
+            {
+                Id = p.Id,
+                Name = p.Name,
+                ImageUrl = p.ImageUrl,
+                SpotifyId = p.SpotifyId,
+                SpotifyUrl = p.SpotifyUrl,
+            }).ToList();
+
+            // Update playlist images in parallel
+            await Task.WhenAll(playlists.Select(async p => 
+            {
+                if (p.SpotifyId != null && p.ImageUrl == null)
+                {
+                    var res = await _spotifyService.GetPlaylistImage(p.SpotifyId, tokenRes.Data);
+                    if (res.Status == HttpStatusCode.OK)
+                    {
+                        p.ImageUrl = res.Data;
+                        await _supabaseService.UpdateCustomPlaylist(userId, p);
+                    }
+                }
+            }));
+
+            return new ServiceResponse<List<CustomPlaylistDetails>>
+            {
+                Status = HttpStatusCode.OK,
+                Data = playlists
+            };
+        }
+
+        public async Task<ServiceResponse<string>> SolveKnapsack(DesiredLengths desiredLengths, List<Track> tracks, string userId)
         {
             SubsetNode[] nodes = new SubsetNode[tracks.Count];
             for (int i = 0; i < tracks.Count; i++)
@@ -54,7 +170,7 @@ namespace Services.KnapsackService
                 level = nextLevel;
             }   
             SubsetNode top = level[0];
-            top.Vector.Print("Top Vector: ");
+            // top.Vector.Print("Top Vector: ");
 
             int length = desiredLengths.Length;
             int max = desiredLengths.Max ?? 0;
@@ -93,15 +209,47 @@ namespace Services.KnapsackService
             Vec total = new Vec(foundTotal, 1);
             List<Track> selections = BackwardsPass(total, top);
 
-            string json = JsonSerializer.Serialize(selections);
-            var stream = new MemoryStream(Encoding.UTF8.GetBytes(json));
+            var playlistRes = await _supabaseService.UploadCustomPlaylist(selections, userId);
+            Console.WriteLine("Playlist Res: " + playlistRes.Data);
+            if (playlistRes.Status != HttpStatusCode.OK)
+            {
+                return new ServiceResponse<string>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = playlistRes.ErrorMessage
+                };
+            }
+            return playlistRes;
+        }
 
-            Guid guid = Guid.NewGuid();
+        public async Task<ServiceResponse<bool>> DeleteCustomPlaylist(string playlistId)
+        {
+            // Fetch the custom playlist record
+            var detailsRecord = await _supabaseService.GetEntities<CustomPlaylistRecord>(new List<string> { playlistId }, "id");
+            if (detailsRecord.Status != System.Net.HttpStatusCode.OK || detailsRecord.Data.Count == 0)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Status = HttpStatusCode.NotFound,
+                    ErrorMessage = "Custom playlist not found"
+                };
+            }
+            var details = detailsRecord.Data.First();
 
-            string filename = $"{userId}/{guid}.json";
-            await _blobService.UploadFile(filename, stream);
+            // If it has a SpotifyId, delete from Spotify
+            if (!string.IsNullOrEmpty(details.SpotifyId))
+            {
+                // Get the userId from the playlist record
+                var userId = details.UserId;
+                var tokenRes = await _spotifyService.GetValidAccessToken(userId);
+                if (tokenRes.Status == System.Net.HttpStatusCode.OK)
+                {
+                    await _spotifyService.DeleteSpotifyPlaylist(details.SpotifyId, tokenRes.Data);
+                }
+            }
 
-            return guid.ToString();
+            // Delete from Supabase
+            return await _supabaseService.DeleteCustomPlaylist(playlistId);
         }
 
         private static void FFT(Vec vector)

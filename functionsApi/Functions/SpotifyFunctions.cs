@@ -46,7 +46,7 @@ namespace Controllers.SpotifyController
             }
             
             ServiceResponse<List<PlaylistDetails>> userPlaylistsResponse = await _spotifyService.GetUserPlaylists(res.Data, accessTokenResponse.Data);
-            return userPlaylistsResponse.ToActionResult();
+            return ServiceResponse.ToIActionResult(userPlaylistsResponse);
         }
         
         [Function("SpotifyGetPlaylist")]
@@ -110,7 +110,7 @@ namespace Controllers.SpotifyController
             SpotifyPostPlaylistRequest? body = JsonSerializer.Deserialize<SpotifyPostPlaylistRequest>(requestBody);
             Playlist playlist = body.Playlist;
             // string image = body.Image;
-            ServiceResponse<string> urlResponse = await _spotifyService.UploadPlaylist(spotifyUserIdResponse.Data, playlist, accessTokenResponse.Data);
+            ServiceResponse<string> urlResponse = await _spotifyService.UploadPlaylist(userId, spotifyUserIdResponse.Data, playlist, accessTokenResponse.Data);
             if (urlResponse.Status == HttpStatusCode.Unauthorized)
             {
                 return Unauthorized();
@@ -119,7 +119,7 @@ namespace Controllers.SpotifyController
             {
                 return BadRequest();
             }
-            return urlResponse.ToActionResult();
+            return ServiceResponse.ToIActionResult(urlResponse);
         }
 
         [Function("SpotifyDisconnect")]

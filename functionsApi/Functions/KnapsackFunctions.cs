@@ -5,6 +5,7 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Models.Knapsack;
 using Models.Requests.Knapsack;
 using Models.Routes;
+using Models.ServiceResponse;
 using Services.KnapsackService;
 using Services.SupabaseService;
 
@@ -23,36 +24,53 @@ namespace Controllers.KnapsackController
         [Function("KnapsackSolvePlaylist")]
         public async Task<IActionResult> SolvePlaylist([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = RouteConstants.CustomPlaylists)] HttpRequestData req, string userId)
         {
-            Console.WriteLine("Solving Playlist for Supabase user: " + userId);
+            try {
+                Console.WriteLine("Solving Playlist for Supabase user: " + userId);
             
-            // Get Spotify user ID from Supabase
-            var spotifyUserIdResponse = await _supabaseService.GetSpotifyUserId(userId);
-            if (spotifyUserIdResponse.Status != System.Net.HttpStatusCode.OK)
-            {
-                return NotFound("User not found or Spotify not connected");
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                SolvePlaylistRequest? body = JsonSerializer.Deserialize<SolvePlaylistRequest>(requestBody);
+                DesiredLengths lengths = body.DesiredLengths;
+                List<Track> tracks = body.Tracks;
+                var solveRes = await _knapsackService.SolveKnapsack(lengths, tracks, userId);
+                var customId = solveRes.Data;
+                Console.WriteLine("Custom ID: " + customId);
+                return ServiceResponse.ToIActionResult(solveRes);
+            } catch (Exception ex) {
+                Console.WriteLine("Error Solving Playlist: " + ex.Message);
+                var res = new ServiceResponse<List<Track>>
+                {
+                    Status = System.Net.HttpStatusCode.InternalServerError,
+                    ErrorMessage = ex.Message
+                };
+                return ServiceResponse.ToIActionResult(res);
             }
-            
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            SolvePlaylistRequest? body = JsonSerializer.Deserialize<SolvePlaylistRequest>(requestBody);
-            DesiredLengths lengths = body.DesiredLengths;
-            List<Track> tracks = body.Tracks;
-            string id = await _knapsackService.SolveKnapsack(lengths, tracks, spotifyUserIdResponse.Data);
-            return Ok(new {id});
         }
-        [Function("KnapsackGetSolvedPlaylist")]
+        [Function("KnapsackGetCustomPlaylist")]
         public async Task<IActionResult> GetSolvedPlaylist([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.CustomPlaylist)] HttpRequestData req, string userId, string customId)
         {
             Console.WriteLine("Getting Solved Playlist for Supabase user: " + userId);
             
-            // Get Spotify user ID from Supabase
-            var spotifyUserIdResponse = await _supabaseService.GetSpotifyUserId(userId);
-            if (spotifyUserIdResponse.Status != System.Net.HttpStatusCode.OK)
-            {
-                return NotFound("User not found or Spotify not connected");
-            }
-            
-            List<Track> tracks = await _knapsackService.GetSolvedPlaylist(spotifyUserIdResponse.Data, customId);
-            return Ok(tracks);
+            var res = await _knapsackService.GetCustomPlaylist(customId);
+            return ServiceResponse.ToIActionResult(res);
+        }
+
+        [Function("GetCustomPlaylists")]
+        public async Task<IActionResult> GetCustomPlaylists([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.CustomPlaylists)] HttpRequestData req, string userId)
+        {
+            Console.WriteLine("Getting Custom Playlists for Supabase user: " + userId);
+
+            var res = await _knapsackService.GetCustomPlaylists(userId);
+            return ServiceResponse.ToIActionResult(res);
+        }
+
+        [Function("KnapsackDeleteCustomPlaylist")]
+        public async Task<IActionResult> DeleteCustomPlaylist([
+            HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = RouteConstants.CustomPlaylist)
+        ] HttpRequestData req, string userId, string customId)
+        {
+            Console.WriteLine($"Deleting Custom Playlist {customId} for Supabase user: {userId}");
+            var res = await _knapsackService.DeleteCustomPlaylist(customId);
+            return ServiceResponse.ToIActionResult(res);
         }
     }
 }

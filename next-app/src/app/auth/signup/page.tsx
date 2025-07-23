@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
@@ -15,6 +16,20 @@ export default function SignUp() {
     e.preventDefault();
     setLoading(true);
     setError("");
+
+    // Validate password confirmation
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
+
+    // Validate password length
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      setLoading(false);
+      return;
+    }
 
     try {
       const { error: authError } = await supabase.auth.signUp({
@@ -70,6 +85,20 @@ export default function SignUp() {
               label="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={6}
+              className="text-white"
+              classNames={{
+                input: "text-white",
+                label: "text-gray-300",
+              }}
+            />
+
+            <Input
+              type="password"
+              label="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               required
               minLength={6}
               className="text-white"

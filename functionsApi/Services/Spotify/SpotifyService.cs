@@ -127,7 +127,7 @@ namespace Services.SpotifyService
             };
         }
 
-        public async Task<ServiceResponse<string>> UploadPlaylist(string userId, Playlist playlist, string token)
+        public async Task<ServiceResponse<string>> UploadPlaylist(string supabaseUserId, string spotifyUserId, Playlist playlist, string token)
         {
             SpotifyCreatePlaylistBody body = new SpotifyCreatePlaylistBody
             {
@@ -136,7 +136,7 @@ namespace Services.SpotifyService
             };
             string bodyJson = JsonSerializer.Serialize(body);
             HttpContent content = new StringContent(bodyJson, Encoding.UTF8, "application/json");
-            var createResponse = await _httpService.MakePostRequest($"https://api.spotify.com/v1/users/{userId}/playlists", token, content);
+            var createResponse = await _httpService.MakePostRequest($"https://api.spotify.com/v1/users/{spotifyUserId}/playlists", token, content);
             if (createResponse.StatusCode == HttpStatusCode.Unauthorized)
             {
                 return new ServiceResponse<string>
@@ -196,12 +196,53 @@ namespace Services.SpotifyService
             //     var imageResponse = await _httpService.MakePutRequest($"https://api.spotify.com/v1/playlists/{id}/images", token, imageContent, "image/jpeg");
             // }
 
+            var updatedResponse = await _supabaseService.UpdateCustomPlaylist(supabaseUserId, new CustomPlaylistDetails
+                {
+                    Id = playlist.Details.Id,
+                    Name = playlist.Details.Name,
+                    SpotifyId = id,
+                    SpotifyUrl = url
+                });
+            if (updatedResponse.Status != HttpStatusCode.OK)
+            {
+                return new ServiceResponse<string>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = "Failed to update playlist in Supabase"
+                };
+            }
+
             return new ServiceResponse<string>
             {
                 Status = HttpStatusCode.OK,
                 Data = url
             };
         }
+
+        public async Task<ServiceResponse<string>> GetPlaylistImage(string playlistId, string token)
+        {
+            Console.WriteLine("Getting playlist image");
+            Console.WriteLine($"Playlist ID: {playlistId}");
+            Console.WriteLine($"Token: {token}");
+            var response = await _httpService.MakeGetRequest($"https://api.spotify.com/v1/playlists/{playlistId}/images", token, "Bearer");
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return new ServiceResponse<string>
+                {
+                    Status = HttpStatusCode.Unauthorized,
+                    ErrorMessage = "Unauthorized"
+                };
+            }
+            string content = await response.Content.ReadAsStringAsync();
+            var image = JsonSerializer.Deserialize<List<SpotifyImage>>(content);
+
+            return new ServiceResponse<string>
+            {
+                Status = HttpStatusCode.OK,
+                Data = image.FirstOrDefault()?.Url ?? ""
+            };
+        }
+
         public async Task<string> RefreshAccessToken(string refreshToken)
         {
             var clientId = Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_ID");
@@ -302,6 +343,20 @@ namespace Services.SpotifyService
                     ErrorMessage = $"Error getting valid access token: {ex.Message}"
                 };
             }
+        }
+
+        public async Task<ServiceResponse<bool>> DeleteSpotifyPlaylist(string playlistId, string token)
+        {
+            var response = await _httpService.MakeDeleteRequest($"https://api.spotify.com/v1/playlists/{playlistId}/followers", token, "Bearer");
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return new ServiceResponse<bool> { Status = System.Net.HttpStatusCode.OK, Data = true };
+            }
+            return new ServiceResponse<bool>
+            {
+                Status = response.StatusCode,
+                ErrorMessage = "Failed to delete playlist from Spotify"
+            };
         }
     }
 }

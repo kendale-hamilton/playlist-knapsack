@@ -1,8 +1,11 @@
 using System.Net;
 using Models.ServiceResponse;
 using Supabase.Postgrest;
-using Supabase.Postgrest.Attributes;
+using Models.Supabase;
+using Models.Knapsack;
 using Supabase.Postgrest.Models;
+using static Supabase.Postgrest.QueryOptions;
+using System.Text.Json;
 
 namespace Services.SupabaseService
 {
@@ -12,14 +15,8 @@ namespace Services.SupabaseService
 
         public SupabaseService()
         {
-            Console.WriteLine("=== Supabase Service Initialization ===");
-            
             var supabaseUrl = Environment.GetEnvironmentVariable("SUPABASE_URL") ?? "";
             var supabaseServiceKey = Environment.GetEnvironmentVariable("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-            
-            Console.WriteLine($"Supabase URL: {supabaseUrl}");
-            Console.WriteLine($"Service key length: {supabaseServiceKey?.Length ?? 0}");
-            Console.WriteLine($"Service key starts with: {supabaseServiceKey?.Substring(0, Math.Min(10, supabaseServiceKey?.Length ?? 0))}...");
             
             if (string.IsNullOrEmpty(supabaseUrl))
             {
@@ -40,11 +37,7 @@ namespace Services.SupabaseService
                     AutoConnectRealtime = false
                 };
                 
-                Console.WriteLine("Creating Supabase client...");
                 _supabaseClient = new Supabase.Client(supabaseUrl, supabaseServiceKey, options);
-                Console.WriteLine("Supabase client created successfully");
-                
-                Console.WriteLine("=== Supabase Service Initialization Complete ===");
             }
             catch (Exception ex)
             {
@@ -58,13 +51,8 @@ namespace Services.SupabaseService
         {
             try
             {
-                Console.WriteLine("=== GetSpotifyUserId Method ===");
-                Console.WriteLine($"Getting Spotify user ID for Supabase user: {supabaseUserId}");
-                Console.WriteLine($"Supabase client is null: {_supabaseClient == null}");
-                
                 if (_supabaseClient == null)
                 {
-                    Console.WriteLine("ERROR: Supabase client is null!");
                     return new ServiceResponse<string>
                     {
                         Status = HttpStatusCode.InternalServerError,
@@ -273,18 +261,175 @@ namespace Services.SupabaseService
                 };
             }
         }
-    }
 
-    [Table("users")]
-    public class UserRecord : BaseModel
-    {
-        [PrimaryKey("id")]
-        public string? Id { get; set; }
-        [Column("spotify_user_id")]
-        public string? SpotifyUserId { get; set; }
-        [Column("spotify_access_token")]
-        public string? SpotifyAccessToken { get; set; }
-        [Column("spotify_refresh_token")]
-        public string? SpotifyRefreshToken { get; set; }
+        public async Task<ServiceResponse<string>> UploadCustomPlaylist(List<Track> tracks, string userId)
+        {
+            try
+            {
+                Console.WriteLine("Uploading custom playlist to Supabase");
+                Console.WriteLine($"User ID: {userId}");
+                Console.WriteLine($"Uploading {tracks.Count} tracks");
+                var trackIds = (await Task.WhenAll(tracks.Select(async track => 
+                {
+                    var existingTrack = await _supabaseClient
+                        .From<TrackRecord>()
+                        .Where(x => x.SpotifyId == track.SpotifyId)
+                        .Single();
+
+                    if (existingTrack != null)
+                    {
+                        Console.WriteLine($"Track '{track.Name}' already exists, skipping");
+                        return existingTrack.Id;
+                    }
+
+                    var trackRes = await _supabaseClient.From<TrackRecord>().Insert(new TrackRecord
+                    {
+                        SpotifyId = track.SpotifyId,
+                        Seconds = track.Seconds,
+                        Name = track.Name,
+                        SpotifyUrl = track.SpotifyUrl,
+                        Uri = track.Uri,
+                        ArtistsId = null,
+                        AlbumId = null
+                    });
+
+                    return trackRes.Model.Id;
+                }))).ToList();
+
+                Console.WriteLine($"Track IDs: {string.Join(", ", trackIds)}");
+
+                var playlistRes = await _supabaseClient.From<CustomPlaylistRecord>().Insert(new CustomPlaylistRecord
+                {
+                    UserId = userId,
+                    Name = "Custom Playlist"
+                });
+
+                var playlistId = playlistRes.Model.Id;
+
+                await Task.WhenAll(trackIds.Select(async trackId => 
+                {
+                    var trackRes = await _supabaseClient.From<PlaylistTrackRecord>().Insert(new PlaylistTrackRecord
+                    {
+                        PlaylistId = playlistId,
+                        TrackId = trackId,
+                    });
+
+                    return trackRes.Model.Id;
+                }));
+
+                return new ServiceResponse<string>
+                {
+                    Status = HttpStatusCode.OK,
+                    Data = playlistId
+                };
+            } catch (Exception ex)
+            {
+                Console.WriteLine($"Error uploading custom playlist: {ex.Message}");
+                return new ServiceResponse<string>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = $"Error uploading custom playlist: {ex.Message}"
+                };
+            }
+        }  
+
+        public async Task<ServiceResponse<string>> UpdateCustomPlaylist(string userId, CustomPlaylistDetails details)
+        {
+            try
+            {
+                Console.WriteLine("Updating custom playlist in Supabase");
+                Console.WriteLine($"User ID: {userId}");
+                Console.WriteLine($"Playlist: {JsonSerializer.Serialize(details)}");
+
+                var updateResponse = await _supabaseClient.From<CustomPlaylistRecord>()
+                    .Filter("id", Constants.Operator.Equals, details.Id)
+                    .Update(new CustomPlaylistRecord
+                    {
+                        Id = details.Id,
+                        UserId = userId,
+                        Name = details.Name,
+                        SpotifyId = details.SpotifyId,
+                        SpotifyUrl = details.SpotifyUrl,
+                        ImageUrl = details.ImageUrl
+                    });
+                
+                return new ServiceResponse<string>
+                {
+                    Status = HttpStatusCode.OK,
+                    Data = updateResponse.Model.Id
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating custom playlist: {ex.Message}");
+                return new ServiceResponse<string>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = $"Error updating custom playlist: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<ServiceResponse<bool>> DeleteCustomPlaylist(string playlistId)
+        {
+            try
+            {
+                await _supabaseClient.From<CustomPlaylistRecord>()
+                    .Filter("id", Constants.Operator.Equals, playlistId)
+                    .Delete();
+
+                return new ServiceResponse<bool>
+                {
+                    Status = HttpStatusCode.OK,
+                    Data = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = $"Error deleting custom playlist: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<ServiceResponse<List<T>>> GetEntities<T>(List<string>? ids = null, string? columnName = null) where T : BaseModel, new()
+        {
+            try
+            {
+                var query = _supabaseClient.From<T>().Select("*");
+
+                if (ids != null && ids.Count > 0)
+                {
+                    query = query.Filter(columnName ?? "id", Constants.Operator.In, ids);
+                }
+
+                var response = await query.Get();
+                
+                if (response.Models == null || response.Models.Count == 0)
+                {
+                    return new ServiceResponse<List<T>>
+                    {
+                        Status = HttpStatusCode.NotFound,
+                        ErrorMessage = "Entity not found"
+                    };
+                }
+
+                return new ServiceResponse<List<T>>
+                {
+                    Status = HttpStatusCode.OK,
+                    Data = response.Models
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<List<T>>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = $"Error fetching entity: {ex.Message}"
+                };
+            }
+        }
     }
 } 

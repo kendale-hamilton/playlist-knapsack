@@ -54,5 +54,13 @@ namespace Services.HttpService
             var response = await _client.SendAsync(request);
             return response;
         }
+
+        public async Task<HttpResponseMessage> MakeDeleteRequest(string url, string token, string tokenType = "Bearer")
+        {
+            var request = new HttpRequestMessage(HttpMethod.Delete, url);
+            request.Headers.Add("Authorization", $"{tokenType} {token}");
+            var response = await _client.SendAsync(request);
+            return response;
+        }
     }
 }

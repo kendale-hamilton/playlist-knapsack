@@ -1,32 +1,22 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Card, CardHeader, Divider, Image, Link } from "@heroui/react";
-import { HomeIcon } from "@heroicons/react/24/outline";
-import { supabase } from "@/lib/supabase";
-import { User } from "@supabase/supabase-js";
+import {
+  Card,
+  CardHeader,
+  CircularProgress,
+  Divider,
+  Image,
+  Link,
+} from "@heroui/react";
+import {
+  WrenchScrewdriverIcon,
+  QueueListIcon,
+} from "@heroicons/react/24/outline";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Home() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    checkUser();
-  }, []);
-
-  const checkUser = async () => {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-    } catch (error) {
-      console.error("Error checking user:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { user, loading } = useAuth();
 
   const handleSignIn = () => {
     router.push("/auth/login");
@@ -45,76 +35,61 @@ export default function Home() {
         <p>
           Keep reading to learn about the app, or click below to get started!
         </p>
-        {!loading && (
-          <>
-            {user && (
-              <div className="flex gap-4">
-                <Card
-                  isPressable
-                  onPress={() => router.push("/playlists")}
-                  className="bg-gray-500"
-                >
-                  <CardHeader className="p-4 gap-2">
-                    <Image
-                      alt="spotify logo"
-                      height={40}
-                      radius="sm"
-                      src="./spotify-svgrepo-com.svg"
-                      className="w-8 h-8"
-                    />
-                    <p className="font-bold">View Playlists</p>
-                  </CardHeader>
-                </Card>
-                <Card
-                  isPressable
-                  onPress={() => router.push("/dashboard")}
-                  className="bg-gray-500 flex flex-row gap-2"
-                >
-                  <CardHeader className="p-4 gap-2 items-center">
-                    <HomeIcon className="w-8 h-8 " />
-                    <p className="font-bold">Go to Dashboard</p>
-                  </CardHeader>
-                </Card>
-              </div>
-            )}
-            {!user && (
-              <div className="flex gap-4">
-                <Card
-                  isPressable
-                  onPress={handleSignIn}
-                  className="bg-gray-500"
-                >
-                  <CardHeader className="p-4 gap-2">
-                    <Image
-                      alt="spotify logo"
-                      height={40}
-                      radius="sm"
-                      src="./spotify-svgrepo-com.svg"
-                      width={40}
-                    />
-                    <p className="font-bold">Sign In</p>
-                  </CardHeader>
-                </Card>
-                <Card
-                  isPressable
-                  onPress={handleSignUp}
-                  className="bg-gray-500"
-                >
-                  <CardHeader className="p-4 gap-2">
-                    <Image
-                      alt="spotify logo"
-                      height={40}
-                      radius="sm"
-                      src="./spotify-svgrepo-com.svg"
-                      width={40}
-                    />
-                    <p className="font-bold">Sign Up</p>
-                  </CardHeader>
-                </Card>
-              </div>
-            )}
-          </>
-        )}
+        <div className="h-24 justify-center items-center flex">
+          {loading && <CircularProgress />}
+          {user && !loading && (
+            <div className="flex w-full justify-center gap-6 my-6">
+              <Card
+                isPressable
+                onPress={() => router.push("/builder/playlists")}
+                className="bg-gray-500 w-52 h-16 hover:bg-gray-600 transition flex items-center justify-center"
+              >
+                <CardHeader className="p-0 flex items-center justify-center gap-2 w-full h-full">
+                  <WrenchScrewdriverIcon className="w-6 h-6" />
+                  <p className="font-bold text-lg">Playlist Builder</p>
+                </CardHeader>
+              </Card>
+              <Card
+                isPressable
+                onPress={() => router.push("/playlists")}
+                className="bg-gray-500 w-52 h-16 hover:bg-gray-600 transition flex items-center justify-center"
+              >
+                <CardHeader className="p-0 flex items-center justify-center gap-2 w-full h-full">
+                  <QueueListIcon className="w-6 h-6" />
+                  <p className="font-bold text-lg">Custom Playlists</p>
+                </CardHeader>
+              </Card>
+            </div>
+          )}
+          {!user && !loading && (
+            <div className="flex gap-4">
+              <Card isPressable onPress={handleSignIn} className="bg-gray-500">
+                <CardHeader className="p-4 gap-2">
+                  <Image
+                    alt="spotify logo"
+                    height={40}
+                    radius="sm"
+                    src="./spotify-svgrepo-com.svg"
+                    width={40}
+                  />
+                  <p className="font-bold">Sign In</p>
+                </CardHeader>
+              </Card>
+              <Card isPressable onPress={handleSignUp} className="bg-gray-500">
+                <CardHeader className="p-4 gap-2">
+                  <Image
+                    alt="spotify logo"
+                    height={40}
+                    radius="sm"
+                    src="./spotify-svgrepo-com.svg"
+                    width={40}
+                  />
+                  <p className="font-bold">Sign Up</p>
+                </CardHeader>
+              </Card>
+            </div>
+          )}
+        </div>
       </div>
       <Divider />
       <div className="flex flex-col items-start px-8 md:px-32">
