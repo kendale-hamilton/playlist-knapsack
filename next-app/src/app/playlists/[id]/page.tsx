@@ -106,6 +106,7 @@ export default function CustomPlaylist() {
 
       runPostSpotifyPlaylist();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [spotifyPlaylist, userId, spotifyConnected]);
 
   if (loading) {
@@ -263,7 +264,6 @@ export default function CustomPlaylist() {
         onClose={() => setDetailModalOpen(false)}
         id={id}
         tracks={customPlaylist?.tracks ?? []}
-        desiredLength={Number(desiredLength)}
         setPlaylist={setSpotifyPlaylist}
       />
 

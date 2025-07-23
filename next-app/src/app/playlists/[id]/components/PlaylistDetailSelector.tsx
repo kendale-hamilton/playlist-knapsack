@@ -1,7 +1,4 @@
-import {
-  playlistDuration,
-  toTimeStringSeconds,
-} from "@/app/helpers/time-functions";
+import { playlistDuration } from "@/app/helpers/time-functions";
 import { FullPlaylist } from "@/types/Playlist";
 import { Track } from "@/types/Track";
 import {
@@ -20,14 +17,13 @@ type PlaylistDetailSelectorProps = {
   onClose: () => void;
   id: string;
   tracks: Track[];
-  desiredLength?: number;
   setPlaylist: (playlist: FullPlaylist) => void;
 };
 
 export default function PlaylistDetailSelector(
   props: PlaylistDetailSelectorProps
 ) {
-  const { isOpen, onClose, id, tracks, desiredLength, setPlaylist } = props;
+  const { isOpen, onClose, id, tracks, setPlaylist } = props;
   const length = playlistDuration(tracks);
 
   const emptyPlaylist: FullPlaylist = {
