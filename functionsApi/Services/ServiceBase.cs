@@ -95,7 +95,8 @@ namespace Services.Base
 
                 if (ids != null && ids.Count > 0)
                 {
-                    query = query.Filter(columnName ?? "id", Constants.Operator.In, ids);
+                    var validIds = ids.Where(id => !string.IsNullOrEmpty(id)).ToList();
+                    query = query.Filter(columnName ?? "id", Constants.Operator.In, validIds);
                 }
 
                 var response = await query.Get();

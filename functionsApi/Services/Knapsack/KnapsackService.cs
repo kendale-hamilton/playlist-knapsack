@@ -117,17 +117,19 @@ namespace Services.KnapsackService
         {
             try
             {
-                var existingTracks = await GetEntities<TrackRecord>(tracks.Select(t => t.SpotifyId).ToList());
+                var existingTracksRes = await GetEntities<TrackRecord>(tracks.Select(t => t.SpotifyId).ToList(), "spotify_id");
+                var existingTracks = existingTracksRes.Data;
                 
                 var trackIds = (await Task.WhenAll(tracks.Select(async track => 
                 {
-                   if (existingTracks.Data.Any(t => t.SpotifyId == track.SpotifyId))
+                   if (existingTracks.Any(existingTrack => existingTrack.SpotifyId == track.SpotifyId))
                    {
-                        return track.SpotifyId;
+                        return existingTracks.First(t => t.SpotifyId == track.SpotifyId).Id;
                    }
 
                     var trackRes = await CreateEntity(new TrackRecord
                     {
+                        Id = null,
                         SpotifyId = track.SpotifyId,
                         Seconds = track.Seconds,
                         Name = track.Name,
@@ -136,13 +138,15 @@ namespace Services.KnapsackService
                         ArtistsId = null,
                         AlbumId = null
                     });
-
                     return trackRes.Data.Id;
                 }))).ToList();
 
                 var playlistRes = await CreateEntity(new CustomPlaylistRecord
                 {
                     UserId = userId,
+                    SpotifyId = null,
+                    SpotifyUrl = null,
+                    ImageUrl = null,
                     Name = "Custom Playlist"
                 });
 
@@ -150,13 +154,17 @@ namespace Services.KnapsackService
 
                 await Task.WhenAll(trackIds.Select(async trackId => 
                 {
-                    var trackRes = await _supabaseClient.From<PlaylistTrackRecord>().Insert(new PlaylistTrackRecord
+                    var trackRecord = new PlaylistTrackRecord
                     {
+                        Id = null,
                         PlaylistId = playlistId,
                         TrackId = trackId,
-                    });
+                    };
+                    Console.WriteLine($"Creating track record: {trackId}");
 
-                    return trackRes.Model.Id;
+                    var trackRes = await CreateEntity(trackRecord);
+                    Console.WriteLine($"Track record created: {trackRes.Data.Id}");
+                    return trackRes.Data.Id;
                 }));
 
                 return new ServiceResponse<CustomPlaylistRecord>
@@ -220,7 +228,6 @@ namespace Services.KnapsackService
                 level = nextLevel;
             }   
             SubsetNode top = level[0];
-            // top.Vector.Print("Top Vector: ");
 
             int length = desiredLengths.Length;
             int max = desiredLengths.Max ?? 0;

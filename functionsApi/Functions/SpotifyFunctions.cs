@@ -11,7 +11,6 @@ using Models.Requests.Spotify;
 using Models.Routes;
 using Models.ServiceResponse;
 using Services.SpotifyService;
-using Services.SupabaseService;
 
 namespace Controllers.SpotifyController
 {
@@ -46,11 +45,11 @@ namespace Controllers.SpotifyController
         }
         
         [Function("SpotifyGetPlaylist")]
-        public async Task<ActionResult> GetPlaylist([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.SpotifyPlaylist)] HttpRequestData req, string userId, string playlistId)
+        public async Task<ActionResult> GetPlaylist([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.SpotifyPlaylist)] HttpRequestData req, string supaUserId, string playlistId)
         {
-            Console.WriteLine("Getting Playlist Tracks for Supabase user: " + userId);
+            Console.WriteLine("Getting Playlist Tracks for Supabase user: " + supaUserId);
             
-            var accessTokenResponse = await _spotifyService.GetValidAccessToken(userId);
+            var accessTokenResponse = await _spotifyService.GetValidAccessToken(supaUserId);
             if (accessTokenResponse.Status != HttpStatusCode.OK)
             {
                 return Unauthorized(accessTokenResponse.ErrorMessage);
@@ -84,17 +83,17 @@ namespace Controllers.SpotifyController
 
 
         [Function("SpotifyPostPlaylist")]
-        public async Task<IActionResult> PostPlaylist([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = RouteConstants.SpotifyUserPlaylists)] HttpRequestData req, string userId)
+        public async Task<IActionResult> PostPlaylist([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = RouteConstants.SpotifyUserPlaylists)] HttpRequestData req, string supaUserId)
         {
-            Console.WriteLine("Creating Playlist for Supabase user: " + userId);
+            Console.WriteLine("Creating Playlist for Supabase user: " + supaUserId);
             
-            var spotifyUserIdResponse = await _spotifyService.GetSpotifyUserId(userId);
+            var spotifyUserIdResponse = await _spotifyService.GetSpotifyUserId(supaUserId);
             if (spotifyUserIdResponse.Status != HttpStatusCode.OK)
             {
                 return NotFound("User not found or Spotify not connected");
             }
             
-            var accessTokenResponse = await _spotifyService.GetValidAccessToken(userId);
+            var accessTokenResponse = await _spotifyService.GetValidAccessToken(supaUserId);
             if (accessTokenResponse.Status != HttpStatusCode.OK)
             {
                 return Unauthorized(accessTokenResponse.ErrorMessage);
@@ -103,7 +102,7 @@ namespace Controllers.SpotifyController
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             SpotifyPostPlaylistRequest? body = JsonSerializer.Deserialize<SpotifyPostPlaylistRequest>(requestBody);
             Playlist playlist = body.Playlist;
-            ServiceResponse<string> urlResponse = await _spotifyService.UploadPlaylist(userId, spotifyUserIdResponse.Data, playlist, accessTokenResponse.Data);
+            ServiceResponse<string> urlResponse = await _spotifyService.UploadPlaylist(supaUserId, spotifyUserIdResponse.Data, playlist, accessTokenResponse.Data);
             if (urlResponse.Status == HttpStatusCode.Unauthorized)
             {
                 return Unauthorized();
@@ -116,17 +115,17 @@ namespace Controllers.SpotifyController
         }
 
         [Function("DisconnectSpotify")]
-        public async Task<IActionResult> DisconnectSpotify([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = RouteConstants.SpotifyDisconnect)] HttpRequestData req, string userId)
+        public async Task<IActionResult> DisconnectSpotify([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = RouteConstants.SpotifyDisconnect)] HttpRequestData req, string supaUserId)
         {
-            Console.WriteLine("Disconnecting Spotify for Supabase user: " + userId);
+            Console.WriteLine("Disconnecting Spotify for Supabase user: " + supaUserId);
             
-            var disconnectResponse = await _spotifyService.DisconnectSpotify(userId);
+            var disconnectResponse = await _spotifyService.DisconnectSpotify(supaUserId);
             if (disconnectResponse.Status != HttpStatusCode.OK)
             {
                 return NotFound($"Failed to disconnect Spotify: {disconnectResponse.ErrorMessage}");
             }
             
-            return Ok(new { message = "Spotify disconnected successfully" });
+            return ServiceResponse.ToIActionResult(disconnectResponse);
         }
     }
 }
