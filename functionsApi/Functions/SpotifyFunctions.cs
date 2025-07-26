@@ -88,14 +88,12 @@ namespace Controllers.SpotifyController
         {
             Console.WriteLine("Creating Playlist for Supabase user: " + userId);
             
-            // Get Spotify user ID from Supabase
-            var spotifyUserIdResponse = await _supabaseService.GetSpotifyUserId(userId);
+            var spotifyUserIdResponse = await _spotifyService.GetSpotifyUserId(userId);
             if (spotifyUserIdResponse.Status != HttpStatusCode.OK)
             {
                 return NotFound("User not found or Spotify not connected");
             }
             
-            // Get valid access token (automatically refreshes if needed)
             var accessTokenResponse = await _spotifyService.GetValidAccessToken(userId);
             if (accessTokenResponse.Status != HttpStatusCode.OK)
             {
@@ -105,7 +103,6 @@ namespace Controllers.SpotifyController
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             SpotifyPostPlaylistRequest? body = JsonSerializer.Deserialize<SpotifyPostPlaylistRequest>(requestBody);
             Playlist playlist = body.Playlist;
-            // string image = body.Image;
             ServiceResponse<string> urlResponse = await _spotifyService.UploadPlaylist(userId, spotifyUserIdResponse.Data, playlist, accessTokenResponse.Data);
             if (urlResponse.Status == HttpStatusCode.Unauthorized)
             {

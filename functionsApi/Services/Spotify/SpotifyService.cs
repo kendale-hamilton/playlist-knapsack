@@ -261,7 +261,7 @@ namespace Services.SpotifyService
             };
             string bodyJson = JsonSerializer.Serialize(body);
             HttpContent content = new StringContent(bodyJson, Encoding.UTF8, "application/json");
-            var createResponse = await _httpService.MakePostRequest($"https://api.spotify.com/v1/users/{spotifyUserId}/playlists", token, content);
+            var createResponse = await MakePostRequest($"https://api.spotify.com/v1/users/{spotifyUserId}/playlists", token, content);
             if (createResponse.StatusCode == HttpStatusCode.Unauthorized)
             {
                 return new ServiceResponse<string>
@@ -300,7 +300,7 @@ namespace Services.SpotifyService
                 };
                 string addBodyJson = JsonSerializer.Serialize(addBody);
                 HttpContent addContent = new StringContent(addBodyJson, Encoding.UTF8, "application/json");
-                var addResponse = await _httpService.MakePostRequest($"https://api.spotify.com/v1/playlists/{id}/tracks", token, addContent);
+                var addResponse = await MakePostRequest($"https://api.spotify.com/v1/playlists/{id}/tracks", token, addContent);
                 if (addResponse.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     return new ServiceResponse<string>
@@ -321,13 +321,16 @@ namespace Services.SpotifyService
             //     var imageResponse = await _httpService.MakePutRequest($"https://api.spotify.com/v1/playlists/{id}/images", token, imageContent, "image/jpeg");
             // }
 
-            var updatedResponse = await _supabaseService.UpdateCustomPlaylist(supabaseUserId, new CustomPlaylistDetails
-                {
-                    Id = playlist.Details.Id,
-                    Name = playlist.Details.Name,
-                    SpotifyId = id,
-                    SpotifyUrl = url
-                });
+            var updatedRecord = new CustomPlaylistRecord
+            {
+                Id = playlist.Details.Id,
+                UserId = supabaseUserId,
+                Name = playlist.Details.Name,
+                SpotifyId = id,
+                SpotifyUrl = url
+            };
+
+            var updatedResponse = await UpdateEntity(updatedRecord);
             if (updatedResponse.Status != HttpStatusCode.OK)
             {
                 return new ServiceResponse<string>
