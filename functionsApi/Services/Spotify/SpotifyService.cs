@@ -186,7 +186,7 @@ namespace Services.SpotifyService
 
         public async Task<ServiceResponse<PlaylistDetails>> GetPlaylistDetails(string playlistId, string token)
         {
-            var response = await _httpService.MakeGetRequest($"https://api.spotify.com/v1/playlists/{playlistId}", token, "Bearer");
+            var response = await MakeGetRequest($"https://api.spotify.com/v1/playlists/{playlistId}", token, "Bearer");
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 return new ServiceResponse<PlaylistDetails>
@@ -217,7 +217,7 @@ namespace Services.SpotifyService
         
         public async Task<ServiceResponse<List<Track>>> GetPlaylistTracks(string playlistId, string token)
         {
-            var response = await _httpService.MakeGetRequest($"https://api.spotify.com/v1/playlists/{playlistId}/tracks", token, "Bearer");
+            var response = await MakeGetRequest($"https://api.spotify.com/v1/playlists/{playlistId}/tracks", token, "Bearer");
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 return new ServiceResponse<List<Track>>
