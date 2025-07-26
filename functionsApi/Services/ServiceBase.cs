@@ -6,11 +6,11 @@ using Supabase.Postgrest.Models;
 
 namespace Services.Base
 {
-    public class BaseService
+    public class ServiceBase
     {
         public readonly Supabase.Client _supabaseClient;
         private readonly HttpClient _httpClient;
-        public BaseService()
+        public ServiceBase()
         {
             var supabaseUrl = Environment.GetEnvironmentVariable("SUPABASE_URL") ?? "";
             var supabaseServiceKey = Environment.GetEnvironmentVariable("SUPABASE_SERVICE_ROLE_KEY") ?? "";

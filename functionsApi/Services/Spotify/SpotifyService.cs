@@ -11,7 +11,7 @@ using Supabase.Postgrest;
 
 namespace Services.SpotifyService
 {
-    public class SpotifyService : BaseService, ISpotifyService
+    public class SpotifyService : ServiceBase, ISpotifyService
     {
         public SpotifyService() : base() {}
 

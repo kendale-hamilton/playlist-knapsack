@@ -5,23 +5,16 @@ using Models.Knapsack;
 using Models.Requests.Knapsack;
 using Models.ServiceResponse;
 using Models.Supabase;
-using Services.SpotifyService;
-using Services.SupabaseService;
+using Services.Base;
 
 namespace Services.KnapsackService
 {
-    public class KnapsackService : IKnapsackService
+    public class KnapsackService : ServiceBase, IKnapsackService
     {
-        private readonly ISupabaseService _supabaseService;
-        private readonly ISpotifyService _spotifyService;
-        public KnapsackService(ISupabaseService supabaseService, ISpotifyService spotifyService)
-        {
-            _supabaseService = supabaseService;
-            _spotifyService = spotifyService;
-        }
+
         public async Task<ServiceResponse<CustomPlaylist>> GetCustomPlaylist(string customId)
         {
-            var playlistRes = await _supabaseService.GetEntities<PlaylistTrackRecord>([customId], "playlist_id");
+            var playlistRes = await GetEntities<PlaylistTrackRecord>([customId], "playlist_id");
             if (playlistRes.Status != HttpStatusCode.OK)
             {
                 return new ServiceResponse<CustomPlaylist>
@@ -32,7 +25,7 @@ namespace Services.KnapsackService
             }
             var trackIds = playlistRes.Data.Select(p => p.TrackId).Where(t => t != null).ToList();
 
-            var tracksRes = await _supabaseService.GetEntities<TrackRecord>(trackIds);
+            var tracksRes = await GetEntities<TrackRecord>(trackIds);
             if (tracksRes.Status != HttpStatusCode.OK)
             {
                 return new ServiceResponse<CustomPlaylist>
@@ -52,7 +45,7 @@ namespace Services.KnapsackService
                 SpotifyId = t.SpotifyId,
             }).ToList();
 
-            var detailsRecord = await _supabaseService.GetEntities<CustomPlaylistRecord>([customId], "id");
+            var detailsRecord = await GetEntities<CustomPlaylistRecord>([customId], "id");
             if (detailsRecord.Status != HttpStatusCode.OK)
             {
                 return new ServiceResponse<CustomPlaylist>
@@ -80,8 +73,6 @@ namespace Services.KnapsackService
                     }
                 }
             };
-
-            Console.WriteLine($"Custom Playlist: {JsonSerializer.Serialize(res)}");
 
             return res;
         }
