@@ -427,7 +427,6 @@ namespace Services.SpotifyService
                 GrantType = "refresh_token",
                 RefreshToken = refreshToken
             };
-            string bodyJson = JsonSerializer.Serialize(body);
             var formContent = new Dictionary<string, string>
             {
                 { "grant_type", body.GrantType },
@@ -435,7 +434,7 @@ namespace Services.SpotifyService
             };
             HttpContent content = new FormUrlEncodedContent(formContent);
 
-            var response = await _httpService.MakePostRequest("https://accounts.spotify.com/api/token", auth, content, "Basic");
+            var response = await MakePostRequest("https://accounts.spotify.com/api/token", auth, content, "Basic");
             string tokenContent = await response.Content.ReadAsStringAsync();
             var tokenJson = JsonObject.Parse(tokenContent);
             string accessToken = tokenJson["access_token"]?.ToString();
