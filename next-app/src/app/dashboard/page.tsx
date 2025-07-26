@@ -64,6 +64,7 @@ export default function Dashboard() {
         );
       }
 
+      refetch();
       // The hook will automatically update the Spotify connection status
       // when the component re-renders after the disconnect
     } catch (error) {
