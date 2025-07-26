@@ -14,12 +14,10 @@ namespace Controllers.KnapsackController
     public class KnapsackController : ControllerBase
     {
         private readonly IKnapsackService _knapsackService;
-        private readonly ISupabaseService _supabaseService;
         
-        public KnapsackController(IKnapsackService knapsackService, ISupabaseService supabaseService)
+        public KnapsackController(IKnapsackService knapsackService)
         {
             _knapsackService = knapsackService;
-            _supabaseService = supabaseService;
         }
         [Function("KnapsackSolvePlaylist")]
         public async Task<IActionResult> SolvePlaylist([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = RouteConstants.CustomPlaylists)] HttpRequestData req, string userId)

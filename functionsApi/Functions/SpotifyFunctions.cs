@@ -120,7 +120,7 @@ namespace Controllers.SpotifyController
         {
             Console.WriteLine("Disconnecting Spotify for Supabase user: " + userId);
             
-            var disconnectResponse = await _supabaseService.DisconnectSpotify(userId);
+            var disconnectResponse = await _spotifyService.DisconnectSpotify(userId);
             if (disconnectResponse.Status != HttpStatusCode.OK)
             {
                 return NotFound($"Failed to disconnect Spotify: {disconnectResponse.ErrorMessage}");

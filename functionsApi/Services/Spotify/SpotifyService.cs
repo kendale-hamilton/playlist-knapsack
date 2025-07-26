@@ -69,6 +69,55 @@ namespace Services.SpotifyService
             }
         }
 
+        public async Task<ServiceResponse<bool>> DisconnectSpotify(string supaUserId)
+        {
+            try
+            {
+                var userResponse = await GetEntities<UserRecord>([supaUserId], "id");
+                if (userResponse.Status != HttpStatusCode.OK)
+                {
+                    return new ServiceResponse<bool>
+                    {
+                        Status = HttpStatusCode.NotFound,
+                        ErrorMessage = "User not found in database"
+                    };
+                }
+
+                var updatedRecord = new UserRecord
+                {
+                    Id = supaUserId,
+                    SpotifyUserId = null,
+                    SpotifyAccessToken = null,
+                    SpotifyRefreshToken = null
+                };
+                var updateResponse = await UpdateEntity(updatedRecord);
+
+                if (updateResponse.Status != HttpStatusCode.OK)
+                {
+                    return new ServiceResponse<bool>
+                    {
+                        Status = HttpStatusCode.InternalServerError,
+                        ErrorMessage = "Failed to update user record"
+                    };
+                }
+
+                return new ServiceResponse<bool>
+                {
+                    Status = HttpStatusCode.OK,
+                    Data = true
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in DisconnectSpotify: {ex.Message}");
+                return new ServiceResponse<bool>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = $"Error disconnecting Spotify: {ex.Message}"
+                };
+            }
+        }
+
          public async Task<ServiceResponse<string>> GetValidAccessToken(string supabaseUserId)
         {
             try
