@@ -123,24 +123,24 @@ namespace Controllers.KnapsackController
         {
             Console.WriteLine($"Deleting Custom Playlist {customId} for Supabase user: {supaUserId}");
             var res = await _knapsackService.DeleteCustomPlaylist(customId);
+            Console.WriteLine($"Deleted Custom Playlist {customId} for Supabase user: {supaUserId}");
             if (res.Status != HttpStatusCode.OK)
             {
                 return ServiceResponse.ToIActionResult(res);
             }
             var record = res.Data;
-
-            var tokenRes = await _spotifyService.GetValidAccessToken(supaUserId);
-
+            
             if (record.SpotifyId != null)
             {
+                Console.WriteLine($"Deleting Spotify Playlist {record.SpotifyId} for Supabase user: {supaUserId}");
+                var tokenRes = await _spotifyService.GetValidAccessToken(supaUserId);
                 var deleteRes = await _spotifyService.DeleteSpotifyPlaylist(record.SpotifyId, tokenRes.Data);
                 if (deleteRes.Status != HttpStatusCode.OK)
                 {
                     return ServiceResponse.ToIActionResult(deleteRes);
                 }
             }
-
-            return ServiceResponse.ToIActionResult(res);
+            return new OkResult();
         }
     }
 }
