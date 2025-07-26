@@ -4,12 +4,11 @@ using Supabase.Postgrest;
 using Models.Supabase;
 using Models.Knapsack;
 using Supabase.Postgrest.Models;
-using static Supabase.Postgrest.QueryOptions;
 using System.Text.Json;
 
 namespace Services.SupabaseService
 {
-    public class SupabaseService : ISupabaseService
+    public class SupabaseService
     {
         private readonly Supabase.Client _supabaseClient;
 

@@ -125,6 +125,19 @@ namespace Services.Base
             }
         }
 
+        public async Task<ServiceResponse<T>> CreateEntity<T>(T entity) where T : BaseModel, new()
+        {
+            try
+            {
+                var response = await _supabaseClient.From<T>().Insert(entity);
+                return new ServiceResponse<T> { Status = HttpStatusCode.OK, Data = response.Models.First() };
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<T> { Status = HttpStatusCode.InternalServerError, ErrorMessage = $"Error creating entity: {ex.Message}" };
+            }
+        }
+
         public async Task<ServiceResponse<T>> UpdateEntity<T>(T entity) where T : BaseModel, new()
         {
             try

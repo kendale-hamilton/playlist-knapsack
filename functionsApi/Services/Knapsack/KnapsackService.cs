@@ -113,6 +113,68 @@ namespace Services.KnapsackService
             };
         }
 
+        public async Task<ServiceResponse<CustomPlaylistRecord>> CreateCustomPlaylist(List<Track> tracks, string userId)
+        {
+            try
+            {
+                var existingTracks = await GetEntities<TrackRecord>(tracks.Select(t => t.SpotifyId).ToList());
+                
+                var trackIds = (await Task.WhenAll(tracks.Select(async track => 
+                {
+                   if (existingTracks.Data.Any(t => t.SpotifyId == track.SpotifyId))
+                   {
+                        return track.SpotifyId;
+                   }
+
+                    var trackRes = await CreateEntity(new TrackRecord
+                    {
+                        SpotifyId = track.SpotifyId,
+                        Seconds = track.Seconds,
+                        Name = track.Name,
+                        SpotifyUrl = track.SpotifyUrl,
+                        Uri = track.Uri,
+                        ArtistsId = null,
+                        AlbumId = null
+                    });
+
+                    return trackRes.Data.Id;
+                }))).ToList();
+
+                var playlistRes = await CreateEntity(new CustomPlaylistRecord
+                {
+                    UserId = userId,
+                    Name = "Custom Playlist"
+                });
+
+                var playlistId = playlistRes.Data.Id;
+
+                await Task.WhenAll(trackIds.Select(async trackId => 
+                {
+                    var trackRes = await _supabaseClient.From<PlaylistTrackRecord>().Insert(new PlaylistTrackRecord
+                    {
+                        PlaylistId = playlistId,
+                        TrackId = trackId,
+                    });
+
+                    return trackRes.Model.Id;
+                }));
+
+                return new ServiceResponse<CustomPlaylistRecord>
+                {
+                    Status = HttpStatusCode.OK,
+                    Data = playlistRes.Data
+                };
+            } catch (Exception ex)
+            {
+                Console.WriteLine($"Error uploading custom playlist: {ex.Message}");
+                return new ServiceResponse<CustomPlaylistRecord>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = $"Error uploading custom playlist: {ex.Message}"
+                };
+            }
+        }
+
         public async Task<ServiceResponse<bool>> UpdateCustomPlaylist(CustomPlaylistRecord playlist)
         {
             var updateRes = await UpdateEntity(playlist);
@@ -127,7 +189,7 @@ namespace Services.KnapsackService
             return new ServiceResponse<bool> { Status = HttpStatusCode.OK, Data = true };
         }
 
-        public async Task<ServiceResponse<string>> SolveKnapsack(DesiredLengths desiredLengths, List<Track> tracks, string userId)
+        public async Task<ServiceResponse<List<Track>>> SolveKnapsack(DesiredLengths desiredLengths, List<Track> tracks, string userId)
         {
             SubsetNode[] nodes = new SubsetNode[tracks.Count];
             for (int i = 0; i < tracks.Count; i++)
@@ -197,17 +259,7 @@ namespace Services.KnapsackService
             Vec total = new Vec(foundTotal, 1);
             List<Track> selections = BackwardsPass(total, top);
 
-            var playlistRes = await _supabaseService.UploadCustomPlaylist(selections, userId);
-            Console.WriteLine("Playlist Res: " + playlistRes.Data);
-            if (playlistRes.Status != HttpStatusCode.OK)
-            {
-                return new ServiceResponse<string>
-                {
-                    Status = HttpStatusCode.InternalServerError,
-                    ErrorMessage = playlistRes.ErrorMessage
-                };
-            }
-            return playlistRes;
+            return new ServiceResponse<List<Track>> { Status = HttpStatusCode.OK, Data = selections };
         }
 
         public async Task<ServiceResponse<CustomPlaylistRecord>> DeleteCustomPlaylist(string playlistId)
