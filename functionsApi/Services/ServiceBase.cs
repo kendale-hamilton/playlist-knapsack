@@ -125,6 +125,25 @@ namespace Services.Base
             }
         }
 
-
+        public async Task<ServiceResponse<T>> UpdateEntity<T>(T entity) where T : BaseModel, new()
+        {
+            try
+            {
+                var response = await _supabaseClient.From<T>().Update(entity);
+                if (response.Content == null)
+                {
+                    return new ServiceResponse<T>
+                    {
+                        Status = HttpStatusCode.NotFound,
+                        ErrorMessage = "Entity not found"
+                    };
+                }
+                return new ServiceResponse<T> { Status = HttpStatusCode.OK, Data = response.Models.First() };
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<T> { Status = HttpStatusCode.InternalServerError, ErrorMessage = $"Error updating entity: {ex.Message}" };
+            }
+        }
     }
 }

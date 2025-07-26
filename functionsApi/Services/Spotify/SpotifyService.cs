@@ -5,24 +5,149 @@ using System.Text.Json.Nodes;
 using Models.Knapsack;
 using Models.ServiceResponse;
 using Models.Spotify;
-using Services.HttpService;
-using Services.SupabaseService;
+using Models.Supabase;
+using Services.Base;
+using Supabase.Postgrest;
 
 namespace Services.SpotifyService
 {
-    public class SpotifyService : ISpotifyService
+    public class SpotifyService : BaseService, ISpotifyService
     {
-        private readonly IHttpService _httpService;
-        private readonly ISupabaseService _supabaseService;
-        
-        public SpotifyService(IHttpService httpService, ISupabaseService supabaseService)
+        public SpotifyService() : base() {}
+
+        public async Task<ServiceResponse<string>> GetSpotifyUserId(string supaUserId)
         {
-            _httpService = httpService;
-            _supabaseService = supabaseService;
+            try
+            {
+                if (_supabaseClient == null)
+                {
+                    return new ServiceResponse<string>
+                    {
+                        Status = HttpStatusCode.InternalServerError,
+                        ErrorMessage = "Supabase client is not initialized"
+                    };
+                }
+                
+                var response = await _supabaseClient.From<UserRecord>()
+                    .Select("spotify_user_id")
+                    .Filter("id", Constants.Operator.Equals, supaUserId)
+                    .Get();
+                
+                if (response.Models == null || response.Models.Count == 0)
+                {
+                    return new ServiceResponse<string>
+                    {
+                        Status = HttpStatusCode.NotFound,
+                        ErrorMessage = "User not found in database"
+                    };
+                }
+
+                var user = response.Models.First();
+                if (string.IsNullOrEmpty(user.SpotifyUserId))
+                {
+                    return new ServiceResponse<string>
+                    {
+                        Status = HttpStatusCode.NotFound,
+                        ErrorMessage = "User found but Spotify not connected"
+                    };
+                }
+
+                return new ServiceResponse<string>
+                {
+                    Status = HttpStatusCode.OK,
+                    Data = user.SpotifyUserId
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetSpotifyUserId: {ex.Message}");
+                return new ServiceResponse<string>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = $"Error fetching Spotify user ID: {ex.Message}"
+                };
+            }
         }
+
+         public async Task<ServiceResponse<string>> GetValidAccessToken(string supabaseUserId)
+        {
+            try
+            {
+                var userResponse = await GetEntities<UserRecord>([supabaseUserId], "id");
+                if (userResponse.Status != HttpStatusCode.OK)
+                {
+                    return new ServiceResponse<string>
+                    {
+                        Status = HttpStatusCode.NotFound,
+                        ErrorMessage = "User not found"
+                    };
+                }
+                var userRecord = userResponse.Data.First();
+                var accessToken = userRecord.SpotifyAccessToken;
+                var refreshToken = userRecord.SpotifyRefreshToken;
+
+                // Test the current token with a simple Spotify API call
+                var testResponse = await MakeGetRequest("https://api.spotify.com/v1/me", accessToken, "Bearer");
+                
+                if (testResponse.StatusCode == HttpStatusCode.OK)
+                {
+                    // Token is still valid
+                    return new ServiceResponse<string>
+                    {
+                        Status = HttpStatusCode.OK,
+                        Data = accessToken
+                    };
+                }
+                else if (testResponse.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    string newAccessToken = await RefreshAccessToken(refreshToken);
+                    if (string.IsNullOrEmpty(newAccessToken))
+                    {
+                        return new ServiceResponse<string>
+                        {
+                            Status = HttpStatusCode.BadRequest,
+                            ErrorMessage = "Failed to refresh access token"
+                        };
+                    }
+                    
+                    userRecord.SpotifyAccessToken = newAccessToken;
+                    var updateResponse = await UpdateEntity(userRecord);
+                    if (updateResponse.Status != HttpStatusCode.OK)
+                    {
+                        return new ServiceResponse<string>
+                        {
+                            Status = HttpStatusCode.InternalServerError,
+                            ErrorMessage = "Failed to update access token"
+                        };
+                    }
+                    return new ServiceResponse<string>
+                    {
+                        Status = HttpStatusCode.OK,
+                        Data = newAccessToken
+                    };
+                }
+                else
+                {
+                    return new ServiceResponse<string>
+                    {
+                        Status = testResponse.StatusCode,
+                        ErrorMessage = "Unexpected error testing access token"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<string>
+                {
+                    Status = HttpStatusCode.InternalServerError,
+                    ErrorMessage = $"Error getting valid access token: {ex.Message}"
+                };
+            }
+        }
+        
         public async Task<ServiceResponse<List<PlaylistDetails>>> GetUserPlaylists(string userId, string token)
         {
-            var response = await _httpService.MakeGetRequest($"https://api.spotify.com/v1/users/{userId}/playlists", token, "Bearer");
+            var response = await MakeGetRequest($"https://api.spotify.com/v1/users/{userId}/playlists", token, "Bearer");
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 return new ServiceResponse<List<PlaylistDetails>>
@@ -268,83 +393,6 @@ namespace Services.SpotifyService
             return accessToken;
         }
         
-        public async Task<ServiceResponse<string>> GetValidAccessToken(string supabaseUserId)
-        {
-            try
-            {
-                // First, try to get the current access token
-                var accessTokenResponse = await _supabaseService.GetSpotifyAccessToken(supabaseUserId);
-                if (accessTokenResponse.Status != HttpStatusCode.OK)
-                {
-                    return new ServiceResponse<string>
-                    {
-                        Status = HttpStatusCode.NotFound,
-                        ErrorMessage = "User not found or Spotify access token not available"
-                    };
-                }
-
-                // Test the current token with a simple Spotify API call
-                var testResponse = await _httpService.MakeGetRequest("https://api.spotify.com/v1/me", accessTokenResponse.Data, "Bearer");
-                
-                if (testResponse.StatusCode == HttpStatusCode.OK)
-                {
-                    // Token is still valid
-                    return new ServiceResponse<string>
-                    {
-                        Status = HttpStatusCode.OK,
-                        Data = accessTokenResponse.Data
-                    };
-                }
-                else if (testResponse.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    // Token is expired, refresh it
-                    var refreshTokenResponse = await _supabaseService.GetSpotifyRefreshToken(supabaseUserId);
-                    if (refreshTokenResponse.Status != HttpStatusCode.OK)
-                    {
-                        return new ServiceResponse<string>
-                        {
-                            Status = HttpStatusCode.NotFound,
-                            ErrorMessage = "Refresh token not available"
-                        };
-                    }
-
-                    string newAccessToken = await RefreshAccessToken(refreshTokenResponse.Data);
-                    if (string.IsNullOrEmpty(newAccessToken))
-                    {
-                        return new ServiceResponse<string>
-                        {
-                            Status = HttpStatusCode.BadRequest,
-                            ErrorMessage = "Failed to refresh access token"
-                        };
-                    }
-
-                    // TODO: Update the access token in Supabase database
-                    // For now, we'll just return the new token
-                    return new ServiceResponse<string>
-                    {
-                        Status = HttpStatusCode.OK,
-                        Data = newAccessToken
-                    };
-                }
-                else
-                {
-                    return new ServiceResponse<string>
-                    {
-                        Status = testResponse.StatusCode,
-                        ErrorMessage = "Unexpected error testing access token"
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResponse<string>
-                {
-                    Status = HttpStatusCode.InternalServerError,
-                    ErrorMessage = $"Error getting valid access token: {ex.Message}"
-                };
-            }
-        }
-
         public async Task<ServiceResponse<bool>> DeleteSpotifyPlaylist(string playlistId, string token)
         {
             var response = await _httpService.MakeDeleteRequest($"https://api.spotify.com/v1/playlists/{playlistId}/followers", token, "Bearer");

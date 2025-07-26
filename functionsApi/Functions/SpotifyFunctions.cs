@@ -18,28 +18,24 @@ namespace Controllers.SpotifyController
     public class SpotifyController : ControllerBase
     {
         private readonly ISpotifyService _spotifyService;
-        private readonly ISupabaseService _supabaseService;
         
-        public SpotifyController(ISpotifyService spotifyService, ISupabaseService supabaseService)
+        public SpotifyController(ISpotifyService spotifyService)
         {
             _spotifyService = spotifyService;
-            _supabaseService = supabaseService;
         }
 
         [Function("SpotifyGetUserPlaylists")]
-        public async Task<IActionResult> GetUserPlaylists([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.SpotifyUserPlaylists)] HttpRequestData req, string userId)
+        public async Task<IActionResult> GetUserPlaylists([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = RouteConstants.SpotifyUserPlaylists)] HttpRequestData req, string supaUserId)
         {
-            Console.WriteLine("Getting User Playlists for Supabase user: " + userId);
+            Console.WriteLine("Getting User Playlists for Supabase user: " + supaUserId);
             
-            // Test Supabase connection first
-            Console.WriteLine("Testing Supabase connection...");
-            var res = await _supabaseService.GetSpotifyUserId(userId);
+            var res = await _spotifyService.GetSpotifyUserId(supaUserId);
             if (res.Status != HttpStatusCode.OK)
             {
                 return NotFound($"Supabase connection failed: {res.ErrorMessage}");
             }
             
-            var accessTokenResponse = await _spotifyService.GetValidAccessToken(userId);
+            var accessTokenResponse = await _spotifyService.GetValidAccessToken(supaUserId);
             if (accessTokenResponse.Status != HttpStatusCode.OK)
             {
                 return Unauthorized(accessTokenResponse.ErrorMessage);
