@@ -115,7 +115,7 @@ namespace Controllers.SpotifyController
             return ServiceResponse.ToIActionResult(urlResponse);
         }
 
-        [Function("SpotifyDisconnect")]
+        [Function("DisconnectSpotify")]
         public async Task<IActionResult> DisconnectSpotify([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = RouteConstants.SpotifyDisconnect)] HttpRequestData req, string userId)
         {
             Console.WriteLine("Disconnecting Spotify for Supabase user: " + userId);
