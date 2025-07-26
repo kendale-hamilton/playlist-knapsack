@@ -145,5 +145,27 @@ namespace Services.Base
                 return new ServiceResponse<T> { Status = HttpStatusCode.InternalServerError, ErrorMessage = $"Error updating entity: {ex.Message}" };
             }
         }
+
+        public async Task<ServiceResponse<T>> DeleteEntity<T>(string id) where T : BaseModel, new()
+        {
+            try
+            {
+                var entity = await _supabaseClient.From<T>().Select("*").Filter("id", Constants.Operator.Equals, id).Single();
+                var response = await _supabaseClient.From<T>().Delete(entity);
+                if (response.Content == null)
+                {
+                    return new ServiceResponse<T>
+                    {
+                        Status = HttpStatusCode.NotFound,
+                        ErrorMessage = "Entity not found"
+                    };
+                }
+                return new ServiceResponse<T> { Status = HttpStatusCode.OK, Data = response.Models.First() };
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<T> { Status = HttpStatusCode.InternalServerError, ErrorMessage = $"Error deleting entity: {ex.Message}" };
+            }
+        }
     }
 }

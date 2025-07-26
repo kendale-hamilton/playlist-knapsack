@@ -13,6 +13,6 @@ namespace Services.KnapsackService
         Task<ServiceResponse<CustomPlaylist>> GetCustomPlaylist(string customId);
         Task<ServiceResponse<List<CustomPlaylistDetails>>> GetCustomPlaylists(string userId);
         Task<ServiceResponse<bool>> UpdateCustomPlaylist(CustomPlaylistRecord playlist);
-        Task<ServiceResponse<bool>> DeleteCustomPlaylist(string playlistId);
+        Task<ServiceResponse<CustomPlaylistRecord>> DeleteCustomPlaylist(string playlistId);
     }
 }

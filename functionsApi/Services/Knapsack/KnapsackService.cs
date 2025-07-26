@@ -210,34 +210,28 @@ namespace Services.KnapsackService
             return playlistRes;
         }
 
-        public async Task<ServiceResponse<bool>> DeleteCustomPlaylist(string playlistId)
+        public async Task<ServiceResponse<CustomPlaylistRecord>> DeleteCustomPlaylist(string playlistId)
         {
             // Fetch the custom playlist record
-            var detailsRecord = await _supabaseService.GetEntities<CustomPlaylistRecord>(new List<string> { playlistId }, "id");
-            if (detailsRecord.Status != System.Net.HttpStatusCode.OK || detailsRecord.Data.Count == 0)
+            var detailsRecord = await GetEntities<CustomPlaylistRecord>(new List<string> { playlistId }, "id");
+            if (detailsRecord.Status != HttpStatusCode.OK || detailsRecord.Data.Count == 0)
             {
-                return new ServiceResponse<bool>
+                return new ServiceResponse<CustomPlaylistRecord>
                 {
                     Status = HttpStatusCode.NotFound,
                     ErrorMessage = "Custom playlist not found"
                 };
             }
-            var details = detailsRecord.Data.First();
-
-            // If it has a SpotifyId, delete from Spotify
-            if (!string.IsNullOrEmpty(details.SpotifyId))
+            var deleteRes = await DeleteEntity<CustomPlaylistRecord>(playlistId);
+            if (deleteRes.Status != HttpStatusCode.OK)
             {
-                // Get the userId from the playlist record
-                var userId = details.UserId;
-                var tokenRes = await _spotifyService.GetValidAccessToken(userId);
-                if (tokenRes.Status == System.Net.HttpStatusCode.OK)
+                return new ServiceResponse<CustomPlaylistRecord>
                 {
-                    await _spotifyService.DeleteSpotifyPlaylist(details.SpotifyId, tokenRes.Data);
-                }
+                    Status = deleteRes.Status,
+                    ErrorMessage = deleteRes.ErrorMessage
+                };
             }
-
-            // Delete from Supabase
-            return await _supabaseService.DeleteCustomPlaylist(playlistId);
+            return deleteRes;
         }
 
         private static void FFT(Vec vector)

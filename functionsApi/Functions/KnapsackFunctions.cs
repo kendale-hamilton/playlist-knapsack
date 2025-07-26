@@ -108,12 +108,27 @@ namespace Controllers.KnapsackController
         }
 
         [Function("KnapsackDeleteCustomPlaylist")]
-        public async Task<IActionResult> DeleteCustomPlaylist([
-            HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = RouteConstants.CustomPlaylist)
-        ] HttpRequestData req, string userId, string customId)
+        public async Task<IActionResult> DeleteCustomPlaylist([HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = RouteConstants.CustomPlaylist)] HttpRequestData req, string userId, string customId)
         {
             Console.WriteLine($"Deleting Custom Playlist {customId} for Supabase user: {userId}");
             var res = await _knapsackService.DeleteCustomPlaylist(customId);
+            if (res.Status != HttpStatusCode.OK)
+            {
+                return ServiceResponse.ToIActionResult(res);
+            }
+            var record = res.Data;
+
+            var tokenRes = await _spotifyService.GetValidAccessToken(userId);
+
+            if (record.SpotifyId != null)
+            {
+                var deleteRes = await _spotifyService.DeleteSpotifyPlaylist(record.SpotifyId, tokenRes.Data);
+                if (deleteRes.Status != HttpStatusCode.OK)
+                {
+                    return ServiceResponse.ToIActionResult(deleteRes);
+                }
+            }
+
             return ServiceResponse.ToIActionResult(res);
         }
     }
