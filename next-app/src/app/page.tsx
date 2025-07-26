@@ -32,13 +32,13 @@ export default function Home() {
         <p className="text-4xl font-bold underline">
           Welcome to Playlist Knapsack
         </p>
-        <p>
+        <p className="mb-4">
           Keep reading to learn about the app, or click below to get started!
         </p>
-        <div className="h-24 justify-center items-center flex">
+        <div className="h-32 sm:h-24 justify-center items-center flex">
           {loading && <CircularProgress />}
           {user && !loading && (
-            <div className="flex w-full justify-center gap-6 my-6">
+            <div className="flex flex-col sm:flex-row w-full justify-center gap-6 my-6">
               <Card
                 isPressable
                 onPress={() => router.push("/builder/playlists")}
@@ -52,7 +52,7 @@ export default function Home() {
               <Card
                 isPressable
                 onPress={() => router.push("/playlists")}
-                className="bg-gray-500 w-52 h-16 hover:bg-gray-600 transition flex items-center justify-center"
+                className="bg-gray-500 w-full sm:w-52 h-16 hover:bg-gray-600 transition flex items-center justify-center"
               >
                 <CardHeader className="p-0 flex items-center justify-center gap-2 w-full h-full">
                   <QueueListIcon className="w-6 h-6" />
@@ -62,7 +62,7 @@ export default function Home() {
             </div>
           )}
           {!user && !loading && (
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
               <Card isPressable onPress={handleSignIn} className="bg-gray-500">
                 <CardHeader className="p-4 gap-2">
                   <Image

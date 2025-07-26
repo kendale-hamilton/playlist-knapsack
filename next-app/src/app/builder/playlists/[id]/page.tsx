@@ -184,7 +184,7 @@ export default function Playlist() {
     <div className="bg-neutral-900 text-white h-fit">
       <div className="hidden md:flex flex-row w-full justify-center">
         <PlaylistDetails
-          onSwitch={() => router.push("/playlists")}
+          onSwitch={() => router.push("/builder/playlists")}
           width="w-1/4"
           playlist={playlist}
         />
@@ -206,7 +206,7 @@ export default function Playlist() {
       </div>
       <div className="flex flex-col md:hidden w-full">
         <PlaylistDetails
-          onSwitch={() => router.push("/playlists")}
+          onSwitch={() => router.push("/builder/playlists")}
           width="w-full"
           playlist={playlist}
         />
