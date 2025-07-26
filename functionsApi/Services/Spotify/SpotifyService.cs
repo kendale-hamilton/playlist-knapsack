@@ -443,10 +443,10 @@ namespace Services.SpotifyService
         
         public async Task<ServiceResponse<bool>> DeleteSpotifyPlaylist(string playlistId, string token)
         {
-            var response = await _httpService.MakeDeleteRequest($"https://api.spotify.com/v1/playlists/{playlistId}/followers", token, "Bearer");
-            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            var response = await MakeDeleteRequest($"https://api.spotify.com/v1/playlists/{playlistId}/followers", token, "Bearer");
+            if (response.StatusCode == HttpStatusCode.NoContent)
             {
-                return new ServiceResponse<bool> { Status = System.Net.HttpStatusCode.OK, Data = true };
+                return new ServiceResponse<bool> { Status = HttpStatusCode.OK, Data = true };
             }
             return new ServiceResponse<bool>
             {
