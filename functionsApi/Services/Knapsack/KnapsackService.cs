@@ -79,12 +79,9 @@ namespace Services.KnapsackService
 
         public async Task<ServiceResponse<List<CustomPlaylistDetails>>> GetCustomPlaylists(string userId)
         {
-            var tokenRes = await _spotifyService.GetValidAccessToken(userId);
-
-            var playlistsRes = await _supabaseService.GetEntities<CustomPlaylistRecord>([userId], "user_id");
+            var playlistsRes = await GetEntities<CustomPlaylistRecord>([userId], "user_id");
             if (playlistsRes.Status == HttpStatusCode.NotFound)
             {
-                // No custom playlists found - return empty list
                 return new ServiceResponse<List<CustomPlaylistDetails>>
                 {   
                     Status = HttpStatusCode.OK,
@@ -109,25 +106,25 @@ namespace Services.KnapsackService
                 SpotifyUrl = p.SpotifyUrl,
             }).ToList();
 
-            // Update playlist images in parallel
-            await Task.WhenAll(playlists.Select(async p => 
-            {
-                if (p.SpotifyId != null && p.ImageUrl == null)
-                {
-                    var res = await _spotifyService.GetPlaylistImage(p.SpotifyId, tokenRes.Data);
-                    if (res.Status == HttpStatusCode.OK)
-                    {
-                        p.ImageUrl = res.Data;
-                        await _supabaseService.UpdateCustomPlaylist(userId, p);
-                    }
-                }
-            }));
-
             return new ServiceResponse<List<CustomPlaylistDetails>>
             {
                 Status = HttpStatusCode.OK,
                 Data = playlists
             };
+        }
+
+        public async Task<ServiceResponse<bool>> UpdateCustomPlaylist(CustomPlaylistRecord playlist)
+        {
+            var updateRes = await UpdateEntity(playlist);
+            if (updateRes.Status != HttpStatusCode.OK)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Status = updateRes.Status,
+                    ErrorMessage = updateRes.ErrorMessage
+                };
+            }
+            return new ServiceResponse<bool> { Status = HttpStatusCode.OK, Data = true };
         }
 
         public async Task<ServiceResponse<string>> SolveKnapsack(DesiredLengths desiredLengths, List<Track> tracks, string userId)

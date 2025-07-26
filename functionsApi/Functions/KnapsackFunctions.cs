@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
@@ -6,7 +7,9 @@ using Models.Knapsack;
 using Models.Requests.Knapsack;
 using Models.Routes;
 using Models.ServiceResponse;
+using Models.Supabase;
 using Services.KnapsackService;
+using Services.SpotifyService;
 using Services.SupabaseService;
 
 namespace Controllers.KnapsackController
@@ -14,10 +17,12 @@ namespace Controllers.KnapsackController
     public class KnapsackController : ControllerBase
     {
         private readonly IKnapsackService _knapsackService;
+        private readonly ISpotifyService _spotifyService;
         
-        public KnapsackController(IKnapsackService knapsackService)
+        public KnapsackController(IKnapsackService knapsackService, ISpotifyService spotifyService)
         {
             _knapsackService = knapsackService;
+            _spotifyService = spotifyService;
         }
         [Function("KnapsackSolvePlaylist")]
         public async Task<IActionResult> SolvePlaylist([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = RouteConstants.CustomPlaylists)] HttpRequestData req, string userId)
@@ -58,7 +63,48 @@ namespace Controllers.KnapsackController
             Console.WriteLine("Getting Custom Playlists for Supabase user: " + userId);
 
             var res = await _knapsackService.GetCustomPlaylists(userId);
-            return ServiceResponse.ToIActionResult(res);
+            if (res.Status != HttpStatusCode.OK)
+            {
+                return ServiceResponse.ToIActionResult(res);
+            }
+            var playlists = res.Data;
+            var tokenRes = await _spotifyService.GetValidAccessToken(userId);
+            if (tokenRes.Status != HttpStatusCode.OK)
+            {
+                return ServiceResponse.ToIActionResult(tokenRes);
+            }
+
+            var playlistsWithImages = (await Task.WhenAll(playlists.Select(async p => 
+            {
+                if (p.SpotifyId != null && p.ImageUrl == null)
+                {
+                    var imageRes = await _spotifyService.GetPlaylistImage(p.SpotifyId, tokenRes.Data);
+                    var updatedRecord = new CustomPlaylistRecord
+                    {
+                        Id = p.Id,
+                        UserId = userId,
+                        SpotifyId = p.SpotifyId,
+                        SpotifyUrl = p.SpotifyUrl,
+                        ImageUrl = p.ImageUrl,
+                        Name = p.Name
+                    };
+                    var updatedRes = await _knapsackService.UpdateCustomPlaylist(updatedRecord);
+                    if (updatedRes.Status != HttpStatusCode.OK)
+                    {
+                        return p;
+                    }
+                    p.ImageUrl = imageRes.Data;
+                    return p;
+                }
+                return p;
+            }))).ToList();
+
+            var serviceRes = new ServiceResponse<List<CustomPlaylistDetails>>
+            {
+                Status = HttpStatusCode.OK,
+                Data = playlistsWithImages
+            };
+            return ServiceResponse.ToIActionResult(serviceRes);
         }
 
         [Function("KnapsackDeleteCustomPlaylist")]
