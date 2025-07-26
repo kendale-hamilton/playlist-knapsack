@@ -1,4 +1,3 @@
-using Models.Knapsack;
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 
