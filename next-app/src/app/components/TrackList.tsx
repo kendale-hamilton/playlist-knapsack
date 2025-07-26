@@ -18,7 +18,7 @@ export default function TrackList(props: TrackListProps) {
   // }
 
   return (
-    <div className={`flex flex-col p-8 space-y-4 items-center ${width}`}>
+    <div className={`flex flex-col px-8 space-y-4 items-center ${width}`}>
       <div className="flex flex-col p-2 space-y-2 w-full">
         {tracks.map((track, index) => (
           <div className="flex flex-row" key={index}>

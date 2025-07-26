@@ -72,8 +72,8 @@ export default function PlaylistDetailSelector(
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalContent>
+    <Modal isOpen={isOpen} onClose={onClose} placement="center">
+      <ModalContent className="mx-4">
         <ModalHeader className="flex flex-col gap-1 text-white">
           Enter Your Playlist Details
         </ModalHeader>

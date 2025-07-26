@@ -266,8 +266,8 @@ export default function CustomPlaylist() {
 
       <TrackList tracks={customPlaylist?.tracks ?? []} width="w-full" />
 
-      <Modal isOpen={open} onClose={() => setOpen(false)}>
-        <ModalContent>
+      <Modal isOpen={open} onClose={() => setOpen(false)} placement="center">
+        <ModalContent className="mx-4">
           <div className="text-white">
             <ModalHeader>
               Your playlist has been uploaded to spotify!
